@@ -1,0 +1,37 @@
+{
+  "name": "tda-luxury",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "analyze": "cross-env ANALYZE=true next build",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "seo:audit": "node scripts/seo-audit.mjs",
+    "preflight": "node scripts/preflight.mjs",
+    "verify": "npm run preflight && npm run deploy:audit && npm run seo:audit && npm run links:audit && npm run assets:audit && npm run typecheck && npm run lint && npm run build && npm run smoke:audit",
+    "links:audit": "node scripts/internal-link-audit.mjs",
+    "assets:audit": "node scripts/asset-audit.mjs",
+    "smoke:audit": "node scripts/smoke-audit.mjs",
+    "deploy:audit": "node scripts/deployment-audit.mjs"
+  },
+  "dependencies": {
+    "@next/third-parties": "^16.2.0",
+    "lucide-react": "^0.468.0",
+    "next": "^16.2.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@next/bundle-analyzer": "^16.2.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "^16.2.0",
+    "typescript": "^5.7.2"
+  }
+}
