@@ -5,11 +5,14 @@ import { ArrowLeft, Clock3, MessageCircle } from "lucide-react";
 import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import { blogPosts, getBlogPost } from "@/data/blog";
+import { blogPosts } from "@/data/blog";
 import { buildMetadata } from "@/lib/seo";
 import { waUrl } from "@/lib/site";
 import SeoTopicCluster from "@/components/SeoTopicCluster";
 import { getClusterForBlog } from "@/data/seo-clusters";
+import { getManagedBlogPost, getManagedBlogPosts } from "@/lib/managed-content";
+
+export const revalidate = 60;
 
 export function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }));
@@ -21,7 +24,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = getBlogPost(slug);
+  const post = await getManagedBlogPost(slug);
 
   if (!post) {
     return buildMetadata({
@@ -50,14 +53,15 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = getBlogPost(slug);
+  const post = await getManagedBlogPost(slug);
   if (!post) notFound();
 
   const seoCluster = getClusterForBlog(post.slug);
 
-  const related = blogPosts
+  const allBlogPosts = await getManagedBlogPosts();
+  const related = allBlogPosts
     .filter((item) => item.slug !== post.slug && item.category === post.category)
-    .concat(blogPosts.filter((item) => item.slug !== post.slug && item.category !== post.category))
+    .concat(allBlogPosts.filter((item) => item.slug !== post.slug && item.category !== post.category))
     .slice(0, 3);
 
   const articleSchema = {
@@ -65,7 +69,7 @@ export default async function Page({
     "@type": "Article",
     headline: post.title,
     description: post.excerpt,
-    image: [`https://www.tdaluxury.com.tr${post.image}`],
+    image: [post.image.startsWith("http") ? post.image : `https://www.tdaluxury.com.tr${post.image}`],
     datePublished: post.datePublished,
     dateModified: post.dateModified,
     mainEntityOfPage: `https://www.tdaluxury.com.tr/blog/${post.slug}`,

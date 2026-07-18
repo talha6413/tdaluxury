@@ -1473,6 +1473,65 @@ main > .motion-reveal,
 @media(max-width:700px){.v20-hero-inner{padding-top:120px;padding-bottom:105px}.v20-kicker{font-size:10px;line-height:1.6;letter-spacing:.22em}.v20-title{font-size:46px;line-height:.98}.v20-lead{font-size:16px;line-height:1.65}.v20-actions{align-items:stretch;flex-direction:column}.v20-primary-btn,.v20-secondary-btn,.v20-actions .hero-video-btn{width:100%;min-height:56px}.v20-quick-links{gap:14px;font-size:12px}.v20-trust-card{padding:24px;border-radius:21px}.v20-trust-card h2{font-size:30px}.v20-scroll-cue{bottom:22px}.v20-hero-bg{object-position:68% center}.v20-hero-overlay{background:linear-gradient(90deg,rgba(4,4,4,.93),rgba(4,4,4,.65)),linear-gradient(180deg,rgba(0,0,0,.16),rgba(0,0,0,.62))}}
 @media(prefers-reduced-motion:reduce){.v20-hero-bg,.v20-hero-copy,.v20-trust-card,.v20-scroll-cue span{animation:none!important}.v20-primary-btn,.v20-secondary-btn{transition:none}}
 
+/* V20.3 — mobile polish: compact hero, safer navigation and thumb-friendly CTAs */
+@media(max-width:700px){
+  html,body{overflow-x:hidden}
+  body{padding-bottom:calc(82px + env(safe-area-inset-bottom))}
+
+  .stage15-nav,
+  .stage15-nav.is-compact{height:72px;background:rgba(3,3,3,.96);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+  .stage15-nav-inner{height:72px;gap:16px}
+  .stage15-logo-main{font-size:37px;line-height:.78}
+  .stage15-logo-mid{margin-top:7px;padding-left:.42em;font-size:8px;letter-spacing:.42em}
+  .stage15-mobile-menu{display:grid;width:48px;height:48px;flex:0 0 48px;padding:0;place-items:center;border:1px solid rgba(217,170,85,.28);border-radius:12px}
+  .stage15-mobile-nav{top:72px;max-height:calc(100dvh - 72px);padding:12px 16px calc(24px + env(safe-area-inset-bottom));gap:0;background:rgba(5,5,5,.98);box-shadow:0 28px 60px rgba(0,0,0,.5)}
+  .stage15-mobile-nav a{display:flex;align-items:center;min-height:52px;padding:12px 8px;font-size:13px;font-weight:800;letter-spacing:.04em}
+  .stage15-mobile-nav a:last-child{justify-content:center;margin-top:14px;border:1px solid #d9aa55;border-radius:10px;background:linear-gradient(135deg,#bd8940,#dfba76);color:#fff}
+
+  .v20-hero{min-height:auto}
+  .v20-hero-inner{display:block;min-height:auto;padding-top:116px;padding-bottom:58px}
+  .v20-hero-copy{max-width:100%}
+  .v20-kicker{max-width:310px;margin-bottom:14px}
+  .v20-title{max-width:390px;font-size:clamp(40px,12vw,48px);line-height:.98;letter-spacing:-.04em}
+  .v20-title span{margin-top:6px}
+  .v20-lead{max-width:410px;margin-top:20px;font-size:15px;line-height:1.62}
+  .v20-actions{gap:10px;margin-top:25px}
+  .v20-primary-btn,.v20-secondary-btn,.v20-actions .hero-video-btn{min-height:54px;padding-inline:18px;border-radius:10px;font-size:12px}
+  .v20-quick-links{justify-content:space-between;margin-top:19px;gap:10px;font-size:11px}
+  .v20-trust-card{max-width:none;margin-top:30px;padding:20px;border-radius:18px;background:linear-gradient(145deg,rgba(11,10,9,.9),rgba(21,17,12,.78))}
+  .v20-trust-icon{width:44px;height:44px}
+  .v20-trust-icon svg{width:21px;height:21px}
+  .v20-trust-kicker{margin-top:16px}
+  .v20-trust-card h2{font-size:27px;line-height:1.08}
+  .v20-trust-copy{margin-top:12px;font-size:13px;line-height:1.6}
+  .v20-trust-list{grid-template-columns:1fr;gap:10px;margin-top:16px}
+  .v20-trust-list div{font-size:12px}
+  .v20-trust-bottom{margin-top:17px;padding-top:15px;font-size:11px}
+  .v20-scroll-cue{display:none}
+  .v20-hero-bg{object-position:70% center;animation:none}
+
+  .global-mobile-booking{left:8px;right:8px;bottom:max(8px,env(safe-area-inset-bottom));min-height:60px;border-radius:16px;grid-template-columns:.7fr 1.05fr 1.35fr}
+  .global-mobile-booking-item{min-height:60px;padding:0 8px;font-size:10.5px}
+  .global-mobile-booking-item svg{width:18px;height:18px}
+  .cookie-consent{bottom:calc(82px + env(safe-area-inset-bottom))}
+}
+
+@media(max-width:380px){
+  .container{width:min(100% - 24px,1360px)}
+  .v20-hero-inner{padding-top:108px;padding-bottom:48px}
+  .v20-title{font-size:39px}
+  .v20-lead{font-size:14px}
+  .v20-quick-links{align-items:flex-start;flex-direction:column}
+  .v20-trust-card h2{font-size:25px}
+  .global-mobile-booking{grid-template-columns:.62fr 1fr 1.38fr}
+  .global-mobile-booking-item{gap:4px;padding-inline:5px;font-size:9.5px}
+}
+
+/* TDA Luxury admin panel */
+.admin-shell{min-height:100dvh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 75% 10%,rgba(217,170,85,.17),transparent 30%),#080706;color:#fff}.admin-login,.admin-setup{width:min(100%,460px);padding:42px;border:1px solid rgba(217,170,85,.25);border-radius:24px;background:rgba(255,255,255,.045);box-shadow:0 30px 80px rgba(0,0,0,.35)}.admin-login>strong,.admin-setup>strong{color:#d9aa55;font-family:Georgia,serif;font-size:25px;letter-spacing:.12em}.admin-login h1,.admin-setup h1{margin:16px 0 8px;font-family:Georgia,serif;font-size:40px;font-weight:500}.admin-login p,.admin-setup p{color:rgba(255,255,255,.62);line-height:1.6}.admin-login label,.admin-editor label{display:grid;gap:8px;margin-top:18px;font-size:13px;font-weight:800}.admin-login input,.admin-editor input,.admin-editor textarea{width:100%;border:1px solid rgba(255,255,255,.14);border-radius:11px;background:rgba(255,255,255,.07);padding:14px;color:#fff;outline:none}.admin-login input:focus,.admin-editor input:focus,.admin-editor textarea:focus{border-color:#d9aa55;box-shadow:0 0 0 3px rgba(217,170,85,.12)}.admin-login>button,.admin-save{width:100%;min-height:54px;margin-top:22px;border:0;border-radius:11px;background:linear-gradient(135deg,#bd8940,#e2bc76);color:#fff;font-weight:900;cursor:pointer}.admin-message{margin:14px 0;padding:13px 15px;border:1px solid rgba(217,170,85,.25);border-radius:10px;background:rgba(217,170,85,.08);color:#e7c789;font-size:13px;line-height:1.5}.admin-page{min-height:100dvh;display:grid;grid-template-columns:250px 1fr;background:#f2eee8;color:#17130f}.admin-sidebar{position:sticky;top:0;height:100dvh;display:flex;flex-direction:column;padding:28px 18px;background:#090807;color:#fff}.admin-sidebar>div{display:grid;padding:0 12px 30px;border-bottom:1px solid rgba(255,255,255,.1)}.admin-sidebar>div strong{color:#d9aa55;font-family:Georgia,serif;font-size:38px;line-height:1}.admin-sidebar>div span{margin-top:8px;color:rgba(255,255,255,.48);font-size:9px;letter-spacing:.2em}.admin-sidebar nav{display:grid;gap:7px;margin-top:25px}.admin-sidebar button{display:flex;align-items:center;gap:11px;min-height:47px;padding:0 14px;border:0;border-radius:10px;background:transparent;color:rgba(255,255,255,.7);font-weight:800;cursor:pointer}.admin-sidebar nav button.active{background:rgba(217,170,85,.14);color:#e3bc75}.admin-logout{margin-top:auto!important}.admin-content{min-width:0;padding:42px}.admin-content>header{display:flex;align-items:center;justify-content:space-between;gap:25px;margin-bottom:28px}.admin-content>header span{color:#a87836;font-size:11px;font-weight:900;letter-spacing:.2em}.admin-content>header h1{margin:7px 0 0;font-family:Georgia,serif;font-size:45px;font-weight:500}.admin-content>header>button{display:flex;align-items:center;gap:8px;min-height:45px;padding:0 18px;border:0;border-radius:10px;background:#17130f;color:#fff;font-weight:800;cursor:pointer}.admin-grid{display:grid;grid-template-columns:minmax(360px,.78fr) minmax(420px,1.22fr);gap:24px;align-items:start}.admin-editor,.admin-list{padding:28px;border:1px solid rgba(31,22,13,.08);border-radius:19px;background:#fff;box-shadow:0 18px 45px rgba(34,25,15,.06)}.admin-editor h2,.admin-list h2{margin:0 0 18px;font-family:Georgia,serif;font-size:27px;font-weight:500}.admin-editor input,.admin-editor textarea{border-color:rgba(25,18,11,.12);background:#faf8f5;color:#17130f;resize:vertical}.admin-upload{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;margin-top:6px;border:1px dashed rgba(168,120,54,.45);border-radius:10px;color:#9b6d31;cursor:pointer}.admin-upload input{position:absolute;inset:0;opacity:0;cursor:pointer}.admin-switch{display:flex!important;align-items:center;gap:10px}.admin-switch>input{display:none}.admin-switch>span{width:46px;height:25px;padding:3px;border-radius:999px;background:#d7d1c9;transition:.2s}.admin-switch>span:after{content:"";display:block;width:19px;height:19px;border-radius:50%;background:#fff;box-shadow:0 2px 7px rgba(0,0,0,.2);transition:.2s}.admin-switch>input:checked+span{background:#ba8642}.admin-switch>input:checked+span:after{transform:translateX(21px)}.admin-save{display:flex;align-items:center;justify-content:center;gap:8px}.admin-list{display:grid;gap:11px}.admin-list article{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:16px;border:1px solid rgba(25,18,11,.08);border-radius:13px;background:#faf8f5}.admin-list article h3{margin:7px 0 0;font-size:15px}.admin-list article>div:last-child{display:flex;gap:6px}.admin-list article button{display:grid;width:38px;height:38px;place-items:center;border:1px solid rgba(25,18,11,.1);border-radius:9px;background:#fff;cursor:pointer}.admin-list .published,.admin-list .draft{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.1em}.admin-list .published{color:#30845a}.admin-list .draft{color:#96774f}.admin-empty{color:#786f65}.admin-save:disabled,.admin-login button:disabled{opacity:.55;cursor:wait}
+@media(max-width:1050px){.admin-grid{grid-template-columns:1fr}.admin-page{grid-template-columns:210px 1fr}.admin-content{padding:30px}}
+@media(max-width:700px){.admin-page{display:block;padding-bottom:0}.admin-sidebar{position:static;height:auto;padding:16px}.admin-sidebar>div{padding-bottom:16px}.admin-sidebar nav{grid-template-columns:repeat(3,1fr);margin-top:14px}.admin-sidebar nav button{justify-content:center;padding:0 7px;font-size:11px}.admin-logout{margin-top:12px!important}.admin-content{padding:22px 14px 50px}.admin-content>header{align-items:flex-start;flex-direction:column}.admin-content>header h1{font-size:38px}.admin-content>header>button{width:100%;justify-content:center}.admin-editor,.admin-list{padding:20px}.admin-login,.admin-setup{padding:28px}.admin-login h1,.admin-setup h1{font-size:34px}}
+
 /* ===== AŞAMA 20.2 — PREMIUM GALLERY ===== */
 .gallery-v20-hero{min-height:790px}
 .gallery-v20-hero .gallery-premium-hero-overlay{background:linear-gradient(90deg,rgba(0,0,0,.96),rgba(0,0,0,.68) 44%,rgba(0,0,0,.18)),linear-gradient(180deg,rgba(0,0,0,.06),rgba(0,0,0,.66))}

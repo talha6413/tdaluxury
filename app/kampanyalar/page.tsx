@@ -5,6 +5,7 @@ import { ArrowRight, BadgePercent, CalendarDays, CheckCircle2, Gift, MessageCirc
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { buildMetadata } from "@/lib/seo";
+import { getManagedCampaigns } from "@/lib/managed-content";
 
 export const metadata: Metadata = buildMetadata({
   title: "TDA Luxury Kampanyalar | Uşak Güzellik Salonu",
@@ -37,7 +38,10 @@ const campaigns = [
   },
 ];
 
-export default function CampaignsPage() {
+export const revalidate = 60;
+
+export default async function CampaignsPage() {
+  const managedCampaigns = await getManagedCampaigns(campaigns);
   return (
     <>
       <Nav />
@@ -63,7 +67,7 @@ export default function CampaignsPage() {
               <p>Kampanya koşulları, uygunluk ve kontenjan bilgileri için doğrudan ekibimizle iletişime geçin.</p>
             </div>
             <div className="campaign-grid">
-              {campaigns.map((campaign) => (
+              {managedCampaigns.map((campaign) => (
                 <article key={campaign.title} className="campaign-card">
                   <div className="campaign-card-media">
                     <Image src={campaign.image} alt={campaign.title} fill sizes="(max-width: 700px) 100vw, 33vw" />

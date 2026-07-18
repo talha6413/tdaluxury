@@ -6,6 +6,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import PremiumGalleryClient from "@/components/PremiumGalleryClient";
 import { buildMetadata } from "@/lib/seo";
+import { getManagedGallery } from "@/lib/managed-content";
 
 export const metadata: Metadata = buildMetadata({
   title: "TDA Luxury Galeri | Uşak Güzellik Salonu Fotoğrafları",
@@ -45,13 +46,24 @@ const gallerySchema = {
   image: gallery.map((item) => `https://www.tdaluxury.com.tr${item.src}`),
 };
 
-export default function GalleryPage() {
+export const revalidate = 60;
+
+export default async function GalleryPage() {
+  const managedGallery = await getManagedGallery(gallery);
+  const managedGallerySchema = {
+    ...gallerySchema,
+    image: managedGallery.map((item) =>
+      item.src.startsWith("http")
+        ? item.src
+        : `https://www.tdaluxury.com.tr${item.src}`
+    ),
+  };
   return (
     <>
       <Nav />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(gallerySchema).replace(/</g, "\\u003c") }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(managedGallerySchema).replace(/</g, "\\u003c") }}
       />
 
       <main className="gallery-premium-page gallery-v20-page">
@@ -95,7 +107,7 @@ export default function GalleryPage() {
               </p>
             </div>
 
-            <PremiumGalleryClient items={gallery} />
+            <PremiumGalleryClient items={managedGallery} />
           </div>
         </section>
 
