@@ -2,9 +2,11 @@
 
 import { CalendarDays, MapPin, MessageCircle, Phone } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { site, waUrl } from "@/lib/site";
+import { useSiteSettings, useWhatsAppUrl } from "@/components/SiteSettingsProvider";
 
 export default function BottomBar() {
+  const settings = useSiteSettings();
+  const whatsappUrl = useWhatsAppUrl();
   const [visible, setVisible] = useState(true);
   const lastScrollY = useRef(0);
 
@@ -26,11 +28,11 @@ export default function BottomBar() {
   return (
     <div className={`bottom-bar ${visible ? "is-visible" : "is-hidden"}`}>
       <div className="bottom-grid">
-        <a className="bottom-item" href={`tel:+${site.whatsapp}`}>
+        <a className="bottom-item" href={`tel:+${settings.whatsappNumber}`}>
           <Phone className="bottom-ico" />
-          <div><div className="bottom-small">HEMEN ARA</div><div className="bottom-big">{site.phoneDisplay}</div></div>
+          <div><div className="bottom-small">HEMEN ARA</div><div className="bottom-big">{settings.phoneDisplay}</div></div>
         </a>
-        <a className="bottom-item" href={waUrl()} target="_blank" rel="noopener noreferrer">
+        <a className="bottom-item" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
           <MessageCircle className="bottom-ico" />
           <div><div className="bottom-small">WHATSAPP</div><div className="bottom-big">Yazışma Başlat</div></div>
         </a>
@@ -38,7 +40,7 @@ export default function BottomBar() {
           <MapPin className="bottom-ico" />
           <div><div className="bottom-small">YOL TARİFİ</div><div className="bottom-big">Konumu Göster</div></div>
         </a>
-        <a className="bottom-item gold-bg" href={waUrl()} target="_blank" rel="noopener noreferrer">
+        <a className="bottom-item gold-bg" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
           <CalendarDays className="bottom-ico" />
           <div><div className="bottom-small">RANDEVU AL</div><div className="bottom-big">Hemen Rezervasyon</div></div>
         </a>

@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -10,7 +12,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
-import { site, waUrl } from "@/lib/site";
+import { useSiteSettings, useWhatsAppUrl } from "@/components/SiteSettingsProvider";
 import HeroVideoButton from "@/components/HeroVideoButton";
 
 const trustItems = [
@@ -20,6 +22,8 @@ const trustItems = [
 ];
 
 export default function Hero() {
+  const settings = useSiteSettings();
+  const whatsappUrl = useWhatsAppUrl("Merhaba, TDA Luxury web siteniz üzerinden ulaşıyorum. Hizmetler ve uygun randevu saatleri hakkında bilgi almak istiyorum.");
   return (
     <section className="v20-hero" aria-labelledby="hero-title">
       <Image
@@ -58,9 +62,7 @@ export default function Hero() {
 
             <a
               data-conversion-source="hero_whatsapp"
-              href={waUrl(
-                "Merhaba, TDA Luxury web siteniz üzerinden ulaşıyorum. Hizmetler ve uygun randevu saatleri hakkında bilgi almak istiyorum."
-              )}
+              href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="v20-secondary-btn"
@@ -73,11 +75,11 @@ export default function Hero() {
           </div>
 
           <div className="v20-quick-links" aria-label="Hızlı iletişim">
-            <a href={`tel:+${site.whatsapp}`} data-conversion-source="hero_phone">
-              <Phone size={16} /> {site.phoneDisplay}
+            <a href={`tel:+${settings.whatsappNumber}`} data-conversion-source="hero_phone">
+              <Phone size={16} /> {settings.phoneDisplay}
             </a>
             <a
-              href={site.mapsUrl}
+              href={settings.mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
               data-conversion-source="hero_map"

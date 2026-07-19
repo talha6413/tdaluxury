@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUp, MapPin, MessageCircle, Phone } from "lucide-react";
-import { site, waUrl } from "@/lib/site";
+import { useSiteSettings, useWhatsAppUrl } from "@/components/SiteSettingsProvider";
 
 function InstagramIcon() {
   return (
@@ -14,13 +14,15 @@ function InstagramIcon() {
 }
 
 export default function FloatingContactDock() {
+  const settings = useSiteSettings();
+  const whatsappUrl = useWhatsAppUrl();
   const items = [
-    { label: "Ara", href: `tel:+${site.whatsapp}`, icon: <Phone size={25} />, external: false },
-    { label: "WhatsApp", href: waUrl(), icon: <MessageCircle size={25} />, external: true },
-    { label: "Instagram", href: site.instagram, icon: <InstagramIcon />, external: true },
+    { label: "Ara", href: `tel:+${settings.whatsappNumber}`, icon: <Phone size={25} />, external: false },
+    { label: "WhatsApp", href: whatsappUrl, icon: <MessageCircle size={25} />, external: true },
+    { label: "Instagram", href: settings.instagramUrl, icon: <InstagramIcon />, external: true },
     {
       label: "Yol Tarifi",
-      href: site.mapsUrl,
+      href: settings.mapsUrl,
       icon: <MapPin size={25} />,
       external: true,
     },

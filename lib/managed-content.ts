@@ -7,6 +7,16 @@ export type ManagedService = { id?: string; title: string; subtitle: string; met
 export type ManagedFaqGroup = { title: string; items: [string, string][] };
 export type ManagedResult = { id?: string; title: string; category: string; image: string; description: string; note?: string };
 export type ManagedPageContent = { title: string; pageKey: string; eyebrow: string; description: string; buttonText: string; buttonUrl: string; image: string; imagePosition: string; seoTitle: string; seoDescription: string };
+export type ManagedSiteSettings = {
+  businessName: string;
+  phoneDisplay: string;
+  whatsappNumber: string;
+  whatsappMessage: string;
+  instagramUrl: string;
+  address: string;
+  mapsUrl: string;
+  maintenanceMode: boolean;
+};
 
 function serverClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -82,6 +92,23 @@ export async function getManagedPageContent(pageKey: string) {
     imagePosition: String(data.image_position || "center center"), seoTitle: String(data.seo_title || ""),
     seoDescription: String(data.seo_description || ""),
   } satisfies ManagedPageContent;
+}
+
+export async function getManagedSiteSettings(): Promise<ManagedSiteSettings | null> {
+  const client = serverClient();
+  if (!client) return null;
+  const { data, error } = await client.from("site_settings").select("business_name,phone_display,whatsapp_number,whatsapp_message,instagram_url,address,maps_url,maintenance_mode").eq("id", true).maybeSingle();
+  if (error || !data) return null;
+  return {
+    businessName: String(data.business_name || "TDA Luxury"),
+    phoneDisplay: String(data.phone_display || ""),
+    whatsappNumber: String(data.whatsapp_number || "").replace(/\D/g, ""),
+    whatsappMessage: String(data.whatsapp_message || ""),
+    instagramUrl: String(data.instagram_url || ""),
+    address: String(data.address || ""),
+    mapsUrl: String(data.maps_url || ""),
+    maintenanceMode: Boolean(data.maintenance_mode),
+  };
 }
 
 function mapBlogRow(row: Record<string, unknown>): BlogPost {

@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -8,7 +10,7 @@ import {
   MessageCircle,
   Phone,
 } from "lucide-react";
-import { site, waUrl } from "@/lib/site";
+import { useSiteSettings, useWhatsAppUrl } from "@/components/SiteSettingsProvider";
 
 const footerGallery = [
   { src: "/images/real/salon-01.webp", alt: "TDA Luxury salon iç mekanı" },
@@ -18,6 +20,9 @@ const footerGallery = [
 ];
 
 export default function Footer() {
+  const settings = useSiteSettings();
+  const defaultWhatsAppUrl = useWhatsAppUrl();
+  const infoWhatsAppUrl = useWhatsAppUrl("Merhaba, TDA Luxury web siteniz üzerinden hizmetler hakkında bilgi almak istiyorum.");
   return (
     <footer className="premium-footer premium-footer-v207">
       <div className="container premium-footer-cta premium-footer-cta-v207">
@@ -35,7 +40,7 @@ export default function Footer() {
             <CalendarDays size={21} /> Randevu Oluştur
           </Link>
           <a
-            href={waUrl("Merhaba, TDA Luxury web siteniz üzerinden hizmetler hakkında bilgi almak istiyorum.")}
+            href={infoWhatsAppUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="premium-footer-outline-btn"
@@ -58,13 +63,13 @@ export default function Footer() {
           </p>
 
           <div className="premium-footer-socials">
-            <a href={site.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
               <Instagram size={20} />
             </a>
-            <a href={waUrl()} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+            <a href={defaultWhatsAppUrl} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
               <MessageCircle size={20} />
             </a>
-            <a href={`tel:+${site.whatsapp}`} aria-label="Telefon">
+            <a href={`tel:+${settings.whatsappNumber}`} aria-label="Telefon">
               <Phone size={20} />
             </a>
           </div>
@@ -92,14 +97,14 @@ export default function Footer() {
 
         <div className="premium-footer-contact">
           <h3>İletişim</h3>
-          <a href={`tel:+${site.whatsapp}`}>
-            <Phone size={17} /> {site.phoneDisplay}
+          <a href={`tel:+${settings.whatsappNumber}`}>
+            <Phone size={17} /> {settings.phoneDisplay}
           </a>
-          <a href={waUrl()} target="_blank" rel="noopener noreferrer">
+          <a href={defaultWhatsAppUrl} target="_blank" rel="noopener noreferrer">
             <MessageCircle size={17} /> WhatsApp’tan Yazın
           </a>
           <Link href="/iletisim">
-            <MapPin size={17} /> {site.address}
+            <MapPin size={17} /> {settings.address}
           </Link>
           <span>Pzt–Cmt: 09.00–20.00</span>
         </div>
@@ -145,7 +150,7 @@ export default function Footer() {
               <MapPin size={18} /> İletişim ve Konum
             </Link>
             <a
-              href={site.mapsUrl}
+              href={settings.mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="premium-footer-location-secondary"

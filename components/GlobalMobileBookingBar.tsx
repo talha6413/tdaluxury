@@ -2,25 +2,25 @@
 
 import Link from "next/link";
 import { CalendarDays, MessageCircle, Phone } from "lucide-react";
-import { site, waUrl } from "@/lib/site";
+import { useSiteSettings, useWhatsAppUrl } from "@/components/SiteSettingsProvider";
 
 export default function GlobalMobileBookingBar() {
+  const settings = useSiteSettings();
+  const whatsappUrl = useWhatsAppUrl("Merhaba, TDA Luxury web siteniz üzerinden ulaşıyorum. Hizmetler hakkında bilgi almak istiyorum.");
   return (
     <nav className="global-mobile-booking" aria-label="Hızlı randevu ve iletişim">
       <a
-        href={`tel:+${site.whatsapp}`}
+        href={`tel:+${settings.whatsappNumber}`}
         className="global-mobile-booking-item"
         data-conversion-source="global_mobile_bar"
-        aria-label={`TDA Luxury'yi ara: ${site.phoneDisplay}`}
+        aria-label={`TDA Luxury'yi ara: ${settings.phoneDisplay}`}
       >
         <Phone size={19} strokeWidth={1.8} />
         <span>Ara</span>
       </a>
 
       <a
-        href={waUrl(
-          "Merhaba, TDA Luxury web siteniz üzerinden ulaşıyorum. Hizmetler hakkında bilgi almak istiyorum."
-        )}
+        href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="global-mobile-booking-item"

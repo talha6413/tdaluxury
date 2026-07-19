@@ -5,6 +5,8 @@ import SkipLink from "@/components/SkipLink";
 import DeferredSiteWidgets from "@/components/DeferredSiteWidgets";
 import ClientOnlyGlobalWidgets from "@/components/ClientOnlyGlobalWidgets";
 import { site } from "@/lib/site";
+import { getManagedSiteSettings } from "@/lib/managed-content";
+import { SiteSettingsProvider } from "@/components/SiteSettingsProvider";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -52,22 +54,25 @@ export const viewport: Viewport = {
   themeColor: "#080706",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getManagedSiteSettings();
   return (
     <html lang="tr">
       <body>
-        <SkipLink />
-        <WebsiteSchema />
-        <LocalBusinessSchema />
+        <SiteSettingsProvider settings={settings}>
+          <SkipLink />
+          <WebsiteSchema />
+          <LocalBusinessSchema />
 
-        {children}
+          {children}
 
-        <DeferredSiteWidgets />
-        <ClientOnlyGlobalWidgets />
+          <DeferredSiteWidgets />
+          <ClientOnlyGlobalWidgets />
+        </SiteSettingsProvider>
       </body>
     </html>
   );
