@@ -5,6 +5,8 @@ import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import { buildMetadata } from "@/lib/seo";
 
+export const revalidate = 60;
+
 const ServicesHome = dynamic(() => import("@/components/ServicesHome"));
 const Results = dynamic(() => import("@/components/Results"));
 const AboutStrip = dynamic(() => import("@/components/AboutStrip"));

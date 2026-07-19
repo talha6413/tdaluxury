@@ -7,6 +7,8 @@ import { buildMetadata } from "@/lib/seo";
 import { JsonLd } from "@/lib/schema";
 import { getManagedFaqGroups, type ManagedFaqGroup } from "@/lib/managed-content";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = buildMetadata({
   title: "Sık Sorulan Sorular | TDA Luxury Uşak",
   description:
