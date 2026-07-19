@@ -1,19 +1,18 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Clock3 } from "lucide-react";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import { buildMetadata } from "@/lib/seo";
+import { buildManagedMetadata } from "@/lib/seo";
 import { getManagedBlogPosts } from "@/lib/managed-content";
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata() { return buildManagedMetadata("blog", {
   title: "Güzellik Blogu | Uşak Lazer Epilasyon ve Cilt Bakımı | TDA Luxury",
   description:
     "Lazer epilasyon, cilt bakımı, kalıcı makyaj, kaş-kirpik ve bölgesel incelme üzerine güncel içerikler ve uzman ipuçları.",
   path: "/blog",
   image: "/images/services-premium/cilt-bakimi.webp",
-});
+}); }
 
 export const revalidate = 60;
 

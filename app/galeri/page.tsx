@@ -1,20 +1,19 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Camera, CheckCircle2, MessageCircle, Sparkles } from "lucide-react";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import PremiumGalleryClient from "@/components/PremiumGalleryClient";
-import { buildMetadata } from "@/lib/seo";
+import { buildManagedMetadata } from "@/lib/seo";
 import { getManagedGallery } from "@/lib/managed-content";
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata() { return buildManagedMetadata("galeri", {
   title: "TDA Luxury Galeri | Uşak Güzellik Salonu Fotoğrafları",
   description:
     "TDA Luxury Uşak salon atmosferini, uygulama alanlarını, lazer epilasyon, cilt bakımı, kalıcı makyaj ve seçili sonuç görsellerini keşfedin.",
   path: "/galeri",
   image: "/images/services-premium/services-hero.webp",
-});
+}); }
 
 const gallery = [
   { src: "/images/services-premium/services-hero.webp", title: "Premium Salon Atmosferi", category: "Salon", alt: "TDA Luxury Uşak premium salon atmosferi" },

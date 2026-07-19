@@ -1,18 +1,17 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Award, HeartHandshake, ShieldCheck, Sparkles } from "lucide-react";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import { buildMetadata } from "@/lib/seo";
+import { buildManagedMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata() { return buildManagedMetadata("hakkimizda", {
   title: "Hakkımızda | Uşak Güzellik Salonu | TDA Luxury",
   description:
     "TDA Luxury’nin hizmet anlayışını, uzman yaklaşımını, hijyen standartlarını ve Uşak’taki premium salon deneyimini keşfedin.",
   path: "/hakkimizda",
   image: "/images/services-premium/services-hero.webp",
-});
+}); }
 
 const values = [
   { icon: ShieldCheck, title: "Hijyen ve Güven", text: "Her uygulamada temiz, düzenli ve kontrollü bir salon standardı." },

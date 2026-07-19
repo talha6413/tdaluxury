@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Info, MessageCircle, ShieldCheck } from "lucide-react";
 import BeforeAfterSlider from "@/components/BeforeAfterSlider";
+import type { ManagedResult } from "@/lib/managed-content";
 
 type Category = "Tümü" | "Lazer" | "Kalıcı Makyaj" | "Cilt Bakımı" | "Vücut";
 
@@ -17,7 +18,7 @@ type ResultItem = {
 
 const filters: Category[] = ["Tümü", "Lazer", "Kalıcı Makyaj", "Cilt Bakımı", "Vücut"];
 
-const results: ResultItem[] = [
+export const fallbackPageResults: ResultItem[] = [
   {
     title: "Dudak Renklendirme",
     category: "Kalıcı Makyaj",
@@ -62,12 +63,12 @@ const results: ResultItem[] = [
   },
 ];
 
-export default function PremiumResultsPageClient() {
+export default function PremiumResultsPageClient({ results = fallbackPageResults }: { results?: ManagedResult[] }) {
   const [active, setActive] = useState<Category>("Tümü");
 
   const visibleResults = useMemo(
     () => (active === "Tümü" ? results : results.filter((item) => item.category === active)),
-    [active],
+    [active, results],
   );
 
   return (

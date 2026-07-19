@@ -1,9 +1,8 @@
-import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
-import { buildMetadata } from "@/lib/seo";
+import { buildManagedMetadata } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -22,14 +21,14 @@ const ScrollProgress = dynamic(() => import("@/components/ScrollProgress"));
 const MotionReveal = dynamic(() => import("@/components/MotionReveal"));
 const PremiumSplash = dynamic(() => import("@/components/PremiumSplash"));
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata() { return buildManagedMetadata("ana-sayfa", {
   title:
     "Uşak Güzellik Salonu | Lazer Epilasyon, Cilt Bakımı | TDA Luxury",
   description:
     "TDA Luxury Uşak'ta lazer epilasyon, cilt bakımı, kalıcı makyaj, bölgesel incelme, kaş-kirpik ve tırnak hizmetleri sunan premium güzellik salonudur.",
   path: "/",
   image: "/og/home.jpg",
-});
+}); }
 
 export default function Home() {
   return (

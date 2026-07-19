@@ -1,15 +1,14 @@
-import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import AppointmentPlanner from "@/components/AppointmentPlanner";
-import { buildMetadata } from "@/lib/seo";
+import { buildManagedMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata() { return buildManagedMetadata("randevu", {
   title: "Randevu Al | TDA Luxury Uşak",
   description:
     "TDA Luxury Uşak için lazer epilasyon, cilt bakımı, kalıcı makyaj ve diğer güzellik hizmetlerinde hızlı randevu talebi oluşturun.",
   path: "/randevu",
-});
+}); }
 
 const breadcrumb = {
   "@context": "https://schema.org",

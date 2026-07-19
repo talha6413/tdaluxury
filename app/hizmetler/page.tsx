@@ -1,15 +1,14 @@
-import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ServicesCatalog from "@/components/ServicesCatalog";
 import { services } from "@/data/services";
-import { buildMetadata } from "@/lib/seo";
+import { buildManagedMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata() { return buildManagedMetadata("hizmetler", {
   title: "Hizmetlerimiz | TDA Luxury Uşak",
   description: "Lazer epilasyon, cilt bakımı, kalıcı makyaj, bölgesel incelme, kaş-kirpik ve tırnak hizmetlerimizin tamamını inceleyin.",
   path: "/hizmetler",
-});
+}); }
 
 export default function Page() {
   return (

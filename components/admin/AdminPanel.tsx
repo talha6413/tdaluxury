@@ -5,12 +5,12 @@ import {
   BookOpen, Check, ChevronRight, CircleUserRound, ExternalLink, Eye, FileText,
   BadgeHelp, BriefcaseBusiness, ImageIcon, LayoutDashboard, LogOut, Megaphone,
   Menu, PanelsTopLeft, Pencil, Plus, RefreshCw, Save, Search, Sparkles,
-  Trash2, Upload, X,
+  Settings, Trash2, Upload, X,
 } from "lucide-react";
 import { getSupabaseBrowserClient } from "@/lib/supabase";
 
 type Tab = "services" | "campaigns" | "blog_posts" | "gallery_items" | "results" | "faqs" | "page_content";
-type View = "dashboard" | Tab;
+type View = "dashboard" | "settings" | Tab;
 type Row = Record<string, unknown> & {
   id: string;
   title: string;
@@ -70,6 +70,7 @@ export default function AdminPanel() {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Row | null>(null);
+  const [settings, setSettings] = useState<Record<string, unknown>>({ business_name: "TDA Luxury", phone_display: "", whatsapp_number: "", whatsapp_message: "", instagram_url: "", address: "", maps_url: "", maintenance_mode: false });
 
   const loadAll = useCallback(async () => {
     if (!supabase) return;
@@ -85,6 +86,8 @@ export default function AdminPanel() {
       next[table] = (result.data as Row[]) ?? [];
       if (result.error) setMessage(result.error.message);
     }
+    const { data: siteSettings } = await supabase.from("site_settings").select("*").eq("id", true).maybeSingle();
+    if (siteSettings) setSettings(siteSettings);
     setRowsByTab(next);
     setBusy(false);
   }, [supabase]);
@@ -99,7 +102,7 @@ export default function AdminPanel() {
     });
   }, [supabase, loadAll]);
 
-  const activeTab: Tab = view === "dashboard" ? "campaigns" : view;
+  const activeTab: Tab = view === "dashboard" || view === "settings" ? "campaigns" : view;
   const activeRows = rowsByTab[activeTab];
   const filteredRows = useMemo(() => activeRows.filter((row) => {
     const matchesSearch = row.title.toLocaleLowerCase("tr-TR").includes(search.toLocaleLowerCase("tr-TR"));
@@ -176,6 +179,17 @@ export default function AdminPanel() {
     setBusy(false);
   }
 
+  async function saveSettings(event: FormEvent) {
+    event.preventDefault();
+    if (!supabase) return;
+    setBusy(true); setMessage("");
+    const payload: Record<string, unknown> = { ...settings, updated_at: new Date().toISOString() };
+    delete payload.id;
+    const { error } = await supabase.from("site_settings").update(payload).eq("id", true);
+    setMessage(error ? "Ayarlar kaydedilemedi: " + error.message : "İşletme ayarları kaydedildi.");
+    setBusy(false);
+  }
+
   if (!ready) return <main className="admin-shell"><RefreshCw className="admin-spinner" /><p>Panel hazırlanıyor…</p></main>;
   if (!supabase) return <main className="admin-shell"><section className="admin-setup"><strong>TDA LUXURY</strong><h1>Admin paneli kuruluma hazır</h1><p>Supabase bağlantı bilgileri henüz Vercel ortam değişkenlerine eklenmedi.</p></section></main>;
   if (!signedIn) return <AdminLogin email={email} password={password} message={message} busy={busy} setEmail={setEmail} setPassword={setPassword} signIn={signIn} />;
@@ -189,6 +203,8 @@ export default function AdminPanel() {
           <button className={view === "dashboard" ? "active" : ""} onClick={() => navigate("dashboard")}><LayoutDashboard size={19} /><span>Genel Bakış</span></button>
           <p>İÇERİK</p>
           {(Object.keys(tabConfig) as Tab[]).map((key) => { const Icon = tabConfig[key].icon; return <button key={key} className={view === key ? "active" : ""} onClick={() => navigate(key)}><Icon size={19} /><span>{tabConfig[key].label}</span><b>{rowsByTab[key].length}</b></button>; })}
+          <p>YAPILANDIRMA</p>
+          <button className={view === "settings" ? "active" : ""} onClick={() => navigate("settings")}><Settings size={19} /><span>İşletme Ayarları</span></button>
         </nav>
         <div className="admin-account"><CircleUserRound /><span><b>Yönetici</b><small>{userEmail}</small></span></div>
         <button className="admin-logout" onClick={async () => { await supabase.auth.signOut(); setSignedIn(false); }}><LogOut size={18} /> Çıkış Yap</button>
@@ -197,6 +213,8 @@ export default function AdminPanel() {
       <section className="admin-content">
         {view === "dashboard" ? (
           <Dashboard rows={rowsByTab} total={total} published={published} busy={busy} navigate={navigate} refresh={loadAll} />
+        ) : view === "settings" ? (
+          <SettingsPanel settings={settings} setSettings={setSettings} save={saveSettings} busy={busy} message={message} />
         ) : (
           <>
             <header className="admin-header"><div><span>İÇERİK YÖNETİMİ</span><h1>{tabConfig[activeTab].label}</h1><p>{tabConfig[activeTab].description}</p></div><button onClick={() => openEditor()}><Plus size={18} /> Yeni {tabConfig[activeTab].singular}</button></header>
@@ -215,6 +233,11 @@ export default function AdminPanel() {
       {menuOpen && <button className="admin-sidebar-scrim" onClick={() => setMenuOpen(false)} aria-label="Menüyü kapat" />}
     </main>
   );
+}
+
+function SettingsPanel({ settings, setSettings, save, busy, message }: { settings: Record<string, unknown>; setSettings: React.Dispatch<React.SetStateAction<Record<string, unknown>>>; save: (event: FormEvent) => void; busy: boolean; message: string }) {
+  const field = (name: string, label: string, placeholder = "") => <label><span>{label}</span><input value={String(settings[name] ?? "")} placeholder={placeholder} onChange={(e) => setSettings((current) => ({ ...current, [name]: e.target.value }))} /></label>;
+  return <><header className="admin-header"><div><span>YAPILANDIRMA</span><h1>İşletme Ayarları</h1><p>Sitedeki iletişim ve işletme bilgilerini tek noktadan yönetin.</p></div></header>{message && <div className="admin-message"><Check size={17} />{message}</div>}<form className="admin-settings-form" onSubmit={save}><section><h2>İletişim bilgileri</h2>{field("business_name", "İşletme adı", "TDA Luxury")}{field("phone_display", "Görünen telefon", "0536 665 10 64")}{field("whatsapp_number", "WhatsApp numarası", "905366651064")}{field("instagram_url", "Instagram bağlantısı", "https://instagram.com/...")}</section><section><h2>Konum ve WhatsApp</h2><label><span>Adres</span><textarea rows={4} value={String(settings.address ?? "")} onChange={(e) => setSettings((current) => ({ ...current, address: e.target.value }))} /></label>{field("maps_url", "Google Haritalar bağlantısı", "https://maps.google.com/...")}<label><span>Varsayılan WhatsApp mesajı</span><textarea rows={5} value={String(settings.whatsapp_message ?? "")} onChange={(e) => setSettings((current) => ({ ...current, whatsapp_message: e.target.value }))} /></label><label className="admin-switch"><input type="checkbox" checked={Boolean(settings.maintenance_mode)} onChange={(e) => setSettings((current) => ({ ...current, maintenance_mode: e.target.checked }))} /><span /><div><b>Bakım modu</b><small>Hazırlık tamamlanana kadar kullanılmak üzere kaydedilir.</small></div></label></section><footer><button className="admin-settings-save" disabled={busy}><Save size={18} />{busy ? "Kaydediliyor…" : "Ayarları Kaydet"}</button></footer></form></>;
 }
 
 function AdminLogin({ email, password, message, busy, setEmail, setPassword, signIn }: { email: string; password: string; message: string; busy: boolean; setEmail: (value: string) => void; setPassword: (value: string) => void; signIn: (event: FormEvent) => void }) {

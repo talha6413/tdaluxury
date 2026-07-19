@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -15,16 +14,16 @@ import {
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ContactForm from "@/components/contact/ContactForm";
-import { buildMetadata } from "@/lib/seo";
+import { buildManagedMetadata } from "@/lib/seo";
 import { BreadcrumbSchema, JsonLd } from "@/lib/schema";
 import { site, waUrl } from "@/lib/site";
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata() { return buildManagedMetadata("iletisim", {
   title: "İletişim | Uşak Merkez Güzellik Salonu",
   description:
     "TDA Luxury Uşak iletişim bilgileri, WhatsApp randevu, çalışma saatleri, Instagram ve Google Haritalar yol tarifi bilgileri.",
   path: "/iletisim",
-});
+}); }
 
 const mapsUrl = site.mapsUrl;
 const mapsEmbedUrl = site.mapsEmbedUrl;

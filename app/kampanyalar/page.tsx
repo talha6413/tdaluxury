@@ -1,18 +1,17 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BadgePercent, CalendarDays, CheckCircle2, Gift, MessageCircle, Sparkles } from "lucide-react";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import { buildMetadata } from "@/lib/seo";
+import { buildManagedMetadata } from "@/lib/seo";
 import { getManagedCampaigns } from "@/lib/managed-content";
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata() { return buildManagedMetadata("kampanyalar", {
   title: "TDA Luxury Kampanyalar | Uşak Güzellik Salonu",
   description:
     "TDA Luxury Uşak güncel kampanyalarını, dönemsel avantajlarını ve özel bakım fırsatlarını inceleyin. Randevu ve detaylar için WhatsApp’tan ulaşın.",
   path: "/kampanyalar",
-});
+}); }
 
 const campaigns = [
   {

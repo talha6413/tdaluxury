@@ -1,19 +1,22 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, MessageCircle, Sparkles } from "lucide-react";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import PremiumResultsPageClient from "@/components/PremiumResultsPageClient";
-import { buildMetadata } from "@/lib/seo";
+import { buildManagedMetadata } from "@/lib/seo";
+import { getManagedResults } from "@/lib/managed-content";
+import { fallbackPageResults } from "@/components/PremiumResultsPageClient";
 
-export const metadata: Metadata = buildMetadata({
+export const revalidate = 60;
+
+export async function generateMetadata() { return buildManagedMetadata("sonuclar", {
   title: "Öncesi Sonrası | TDA Luxury Uşak Güzellik Salonu",
   description:
     "TDA Luxury Uşak lazer epilasyon, cilt bakımı, kalıcı makyaj ve bölgesel bakım öncesi sonrası görsellerini inceleyin. Sonuçlar kişiden kişiye değişebilir.",
   path: "/sonuclar",
   image: "/images/real/dudak-oncesi-sonrasi.webp",
-});
+}); }
 
 const schema = {
   "@context": "https://schema.org",
@@ -29,7 +32,8 @@ const schema = {
   },
 };
 
-export default function ResultsPage() {
+export default async function ResultsPage() {
+  const results = await getManagedResults(fallbackPageResults);
   return (
     <>
       <Nav />
@@ -79,7 +83,7 @@ export default function ResultsPage() {
               </p>
             </div>
 
-            <PremiumResultsPageClient />
+            <PremiumResultsPageClient results={results} />
           </div>
         </section>
       </main>

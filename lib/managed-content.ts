@@ -5,6 +5,8 @@ export type ManagedCampaign = { id?: string; title: string; eyebrow: string; des
 export type ManagedGalleryItem = { id?: string; src: string; title: string; category: string; alt: string };
 export type ManagedService = { id?: string; title: string; subtitle: string; meta: string; duration: string; price: string; href: string; image: string; imagePosition: string };
 export type ManagedFaqGroup = { title: string; items: [string, string][] };
+export type ManagedResult = { id?: string; title: string; category: string; image: string; description: string; note?: string };
+export type ManagedPageContent = { title: string; pageKey: string; eyebrow: string; description: string; buttonText: string; buttonUrl: string; image: string; imagePosition: string; seoTitle: string; seoDescription: string };
 
 function serverClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -51,6 +53,35 @@ export async function getManagedFaqGroups(fallback: ManagedFaqGroup[]) {
     groups.set(category, [...(groups.get(category) ?? []), [String(row.title), String(row.answer)]]);
   }
   return Array.from(groups, ([title, items]) => ({ title, items }));
+}
+
+export async function getManagedResults(fallback: ManagedResult[]) {
+  const client = serverClient();
+  if (!client) return fallback;
+  const { data, error } = await client.from("results").select("*").eq("published", true).order("sort_order");
+  if (error || !data?.length) return fallback;
+  return data.map((row) => ({
+    id: row.id,
+    title: String(row.title),
+    category: String(row.category || "Sonuç"),
+    image: `url(${String(row.before_image_url || row.after_image_url || "/images/result-lazer.svg")})`,
+    description: String(row.description || ""),
+    note: String(row.disclaimer || "Sonuçlar kişiden kişiye değişebilir."),
+  }));
+}
+
+export async function getManagedPageContent(pageKey: string) {
+  const client = serverClient();
+  if (!client) return null;
+  const { data, error } = await client.from("page_content").select("*").eq("page_key", pageKey).eq("published", true).maybeSingle();
+  if (error || !data) return null;
+  return {
+    title: String(data.title), pageKey: String(data.page_key), eyebrow: String(data.eyebrow || ""),
+    description: String(data.description || ""), buttonText: String(data.button_text || ""),
+    buttonUrl: String(data.button_url || ""), image: String(data.image_url || ""),
+    imagePosition: String(data.image_position || "center center"), seoTitle: String(data.seo_title || ""),
+    seoDescription: String(data.seo_description || ""),
+  } satisfies ManagedPageContent;
 }
 
 function mapBlogRow(row: Record<string, unknown>): BlogPost {

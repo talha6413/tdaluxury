@@ -1,20 +1,19 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, HelpCircle, MessageCircle, ShieldCheck, Sparkles } from "lucide-react";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import { buildMetadata } from "@/lib/seo";
+import { buildManagedMetadata } from "@/lib/seo";
 import { JsonLd } from "@/lib/schema";
 import { getManagedFaqGroups, type ManagedFaqGroup } from "@/lib/managed-content";
 
 export const revalidate = 60;
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata() { return buildManagedMetadata("sss", {
   title: "Sık Sorulan Sorular | TDA Luxury Uşak",
   description:
     "Lazer epilasyon, cilt bakımı, kalıcı makyaj, bölgesel incelme, randevu ve bakım süreçleri hakkında sık sorulan soruların yanıtları.",
   path: "/sss",
-});
+}); }
 
 const fallbackGroups: ManagedFaqGroup[] = [
   {
