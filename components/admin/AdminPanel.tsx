@@ -3,12 +3,13 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import {
   BookOpen, Check, ChevronRight, CircleUserRound, ExternalLink, Eye, FileText,
-  ImageIcon, LayoutDashboard, LogOut, Megaphone, Menu, Pencil, Plus, RefreshCw,
-  Save, Search, Trash2, Upload, X,
+  BadgeHelp, BriefcaseBusiness, ImageIcon, LayoutDashboard, LogOut, Megaphone,
+  Menu, PanelsTopLeft, Pencil, Plus, RefreshCw, Save, Search, Sparkles,
+  Trash2, Upload, X,
 } from "lucide-react";
 import { getSupabaseBrowserClient } from "@/lib/supabase";
 
-type Tab = "campaigns" | "blog_posts" | "gallery_items";
+type Tab = "services" | "campaigns" | "blog_posts" | "gallery_items" | "results" | "faqs" | "page_content";
 type View = "dashboard" | Tab;
 type Row = Record<string, unknown> & {
   id: string;
@@ -19,16 +20,28 @@ type Row = Record<string, unknown> & {
 };
 
 const tabConfig = {
+  services: { label: "Hizmetler & Fiyatlar", singular: "Hizmet", icon: BriefcaseBusiness, description: "Hizmet, fiyat, süre ve SEO bilgilerini yönetin" },
   campaigns: { label: "Kampanyalar", singular: "Kampanya", icon: Megaphone, description: "Dönemsel fırsatları yönetin" },
   blog_posts: { label: "Blog Yazıları", singular: "Blog yazısı", icon: BookOpen, description: "Yazıları hazırlayın ve yayınlayın" },
   gallery_items: { label: "Galeri", singular: "Galeri öğesi", icon: ImageIcon, description: "Salon ve sonuç görsellerini yönetin" },
+  results: { label: "Öncesi / Sonrası", singular: "Sonuç", icon: Sparkles, description: "Uygulama sonuçlarını ve açıklamalarını yönetin" },
+  faqs: { label: "Sık Sorulan Sorular", singular: "Soru", icon: BadgeHelp, description: "Soru, yanıt ve kategorileri yönetin" },
+  page_content: { label: "Sayfalar & SEO", singular: "Sayfa içeriği", icon: PanelsTopLeft, description: "Sayfa başlıkları, butonlar ve SEO alanlarını yönetin" },
 } satisfies Record<Tab, { label: string; singular: string; icon: typeof Megaphone; description: string }>;
 
 const emptyRows: Record<Tab, Record<string, unknown>> = {
-  campaigns: { title: "", eyebrow: "DÖNEMSEL AVANTAJ", description: "", image_url: "", href: "/hizmetler", published: false, sort_order: 0 },
+  services: { title: "", slug: "", category: "Genel", description: "", short_description: "", price_text: "Bilgi alın", duration: "Kişiye özel", image_url: "", image_position: "center center", featured: false, published: false, sort_order: 0, seo_title: "", seo_description: "" },
+  campaigns: { title: "", eyebrow: "DÖNEMSEL AVANTAJ", description: "", image_url: "", image_position: "center center", href: "/hizmetler", published: false, sort_order: 0 },
   blog_posts: { slug: "", title: "", excerpt: "", category: "Güzellik", read_time: "5 dk", image_url: "", intro: "", sections: [], keywords: [], published: false, published_at: new Date().toISOString().slice(0, 10) },
-  gallery_items: { title: "", category: "Salon", alt_text: "", image_url: "", published: false, sort_order: 0 },
+  gallery_items: { title: "", category: "Salon", alt_text: "", image_url: "", image_position: "center center", published: false, sort_order: 0 },
+  results: { title: "", category: "Sonuç", description: "", before_image_url: "", after_image_url: "", image_position: "center center", disclaimer: "Sonuçlar kişiden kişiye değişebilir.", published: false, sort_order: 0 },
+  faqs: { title: "", answer: "", category: "Genel", published: false, sort_order: 0 },
+  page_content: { title: "", page_key: "", eyebrow: "", description: "", button_text: "", button_url: "", image_url: "", image_position: "center center", seo_title: "", seo_description: "", published: false, sort_order: 0 },
 };
+
+function emptyRowsByTab(): Record<Tab, Row[]> {
+  return { services: [], campaigns: [], blog_posts: [], gallery_items: [], results: [], faqs: [], page_content: [] };
+}
 
 function slugify(value: string) {
   return value.toLocaleLowerCase("tr-TR").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i").replace(/ğ/g, "g").replace(/ü/g, "u").replace(/ş/g, "s").replace(/ö/g, "o").replace(/ç/g, "c").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -47,7 +60,7 @@ export default function AdminPanel() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [view, setView] = useState<View>("dashboard");
-  const [rowsByTab, setRowsByTab] = useState<Record<Tab, Row[]>>({ campaigns: [], blog_posts: [], gallery_items: [] });
+  const [rowsByTab, setRowsByTab] = useState<Record<Tab, Row[]>>(emptyRowsByTab);
   const [draft, setDraft] = useState<Record<string, unknown>>({ ...emptyRows.campaigns });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
@@ -67,7 +80,7 @@ export default function AdminPanel() {
       const result = await supabase.from(table).select("*").order(orderColumn, { ascending: false });
       return [table, result] as const;
     }));
-    const next = { campaigns: [], blog_posts: [], gallery_items: [] } as Record<Tab, Row[]>;
+    const next = emptyRowsByTab();
     for (const [table, result] of results) {
       next[table] = (result.data as Row[]) ?? [];
       if (result.error) setMessage(result.error.message);
@@ -122,7 +135,8 @@ export default function AdminPanel() {
     if (!supabase) return;
     setBusy(true); setMessage("");
     const payload: Record<string, unknown> = { ...draft, updated_at: new Date().toISOString() };
-    if (activeTab === "blog_posts" && !payload.slug) payload.slug = slugify(String(payload.title));
+    if ((activeTab === "blog_posts" || activeTab === "services") && !payload.slug) payload.slug = slugify(String(payload.title));
+    if (activeTab === "page_content" && !payload.page_key) payload.page_key = slugify(String(payload.title));
     delete payload.id; delete payload.created_at;
     const query = editingId ? supabase.from(activeTab).update(payload).eq("id", editingId) : supabase.from(activeTab).insert(payload);
     const { error } = await query;
@@ -214,5 +228,29 @@ function Dashboard({ rows, total, published, busy, navigate, refresh }: { rows: 
 
 function AdminFields({ tab, draft, setDraft, uploadImage }: { tab: Tab; draft: Record<string, unknown>; setDraft: React.Dispatch<React.SetStateAction<Record<string, unknown>>>; uploadImage: (file: File) => void }) {
   const field = (name: string, label: string, type = "text", placeholder = "") => <label><span>{label}</span><input type={type} value={String(draft[name] ?? "")} placeholder={placeholder} onChange={(e) => setDraft((d) => ({ ...d, [name]: type === "number" ? Number(e.target.value) : e.target.value }))} required={name === "title"} /></label>;
-  return <div className="admin-fields"><section><h3>Temel bilgiler</h3>{field("title", "Başlık", "text", "İçerik başlığını yazın")}{tab === "campaigns" && <>{field("eyebrow", "Üst etiket")}<label><span>Açıklama</span><textarea rows={5} value={String(draft.description ?? "")} onChange={(e) => setDraft((d) => ({ ...d, description: e.target.value }))} placeholder="Kampanyayı kısa ve anlaşılır biçimde anlatın" /></label>{field("href", "Yönlendirme bağlantısı", "text", "/hizmetler")}{field("sort_order", "Sıralama", "number")}</>}{tab === "blog_posts" && <>{field("slug", "URL adresi", "text", "Boş bırakılırsa otomatik oluşturulur")}{field("category", "Kategori")}{field("read_time", "Okuma süresi")}<label><span>Kısa açıklama</span><textarea rows={4} value={String(draft.excerpt ?? "")} onChange={(e) => setDraft((d) => ({ ...d, excerpt: e.target.value }))} /></label><label><span>Giriş metni</span><textarea rows={6} value={String(draft.intro ?? "")} onChange={(e) => setDraft((d) => ({ ...d, intro: e.target.value }))} /></label><label><span>İçerik bölümleri (JSON)</span><textarea rows={9} value={JSON.stringify(draft.sections ?? [], null, 2)} onChange={(e) => { try { setDraft((d) => ({ ...d, sections: JSON.parse(e.target.value) })); } catch { /* only apply valid JSON */ } }} /></label>{field("published_at", "Yayın tarihi", "date")}</>}{tab === "gallery_items" && <>{field("category", "Kategori")}{field("alt_text", "Görsel açıklaması", "text", "Erişilebilirlik ve SEO için açıklayın")}{field("sort_order", "Sıralama", "number")}</>}</section><section><h3>Görsel ve yayın</h3>{String(draft.image_url || "") && <div className="admin-image-preview"><img src={String(draft.image_url)} alt="Önizleme" /></div>}<label><span>Görsel URL</span><input value={String(draft.image_url ?? "")} onChange={(e) => setDraft((d) => ({ ...d, image_url: e.target.value }))} placeholder="https://…" /><span className="admin-upload"><Upload size={18} /><b>Bilgisayardan görsel seç</b><small>JPG, PNG veya WEBP</small><input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && uploadImage(e.target.files[0])} /></span></label><label className="admin-switch"><input type="checkbox" checked={Boolean(draft.published)} onChange={(e) => setDraft((d) => ({ ...d, published: e.target.checked }))} /><span /><div><b>Yayında göster</b><small>Aktif olduğunda ziyaretçiler bu içeriği görür.</small></div></label></section></div>;
+  const area = (name: string, label: string, rows = 5, placeholder = "") => <label><span>{label}</span><textarea rows={rows} value={String(draft[name] ?? "")} placeholder={placeholder} onChange={(e) => setDraft((d) => ({ ...d, [name]: e.target.value }))} /></label>;
+  const imageUpload = (name = "image_url", label = "Görsel URL") => <label><span>{label}</span><input value={String(draft[name] ?? "")} onChange={(e) => setDraft((d) => ({ ...d, [name]: e.target.value }))} placeholder="https://…" />{name === "image_url" && <span className="admin-upload"><Upload size={18} /><b>Bilgisayardan görsel seç</b><small>JPG, PNG veya WEBP</small><input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && uploadImage(e.target.files[0])} /></span>}</label>;
+  const imagePosition = <label><span>Görsel odak noktası</span><select value={String(draft.image_position ?? "center center")} onChange={(e) => setDraft((d) => ({ ...d, image_position: e.target.value }))}><option value="center center">Tam orta</option><option value="center top">Üst orta</option><option value="center bottom">Alt orta</option><option value="left center">Sol orta</option><option value="right center">Sağ orta</option><option value="left top">Sol üst</option><option value="right top">Sağ üst</option></select><small className="admin-input-help">Önemli yüz veya uygulama bölgesinin kesilmesini önler.</small></label>;
+
+  return <div className="admin-fields">
+    <section><h3>Temel bilgiler</h3>
+      {field("title", tab === "faqs" ? "Soru" : "Başlık", "text", tab === "faqs" ? "Soruyu yazın" : "İçerik başlığını yazın")}
+      {tab === "services" && <>{field("slug", "Sayfa adresi", "text", "Boş bırakılırsa otomatik oluşur")}{field("category", "Kategori")}{area("short_description", "Kart açıklaması", 3)}{area("description", "Detaylı açıklama", 7)}{field("price_text", "Fiyat / fiyat bilgisi", "text", "Örn. 1.500 TL veya Bilgi alın")}{field("duration", "İşlem süresi", "text", "Örn. 45–60 dk")}{field("sort_order", "Sıralama", "number")}</>}
+      {tab === "campaigns" && <>{field("eyebrow", "Üst etiket")}{area("description", "Açıklama", 5, "Kampanyayı kısa ve anlaşılır biçimde anlatın")}{field("href", "Yönlendirme bağlantısı", "text", "/hizmetler")}{field("sort_order", "Sıralama", "number")}</>}
+      {tab === "blog_posts" && <>{field("slug", "URL adresi", "text", "Boş bırakılırsa otomatik oluşturulur")}{field("category", "Kategori")}{field("read_time", "Okuma süresi")}{area("excerpt", "Kısa açıklama", 4)}{area("intro", "Giriş metni", 6)}<label><span>İçerik bölümleri (JSON)</span><textarea rows={9} value={JSON.stringify(draft.sections ?? [], null, 2)} onChange={(e) => { try { setDraft((d) => ({ ...d, sections: JSON.parse(e.target.value) })); } catch { /* only apply valid JSON */ } }} /></label>{field("published_at", "Yayın tarihi", "date")}</>}
+      {tab === "gallery_items" && <>{field("category", "Kategori")}{field("alt_text", "Görsel açıklaması", "text", "Erişilebilirlik ve SEO için açıklayın")}{field("sort_order", "Sıralama", "number")}</>}
+      {tab === "results" && <>{field("category", "Hizmet kategorisi")}{area("description", "Sonuç açıklaması", 4)}{area("disclaimer", "Yasal bilgilendirme", 3)}{field("sort_order", "Sıralama", "number")}</>}
+      {tab === "faqs" && <>{field("category", "Kategori")}{area("answer", "Yanıt", 7, "Açık ve anlaşılır yanıtı yazın")}{field("sort_order", "Sıralama", "number")}</>}
+      {tab === "page_content" && <>{field("page_key", "Bölüm anahtarı", "text", "Örn. ana-sayfa-hero")}{field("eyebrow", "Üst etiket")}{area("description", "Açıklama", 6)}{field("button_text", "Buton yazısı")}{field("button_url", "Buton bağlantısı")}{field("sort_order", "Sıralama", "number")}</>}
+    </section>
+    <section><h3>{tab === "faqs" ? "Yayın ayarları" : "Görsel ve yayın"}</h3>
+      {String(draft.image_url || "") && <div className="admin-image-preview"><img src={String(draft.image_url)} alt="Önizleme" /></div>}
+      {!["faqs", "results"].includes(tab) && imageUpload()}
+      {tab === "results" && <>{imageUpload("before_image_url", "Öncesi görsel URL")}{imageUpload("after_image_url", "Sonrası görsel URL")}</>}
+      {tab !== "faqs" && imagePosition}
+      {tab === "services" && <label className="admin-switch"><input type="checkbox" checked={Boolean(draft.featured)} onChange={(e) => setDraft((d) => ({ ...d, featured: e.target.checked }))} /><span /><div><b>Ana sayfada öne çıkar</b><small>Hizmeti ana sayfa kartlarında gösterir.</small></div></label>}
+      <label className="admin-switch"><input type="checkbox" checked={Boolean(draft.published)} onChange={(e) => setDraft((d) => ({ ...d, published: e.target.checked }))} /><span /><div><b>Yayında göster</b><small>Aktif olduğunda ziyaretçiler bu içeriği görür.</small></div></label>
+    </section>
+    {(tab === "services" || tab === "page_content") && <section><h3>Arama motoru ayarları</h3>{field("seo_title", "SEO başlığı", "text", "Google sonuçlarında görünen başlık")}{area("seo_description", "SEO açıklaması", 4, "Google sonuçlarında görünen kısa açıklama")}<p className="admin-field-note">Başlık için yaklaşık 50–60, açıklama için 140–160 karakter önerilir.</p></section>}
+  </div>;
 }

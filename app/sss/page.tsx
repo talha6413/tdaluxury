@@ -5,6 +5,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { buildMetadata } from "@/lib/seo";
 import { JsonLd } from "@/lib/schema";
+import { getManagedFaqGroups, type ManagedFaqGroup } from "@/lib/managed-content";
 
 export const metadata: Metadata = buildMetadata({
   title: "Sık Sorulan Sorular | TDA Luxury Uşak",
@@ -13,7 +14,7 @@ export const metadata: Metadata = buildMetadata({
   path: "/sss",
 });
 
-const groups = [
+const fallbackGroups: ManagedFaqGroup[] = [
   {
     title: "Lazer Epilasyon",
     items: [
@@ -48,17 +49,16 @@ const groups = [
   },
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: groups.flatMap((group) => group.items.map(([question, answer]) => ({
-    "@type": "Question",
-    name: question,
-    acceptedAnswer: { "@type": "Answer", text: answer },
-  }))),
-};
-
-export default function FAQPage() {
+export default async function FAQPage() {
+  const groups = await getManagedFaqGroups(fallbackGroups);
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: groups.flatMap((group) => group.items.map(([question, answer]) => ({
+      "@type": "Question", name: question,
+      acceptedAnswer: { "@type": "Answer", text: answer },
+    }))),
+  };
   return (
     <>
       <JsonLd data={faqSchema} />
