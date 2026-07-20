@@ -4,7 +4,7 @@ import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "Uşak Kalıcı Makyaj ve Microblading | TDA Luxury",
-  description: "Uşak kalıcı makyaj hizmetleri: microblading, pudralama kaş, dipliner, eyeliner ve dudak renklendirme. TDA Luxury Uşak Merkez.",
+  description: "Uşak’ta microblading, pudralama kaş, dipliner, eyeliner ve dudak renklendirme uygulamalarını keşfedin. Kişiye özel tasarım için bilgi alın.",
   path: "/kalici-makyaj",
   image: "/og/home.jpg",
 });

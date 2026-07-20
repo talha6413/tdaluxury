@@ -6,7 +6,7 @@ import { buildManagedMetadata } from "@/lib/seo";
 export async function generateMetadata() { return buildManagedMetadata("randevu", {
   title: "Randevu Al | TDA Luxury Uşak",
   description:
-    "TDA Luxury Uşak için lazer epilasyon, cilt bakımı, kalıcı makyaj ve diğer güzellik hizmetlerinde hızlı randevu talebi oluşturun.",
+    "Uşak TDA Luxury’de lazer epilasyon, cilt bakımı veya kalıcı makyaj için randevu talebinizi oluşturun; uygun gün ve saat seçeneklerini birlikte belirleyelim.",
   path: "/randevu",
 }); }
 

@@ -6,7 +6,7 @@ import { buildManagedMetadata } from "@/lib/seo";
 
 export async function generateMetadata() { return buildManagedMetadata("hizmetler", {
   title: "Hizmetlerimiz | TDA Luxury Uşak",
-  description: "Lazer epilasyon, cilt bakımı, kalıcı makyaj, bölgesel incelme, kaş-kirpik ve tırnak hizmetlerimizin tamamını inceleyin.",
+  description: "Uşak TDA Luxury’nin lazer epilasyon, cilt bakımı ve kalıcı makyaj hizmetlerini inceleyin; size uygun uygulama için uzman ekibimizden bilgi alın.",
   path: "/hizmetler",
 }); }
 

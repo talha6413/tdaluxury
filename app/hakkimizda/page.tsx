@@ -8,7 +8,7 @@ import { buildManagedMetadata } from "@/lib/seo";
 export async function generateMetadata() { return buildManagedMetadata("hakkimizda", {
   title: "Hakkımızda | Uşak Güzellik Salonu | TDA Luxury",
   description:
-    "TDA Luxury’nin hizmet anlayışını, uzman yaklaşımını, hijyen standartlarını ve Uşak’taki premium salon deneyimini keşfedin.",
+    "TDA Luxury’nin Uşak’taki uzman ekibini, kişiye özel hizmet anlayışını, hijyen standartlarını ve konforlu güzellik salonu deneyimini yakından tanıyın.",
   path: "/hakkimizda",
   image: "/images/real/salon-03.webp",
 }); }

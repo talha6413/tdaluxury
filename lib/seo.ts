@@ -13,7 +13,19 @@ export function buildMetadata({ title, description, path, image = "/og/default.j
     title: { absolute: title },
     description,
     alternates: { canonical },
-    robots: noindex ? { index: false, follow: false } : { index: true, follow: true },
+    robots: noindex
+      ? { index: false, follow: false }
+      : {
+          index: true,
+          follow: true,
+          googleBot: {
+            index: true,
+            follow: true,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+            "max-video-preview": -1,
+          },
+        },
     openGraph: { type, locale: "tr_TR", siteName: site.name, url: canonical, title, description, images: [{ url: ogImage, width: 1200, height: 630, alt: title }] },
     twitter: { card: "summary_large_image", title, description, images: [ogImage] },
   };

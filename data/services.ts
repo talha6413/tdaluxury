@@ -4,88 +4,88 @@ export const services: Service[] = [
     "title": "Lazer Epilasyon",
     "slug": "/lazer-epilasyon",
     "keyword": "uşak lazer epilasyon",
-    "description": "Uşak'ta kişiye özel değerlendirme ile lazer epilasyon sürecini, seans planını ve dikkat edilmesi gerekenleri öğrenin."
+    "description": "Uşak’ta kadın ve erkek lazer epilasyon seçeneklerini inceleyin. Cilt ve kıl yapınıza özel bölge, seans planı ve randevu için TDA Luxury’ye ulaşın."
   },
   {
     "title": "Kadın Lazer Epilasyon",
     "slug": "/lazer-epilasyon/kadin-lazer-epilasyon",
     "keyword": "kadın lazer epilasyon uşak",
-    "description": "Koltuk altı, bacak, bikini ve yüz bölgeleri için kadın lazer epilasyon hakkında detaylı bilgi alın.",
+    "description": "Uşak’ta koltuk altı, bacak, bikini ve yüz bölgelerine yönelik kadın lazer epilasyon seçeneklerini inceleyin; kişiye özel seans planı için bilgi alın.",
     "parent": "/lazer-epilasyon"
   },
   {
     "title": "Erkek Lazer Epilasyon",
     "slug": "/lazer-epilasyon/erkek-lazer-epilasyon",
     "keyword": "erkek lazer epilasyon uşak",
-    "description": "Sırt, göğüs, ense, omuz ve sakal üstü bölgeler için erkek lazer epilasyon sürecini inceleyin.",
+    "description": "Uşak’ta sırt, göğüs, ense, omuz ve sakal üstü için erkek lazer epilasyon seçeneklerini keşfedin; bölgenize özel planlama ve randevu bilgisi alın.",
     "parent": "/lazer-epilasyon"
   },
   {
     "title": "Yüz Lazer Epilasyon",
     "slug": "/lazer-epilasyon/yuz-lazer-epilasyon",
     "keyword": "yüz lazer epilasyon uşak",
-    "description": "Çene, üst dudak, favori ve yüz bölgesi için lazer epilasyon hakkında merak edilenleri öğrenin.",
+    "description": "Uşak’ta çene, üst dudak ve favori bölgelerine yönelik yüz lazer epilasyon sürecini öğrenin; cilt yapınıza uygun değerlendirme için bize ulaşın.",
     "parent": "/lazer-epilasyon"
   },
   {
     "title": "Tüm Vücut Lazer Epilasyon",
     "slug": "/lazer-epilasyon/tum-vucut-lazer-epilasyon",
     "keyword": "tüm vücut lazer epilasyon uşak",
-    "description": "Tüm vücut lazer epilasyon planlaması, seans mantığı ve bölge kombinasyonları hakkında bilgi alın.",
+    "description": "Uşak’ta tüm vücut lazer epilasyon için bölge kombinasyonlarını ve seans planlamasını inceleyin; kişiye özel ön görüşme ve randevu bilgisi alın.",
     "parent": "/lazer-epilasyon"
   },
   {
     "title": "İğneli Epilasyon",
     "slug": "/igneli-epilasyon",
     "keyword": "uşak iğneli epilasyon",
-    "description": "İnce, açık renkli veya bölgesel tüyler için iğneli epilasyon hakkında detaylı bilgi ve süreç rehberi."
+    "description": "Uşak’ta ince, açık renkli veya tekil kıllar için iğneli epilasyon sürecini inceleyin; uygunluk değerlendirmesi ve randevu için bilgi alın."
   },
   {
     "title": "Cilt Bakımı",
     "slug": "/cilt-bakimi",
     "keyword": "uşak cilt bakımı",
-    "description": "Cilt ihtiyacına göre planlanan profesyonel cilt bakımı uygulamalarını ve bakım süreçlerini keşfedin."
+    "description": "Uşak’ta cilt analiziyle ihtiyacınıza göre planlanan profesyonel cilt bakımı seçeneklerini keşfedin; kişisel bakım planınız ve randevu için bize ulaşın."
   },
   {
     "title": "Hydrafacial",
     "slug": "/cilt-bakimi/hydrafacial",
     "keyword": "hydrafacial uşak",
-    "description": "Nem, arındırma ve daha canlı bir görünüm hedefleyen Hydrafacial sürecini adım adım inceleyin.",
+    "description": "Uşak’ta arındırma, nem desteği ve canlı görünüm odaklı Hydrafacial bakımını keşfedin; cildinize uygun seans ve randevu bilgisi alın.",
     "parent": "/cilt-bakimi"
   },
   {
     "title": "Erkek Cilt Bakımı",
     "slug": "/cilt-bakimi/erkek-cilt-bakimi",
     "keyword": "erkek cilt bakımı uşak",
-    "description": "Erkek cildine özel temizlik, dengeleme ve bakım uygulamaları hakkında bilgi alın.",
+    "description": "Uşak’ta erkek cildine özel temizlik, arındırma ve dengeleme odaklı bakım seçeneklerini inceleyin; kişisel bakım planı için bilgi alın.",
     "parent": "/cilt-bakimi"
   },
   {
     "title": "Akne Bakımı",
     "slug": "/cilt-bakimi/akne-bakimi",
     "keyword": "akne cilt bakımı uşak",
-    "description": "Akneye eğilimli ciltler için profesyonel bakım süreci, hedefler ve bakım sonrası öneriler.",
+    "description": "Uşak’ta akneye eğilimli ciltler için hassasiyet ve yağ dengesi odaklı profesyonel bakım sürecini inceleyin; cilt analizi için randevu alın.",
     "parent": "/cilt-bakimi"
   },
   {
     "title": "Leke Bakımı",
     "slug": "/cilt-bakimi/leke-bakimi",
     "keyword": "leke bakımı uşak",
-    "description": "Cilt tonu eşitsizliği ve leke görünümü için bakım odaklı uygulama sürecini keşfedin.",
+    "description": "Uşak’ta cilt tonu eşitsizliği ve leke görünümüne yönelik bakım seçeneklerini keşfedin; cilt analiziyle size uygun bakım planını belirleyin.",
     "parent": "/cilt-bakimi"
   },
   {
     "title": "Anti Aging Cilt Bakımı",
     "slug": "/cilt-bakimi/anti-aging",
     "keyword": "anti aging uşak",
-    "description": "Daha canlı ve bakımlı bir görünüm için anti-aging cilt bakım yaklaşımımızı inceleyin.",
+    "description": "Uşak’ta nem, canlılık ve ince çizgi görünümüne yönelik anti-aging cilt bakım seçeneklerini inceleyin; kişiye özel bakım planı için bilgi alın.",
     "parent": "/cilt-bakimi"
   },
   {
     "title": "Cilt Analizi",
     "slug": "/cilt-bakimi/cilt-analizi",
     "keyword": "cilt analizi uşak",
-    "description": "Cilt tipinizi ve ihtiyaçlarınızı anlamaya yardımcı profesyonel cilt analizi sürecini öğrenin.",
+    "description": "Uşak’ta profesyonel cilt analiziyle cilt tipinizi ve bakım ihtiyaçlarınızı belirleyin; size uygun ürün ve uygulama planı için randevu oluşturun.",
     "parent": "/cilt-bakimi"
   },
   {
@@ -112,41 +112,41 @@ export const services: Service[] = [
     "title": "Kalıcı Makyaj",
     "slug": "/kalici-makyaj",
     "keyword": "uşak kalıcı makyaj",
-    "description": "Kaş, eyeliner, dipliner ve dudak renklendirme dâhil kalıcı makyaj uygulamalarını keşfedin."
+    "description": "Uşak’ta microblading, pudralama kaş, dipliner, eyeliner ve dudak renklendirme seçeneklerini keşfedin; yüzünüze özel tasarım için bilgi alın."
   },
   {
     "title": "Microblading",
     "slug": "/kalici-makyaj/microblading",
     "keyword": "microblading uşak",
-    "description": "Doğal kaş görünümüne odaklanan microblading uygulaması hakkında detaylı rehber.",
+    "description": "Uşak’ta doğal kıl efekti odaklı microblading uygulamasını inceleyin; yüz hatlarınıza uygun kaş tasarımı, süreç ve randevu bilgisi alın.",
     "parent": "/kalici-makyaj"
   },
   {
     "title": "Pudralama Kaş",
     "slug": "/kalici-makyaj/pudralama-kas",
     "keyword": "pudralama kaş uşak",
-    "description": "Daha yumuşak geçişli kaş görünümü için pudralama kaş sürecini inceleyin.",
+    "description": "Uşak’ta yumuşak gölgelendirme ve belirgin kaş görünümü için pudralama kaş uygulamasını inceleyin; kişiye özel tasarım için bilgi alın.",
     "parent": "/kalici-makyaj"
   },
   {
     "title": "Dipliner",
     "slug": "/kalici-makyaj/dipliner",
     "keyword": "dipliner uşak",
-    "description": "Kirpik diplerini belirginleştiren dipliner uygulaması hakkında süreç ve bakım bilgileri.",
+    "description": "Uşak’ta kirpik diplerini zarif biçimde belirginleştiren kalıcı dipliner uygulamasını keşfedin; tasarım, bakım ve randevu bilgisi alın.",
     "parent": "/kalici-makyaj"
   },
   {
     "title": "Kalıcı Eyeliner",
     "slug": "/kalici-makyaj/eyeliner",
     "keyword": "kalıcı eyeliner uşak",
-    "description": "Kalıcı eyeliner ile daha belirgin göz görünümü için süreç, bakım ve merak edilenler.",
+    "description": "Uşak’ta göz şeklinize özel kalıcı eyeliner uygulamasını inceleyin; tasarım, işlem sonrası bakım ve randevu hakkında bilgi alın.",
     "parent": "/kalici-makyaj"
   },
   {
     "title": "Dudak Renklendirme",
     "slug": "/kalici-makyaj/dudak-renklendirme",
     "keyword": "dudak renklendirme uşak",
-    "description": "Dudak renklendirme uygulaması, iyileşme süreci ve sonuç beklentileri hakkında detaylar.",
+    "description": "Uşak’ta dudak tonu ve kontur görünümünü destekleyen dudak renklendirme uygulamasını keşfedin; renk seçimi, bakım ve randevu bilgisi alın.",
     "parent": "/kalici-makyaj"
   },
   {

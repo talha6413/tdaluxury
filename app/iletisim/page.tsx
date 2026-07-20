@@ -21,7 +21,7 @@ import { site, waUrl } from "@/lib/site";
 export async function generateMetadata() { return buildManagedMetadata("iletisim", {
   title: "İletişim | Uşak Merkez Güzellik Salonu",
   description:
-    "TDA Luxury Uşak iletişim bilgileri, WhatsApp randevu, çalışma saatleri, Instagram ve Google Haritalar yol tarifi bilgileri.",
+    "TDA Luxury Uşak adresi, çalışma saatleri ve yol tarifini görüntüleyin. Lazer epilasyon, cilt bakımı ve kalıcı makyaj randevusu için WhatsApp’tan ulaşın.",
   path: "/iletisim",
 }); }
 

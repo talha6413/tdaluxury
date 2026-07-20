@@ -25,7 +25,7 @@ export async function generateMetadata() { return buildManagedMetadata("ana-sayf
   title:
     "Uşak Güzellik Salonu | Lazer Epilasyon, Cilt Bakımı | TDA Luxury",
   description:
-    "TDA Luxury Uşak'ta lazer epilasyon, cilt bakımı, kalıcı makyaj, bölgesel incelme, kaş-kirpik ve tırnak hizmetleri sunan premium güzellik salonudur.",
+    "Uşak TDA Luxury’de lazer epilasyon, profesyonel cilt bakımı ve kalıcı makyaj hizmetlerini keşfedin. Kişiye özel planlama ve randevu için bize ulaşın.",
   path: "/",
   image: "/og/home.jpg",
 }); }

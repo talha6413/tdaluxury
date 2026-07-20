@@ -4,7 +4,7 @@ import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "Uşak Cilt Bakımı ve Cilt Analizi | TDA Luxury",
-  description: "Uşak cilt bakımı: cilt analizi, nem bakımı, akneye eğilimli cilt bakımı, leke görünümü ve anti-aging uygulamaları. TDA Luxury Uşak Merkez.",
+  description: "Uşak’ta cilt analizi, Hydrafacial, akne, leke ve anti-aging bakım seçeneklerini keşfedin. Cildinize özel bakım planı ve randevu için bilgi alın.",
   path: "/cilt-bakimi",
   image: "/og/home.jpg",
 });
