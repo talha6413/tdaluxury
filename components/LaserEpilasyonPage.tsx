@@ -33,7 +33,7 @@ export default function LaserEpilasyonPage() {
       <Nav />
       <main className="laser-page">
         <section className="laser-hero">
-          <Image src="/images/services-premium/lazer-epilasyon.webp" alt="Uşak lazer epilasyon uygulaması" fill priority sizes="100vw" className="laser-hero-image" />
+          <Image src="/images/real/salon-03.webp" alt="TDA Luxury Uşak lazer epilasyon salonu" fill priority sizes="100vw" className="laser-hero-image" />
           <div className="laser-hero-overlay" />
           <div className="container laser-hero-content">
             <nav className="breadcrumb laser-breadcrumb" aria-label="Sayfa yolu"><Link href="/">Ana Sayfa</Link><span>/</span><Link href="/hizmetler">Hizmetler</Link><span>/</span><span>Lazer Epilasyon</span></nav>
@@ -115,7 +115,7 @@ export default function LaserEpilasyonPage() {
         </section>
 
         <section className="laser-areas-section">
-          <div className="container"><p className="section-label">UYGULAMA BÖLGELERİ</p><h2>Kadın ve Erkek Lazer Epilasyon Seçenekleri</h2><div className="laser-area-grid">{areas.map(area=><div key={area}>{area}<span>→</span></div>)}</div><div className="laser-link-row"><Link href="/lazer-epilasyon/kadin-lazer-epilasyon">Kadın lazer epilasyon rehberi</Link><Link href="/lazer-epilasyon/erkek-lazer-epilasyon">Erkek lazer epilasyon rehberi</Link><Link href="/lazer-epilasyon/tum-vucut-lazer-epilasyon">Tüm vücut lazer</Link></div></div>
+          <div className="container"><p className="section-label">UYGULAMA BÖLGELERİ</p><h2>Kadın ve Erkek Lazer Epilasyon Seçenekleri</h2><div className="laser-area-grid">{areas.map(area=><div key={area}>{area}<span>→</span></div>)}</div><div className="laser-link-row"><Link href="/lazer-epilasyon/kadin-lazer-epilasyon">Kadın lazer epilasyon rehberi</Link><Link href="/lazer-epilasyon/erkek-lazer-epilasyon">Erkek lazer epilasyon rehberi</Link><Link href="/lazer-epilasyon/tum-vucut-lazer-epilasyon">Tüm vücut lazer</Link><Link href="/lazer-epilasyon/yuz-lazer-epilasyon">Yüz lazer epilasyon</Link></div></div>
         </section>
 
         <section className="section-light laser-faq-section">

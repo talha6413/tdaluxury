@@ -7,11 +7,11 @@ import { buildManagedMetadata } from "@/lib/seo";
 import { getManagedBlogPosts } from "@/lib/managed-content";
 
 export async function generateMetadata() { return buildManagedMetadata("blog", {
-  title: "Güzellik Blogu | Uşak Lazer Epilasyon ve Cilt Bakımı | TDA Luxury",
+  title: "Uşak Güzellik Blogu | Lazer ve Cilt Bakımı | TDA Luxury",
   description:
     "Lazer epilasyon, cilt bakımı, kalıcı makyaj, kaş-kirpik ve bölgesel incelme üzerine güncel içerikler ve uzman ipuçları.",
   path: "/blog",
-  image: "/images/services-premium/cilt-bakimi.webp",
+  image: "/images/real/salon-06.webp",
 }); }
 
 export const revalidate = 60;

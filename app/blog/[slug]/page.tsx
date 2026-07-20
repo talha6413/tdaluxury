@@ -37,7 +37,7 @@ export async function generateMetadata({
 
   return {
     ...buildMetadata({
-      title: `${post.title} | TDA Luxury Blog`,
+      title: `${post.title} | TDA Luxury`,
       description: post.excerpt,
       path: `/blog/${post.slug}`,
       image: post.image,

@@ -10,7 +10,7 @@ export async function generateMetadata() { return buildManagedMetadata("hakkimiz
   description:
     "TDA Luxury’nin hizmet anlayışını, uzman yaklaşımını, hijyen standartlarını ve Uşak’taki premium salon deneyimini keşfedin.",
   path: "/hakkimizda",
-  image: "/images/services-premium/services-hero.webp",
+  image: "/images/real/salon-03.webp",
 }); }
 
 const values = [
@@ -27,7 +27,7 @@ export default function Page() {
       <main>
         <section className="about-premium-hero">
           <Image
-            src="/images/services-premium/services-hero.webp"
+            src="/images/real/salon-03.webp"
             alt="TDA Luxury premium güzellik salonu atmosferi"
             fill
             priority
@@ -51,7 +51,7 @@ export default function Page() {
         <section className="about-story-section">
           <div className="container about-story-grid">
             <div className="about-story-visual">
-              <Image src="/images/salon-lounge.svg" alt="TDA Luxury salon içi premium alan" fill sizes="(max-width: 900px) 100vw, 50vw" className="about-story-image" />
+              <Image src="/images/real/salon-04.webp" alt="TDA Luxury Uşak gerçek salon iç mekânı" fill sizes="(max-width: 900px) 100vw, 50vw" className="about-story-image" />
               <div className="about-story-badge"><strong>TDA</strong><span>LUXURY</span></div>
             </div>
             <div className="about-story-copy">

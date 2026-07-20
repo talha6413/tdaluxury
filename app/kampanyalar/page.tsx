@@ -18,21 +18,21 @@ const campaigns = [
     title: "Lazer Epilasyon Danışmanlığı",
     eyebrow: "ÜCRETSİZ ÖN GÖRÜŞME",
     description: "Cilt ve kıl yapınıza göre kişisel seans planınızı uzman ekibimizle birlikte oluşturun.",
-    image: "/images/services-premium/lazer-epilasyon.webp",
+    image: "/images/real/salon-03.webp",
     href: "/lazer-epilasyon",
   },
   {
     title: "Cilt Bakımı Analiz Paketi",
     eyebrow: "KİŞİYE ÖZEL PLANLAMA",
     description: "Cildinizin ihtiyacını belirleyen analiz ve bakım önerisiyle doğru rutine başlayın.",
-    image: "/images/services-premium/cilt-bakimi.webp",
+    image: "/images/real/salon-06.webp",
     href: "/cilt-bakimi",
   },
   {
     title: "Bölgesel Bakım Programı",
     eyebrow: "DÖNEMSEL AVANTAJ",
     description: "G5 ve bölgesel incelme uygulamalarında ihtiyacınıza özel program seçeneklerini öğrenin.",
-    image: "/images/services-premium/bolgesel-incelme.webp",
+    image: "/images/real/salon-04.webp",
     href: "/bolgesel-incelme",
   },
 ];
@@ -46,7 +46,7 @@ export default async function CampaignsPage() {
       <Nav />
       <main className="campaign-page">
         <section className="campaign-hero">
-          <Image src="/images/services-premium/services-hero.webp" alt="TDA Luxury kampanyalar" fill priority sizes="100vw" quality={80} className="campaign-hero-image" />
+          <Image src="/images/real/salon-03.webp" alt="TDA Luxury Uşak kampanyaları" fill priority sizes="100vw" quality={80} className="campaign-hero-image" />
           <div className="campaign-hero-overlay" />
           <div className="container campaign-hero-inner">
             <p className="campaign-kicker"><BadgePercent size={18} /> TDA LUXURY AVANTAJLARI</p>

@@ -39,7 +39,7 @@ export default function CiltBakimiPage() {
 
       <main className="laser-page">
         <section className="laser-hero">
-          <Image src="/images/services-premium/cilt-bakimi.webp" alt="Uşak cilt bakımı ve cilt analizi" fill priority sizes="100vw" className="laser-hero-image" />
+          <Image src="/images/real/salon-06.webp" alt="TDA Luxury Uşak cilt bakımı salonu" fill priority sizes="100vw" className="laser-hero-image" />
           <div className="laser-hero-overlay" />
           <div className="container laser-hero-content">
             <nav className="breadcrumb laser-breadcrumb" aria-label="Sayfa yolu"><Link href="/">Ana Sayfa</Link><span>/</span><Link href="/hizmetler">Hizmetler</Link><span>/</span><span>Cilt Bakımı</span></nav>
@@ -89,7 +89,7 @@ export default function CiltBakimiPage() {
               <h3>Planlamayı etkileyen başlıca faktörler</h3>
               <ul className="laser-check-list"><li>Cilt tipi ve bariyer durumu</li><li>Aktif ürün ve ilaç kullanımı</li><li>Akne ve hassasiyet düzeyi</li><li>Güneş maruziyeti</li><li>Bakım hedefi</li><li>Ev rutini ve düzenlilik</li></ul>
             </article>
-            <div className="laser-image-panel"><Image src="/images/services-premium/cilt-analizi.webp" alt="TDA Luxury Uşak cilt analizi" fill sizes="(max-width: 900px) 100vw, 42vw" /></div>
+            <div className="laser-image-panel"><Image src="/images/real/salon-05.webp" alt="TDA Luxury danışmanlık ve cilt analizi alanı" fill sizes="(max-width: 900px) 100vw, 42vw" /></div>
           </div>
         </section>
 
@@ -116,7 +116,7 @@ export default function CiltBakimiPage() {
         </section>
 
         <section className="laser-areas-section">
-          <div className="container"><p className="section-label">BAKIM SEÇENEKLERİ</p><h2>Cilt İhtiyacınıza Göre Uygulamalar</h2><div className="laser-area-grid">{treatments.map(item=><div key={item}>{item}<span>→</span></div>)}</div><div className="laser-link-row"><Link href="/cilt-bakimi/akne-bakimi">Akne bakımı</Link><Link href="/cilt-bakimi/leke-bakimi">Leke bakımı</Link><Link href="/cilt-bakimi/anti-aging">Anti-aging bakım</Link><Link href="/cilt-bakimi/erkek-cilt-bakimi">Erkek cilt bakımı</Link></div></div>
+          <div className="container"><p className="section-label">BAKIM SEÇENEKLERİ</p><h2>Cilt İhtiyacınıza Göre Uygulamalar</h2><div className="laser-area-grid">{treatments.map(item=><div key={item}>{item}<span>→</span></div>)}</div><div className="laser-link-row"><Link href="/cilt-bakimi/hydrafacial">Hydrafacial</Link><Link href="/cilt-bakimi/cilt-analizi">Cilt analizi</Link><Link href="/cilt-bakimi/akne-bakimi">Akne bakımı</Link><Link href="/cilt-bakimi/leke-bakimi">Leke bakımı</Link><Link href="/cilt-bakimi/anti-aging">Anti-aging bakım</Link><Link href="/cilt-bakimi/erkek-cilt-bakimi">Erkek cilt bakımı</Link></div></div>
         </section>
 
         <section className="section-light laser-faq-section">

@@ -8,7 +8,9 @@ export function buildMetadata({ title, description, path, image = "/og/default.j
   const ogImage = new URL(image, site.url).toString();
   return {
     metadataBase: new URL(site.url),
-    title,
+    // Page titles already include the brand where appropriate. Marking them as
+    // absolute prevents the root layout template from appending it a second time.
+    title: { absolute: title },
     description,
     alternates: { canonical },
     robots: noindex ? { index: false, follow: false } : { index: true, follow: true },

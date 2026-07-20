@@ -27,8 +27,8 @@ export default function Hero() {
   return (
     <section className="v20-hero" aria-labelledby="hero-title">
       <Image
-        src="/images/hero-lounge.svg"
-        alt="TDA Luxury premium güzellik salonu"
+        src="/images/real/salon-03.webp"
+        alt="TDA Luxury Uşak güzellik salonu iç mekânı"
         fill
         priority
         fetchPriority="high"

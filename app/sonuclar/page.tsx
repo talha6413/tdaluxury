@@ -56,8 +56,7 @@ export default async function ResultsPage() {
             <p className="results-v20-kicker"><Sparkles size={17} /> ÖNCESİ &amp; SONRASI</p>
             <h1>Sonuçları Şeffaf ve Gerçekçi Şekilde İnceleyin</h1>
             <p>
-              Lazer epilasyon, cilt bakımı, kalıcı makyaj ve bölgesel bakım uygulamalarında
-              seçili karşılaştırmaları kategori bazında keşfedin.
+              Açık onayla yayımlanan gerçek danışan sonucunu şeffaf biçimde inceleyin.
             </p>
             <div className="results-v20-hero-actions">
               <a className="btn-gold" href="https://wa.me/905366651064" target="_blank" rel="noreferrer">
@@ -78,7 +77,7 @@ export default async function ResultsPage() {
                 <h2>Karşılaştırma Çizgisini Sürükleyin</h2>
               </div>
               <p>
-                Her bakım süreci kişiye özeldir. Bu bölüm bilgilendirme amacıyla hazırlanır;
+                Her uygulama süreci kişiye özeldir. Bu bölüm bilgilendirme amacıyla hazırlanır;
                 kesin sonuç veya standart seans garantisi sunmaz.
               </p>
             </div>

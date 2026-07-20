@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { blogPosts as fallbackBlogPosts, type BlogPost } from "@/data/blog";
+import { getServiceImage } from "@/lib/service-media";
 
 export type ManagedCampaign = { id?: string; title: string; eyebrow: string; description: string; image: string; href: string };
 export type ManagedGalleryItem = { id?: string; src: string; title: string; category: string; alt: string };
@@ -24,12 +25,19 @@ function serverClient() {
   return url && key ? createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } }) : null;
 }
 
+const legacyPlaceholderPattern = /^\/images\/(?:services-premium\/|result-(?:lazer|leg|belly)\.svg|hero-lounge\.svg|salon-lounge\.svg)/;
+
+function realImage(value: unknown, fallback: string) {
+  const image = String(value || "").trim();
+  return !image || legacyPlaceholderPattern.test(image) ? fallback : image;
+}
+
 export async function getManagedCampaigns(fallback: ManagedCampaign[]) {
   const client = serverClient();
   if (!client) return fallback;
   const { data, error } = await client.from("campaigns").select("*").eq("published", true).order("sort_order");
   if (error || !data?.length) return fallback;
-  return data.map((row) => ({ id: row.id, title: row.title, eyebrow: row.eyebrow, description: row.description, image: row.image_url, href: row.href }));
+  return data.map((row) => ({ id: row.id, title: row.title, eyebrow: row.eyebrow, description: row.description, image: realImage(row.image_url, "/images/real/salon-03.webp"), href: row.href }));
 }
 
 export async function getManagedGallery(fallback: ManagedGalleryItem[]) {
@@ -37,7 +45,7 @@ export async function getManagedGallery(fallback: ManagedGalleryItem[]) {
   if (!client) return fallback;
   const { data, error } = await client.from("gallery_items").select("*").eq("published", true).order("sort_order");
   if (error || !data?.length) return fallback;
-  return data.map((row) => ({ id: row.id, src: row.image_url, title: row.title, category: row.category, alt: row.alt_text || row.title }));
+  return data.map((row) => ({ id: row.id, src: realImage(row.image_url, "/images/real/salon-03.webp"), title: row.title, category: row.category, alt: row.alt_text || row.title }));
 }
 
 export async function getManagedFeaturedServices(fallback: ManagedService[]) {
@@ -48,7 +56,7 @@ export async function getManagedFeaturedServices(fallback: ManagedService[]) {
   return data.map((row) => ({
     id: row.id, title: row.title, subtitle: row.short_description || row.description,
     meta: row.category, duration: row.duration, price: row.price_text, href: row.slug,
-    image: row.image_url, imagePosition: row.image_position || "center center",
+    image: realImage(row.image_url, getServiceImage(String(row.slug))), imagePosition: row.image_position || "center center",
   }));
 }
 
@@ -74,7 +82,7 @@ export async function getManagedResults(fallback: ManagedResult[]) {
     id: row.id,
     title: String(row.title),
     category: String(row.category || "Sonuç"),
-    image: `url(${String(row.before_image_url || row.after_image_url || "/images/result-lazer.svg")})`,
+    image: `url(${realImage(row.before_image_url || row.after_image_url, "/images/real/dudak-oncesi-sonrasi.webp")})`,
     description: String(row.description || ""),
     note: String(row.disclaimer || "Sonuçlar kişiden kişiye değişebilir."),
   }));
@@ -88,7 +96,7 @@ export async function getManagedPageContent(pageKey: string) {
   return {
     title: String(data.title), pageKey: String(data.page_key), eyebrow: String(data.eyebrow || ""),
     description: String(data.description || ""), buttonText: String(data.button_text || ""),
-    buttonUrl: String(data.button_url || ""), image: String(data.image_url || ""),
+    buttonUrl: String(data.button_url || ""), image: realImage(data.image_url, "/images/real/salon-03.webp"),
     imagePosition: String(data.image_position || "center center"), seoTitle: String(data.seo_title || ""),
     seoDescription: String(data.seo_description || ""),
   } satisfies ManagedPageContent;
@@ -116,7 +124,7 @@ function mapBlogRow(row: Record<string, unknown>): BlogPost {
   return {
     slug: String(row.slug), title: String(row.title), excerpt: String(row.excerpt ?? ""),
     category: String(row.category ?? "Güzellik"), readTime: String(row.read_time ?? "5 dk"),
-    image: String(row.image_url || "/images/services-premium/cilt-bakimi.webp"),
+    image: realImage(row.image_url, "/images/real/salon-03.webp"),
     intro: String(row.intro ?? ""), datePublished: publishedAt,
     dateModified: String(row.updated_at ?? publishedAt).slice(0, 10),
     keywords: Array.isArray(row.keywords) ? row.keywords.map(String) : [],

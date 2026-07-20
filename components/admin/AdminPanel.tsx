@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element -- Admin previews accept dynamic CMS and local blob URLs. */
+
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import {
   BookOpen, Check, ChevronRight, CircleUserRound, ExternalLink, Eye, FileText,

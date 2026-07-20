@@ -12,28 +12,21 @@ export async function generateMetadata() { return buildManagedMetadata("galeri",
   description:
     "TDA Luxury Uşak salon atmosferini, uygulama alanlarını, lazer epilasyon, cilt bakımı, kalıcı makyaj ve seçili sonuç görsellerini keşfedin.",
   path: "/galeri",
-  image: "/images/services-premium/services-hero.webp",
+  image: "/images/real/salon-03.webp",
 }); }
 
 const gallery = [
-  { src: "/images/services-premium/services-hero.webp", title: "Premium Salon Atmosferi", category: "Salon", alt: "TDA Luxury Uşak premium salon atmosferi" },
-  { src: "/images/services-premium/lazer-epilasyon.webp", title: "Lazer Epilasyon Uygulaması", category: "Lazer", alt: "TDA Luxury Uşak lazer epilasyon uygulaması" },
-  { src: "/images/services-premium/cilt-bakimi.webp", title: "Profesyonel Cilt Bakımı", category: "Cilt", alt: "TDA Luxury Uşak profesyonel cilt bakımı" },
-  { src: "/images/services-premium/hydrafacial.webp", title: "Hydrafacial Bakımı", category: "Cilt", alt: "TDA Luxury Uşak Hydrafacial cilt bakımı" },
-  { src: "/images/services-premium/bolgesel-incelme.webp", title: "Bölgesel İncelme", category: "Vücut", alt: "TDA Luxury Uşak bölgesel incelme uygulaması" },
-  { src: "/images/services-premium/kirpik-lifting.webp", title: "Kirpik Lifting", category: "Kaş & Kirpik", alt: "TDA Luxury Uşak kirpik lifting uygulaması" },
-  { src: "/images/services-premium/g5-masaji.webp", title: "G5 Masajı", category: "Vücut", alt: "TDA Luxury Uşak G5 masajı uygulaması" },
-  { src: "/images/services-premium/erkek-lazer.webp", title: "Erkek Lazer Epilasyon", category: "Lazer", alt: "TDA Luxury Uşak erkek lazer epilasyon" },
-  { src: "/images/services-premium/dudak-renklendirme.webp", title: "Dudak Renklendirme", category: "Kalıcı Makyaj", alt: "TDA Luxury Uşak dudak renklendirme uygulaması" },
-  { src: "/images/services-premium/microblading.webp", title: "Microblading", category: "Kalıcı Makyaj", alt: "TDA Luxury Uşak microblading uygulaması" },
-  { src: "/images/services-premium/ipek-kirpik.webp", title: "İpek Kirpik", category: "Kaş & Kirpik", alt: "TDA Luxury Uşak ipek kirpik uygulaması" },
-  { src: "/images/services-premium/akne-bakimi.webp", title: "Akneye Eğilimli Cilt Bakımı", category: "Cilt", alt: "TDA Luxury Uşak akneye eğilimli cilt bakımı" },
+  { src: "/images/real/salon-01.webp", title: "TDA Luxury Dış Cephe", category: "Salon", alt: "TDA Luxury Uşak güzellik salonu dış cephesi" },
+  { src: "/images/real/salon-02.webp", title: "TDA Luxury Giriş", category: "Salon", alt: "TDA Luxury Uşak salon girişi" },
+  { src: "/images/real/salon-03.webp", title: "Salon Atmosferi", category: "Salon", alt: "TDA Luxury Uşak salon iç mekânı" },
+  { src: "/images/real/salon-04.webp", title: "Uygulama Koridoru", category: "Salon", alt: "TDA Luxury Uşak uygulama odaları koridoru" },
+  { src: "/images/real/salon-05.webp", title: "Danışmanlık Alanı", category: "Salon", alt: "TDA Luxury Uşak danışmanlık alanı" },
+  { src: "/images/real/salon-06.webp", title: "Karşılama Alanı", category: "Salon", alt: "TDA Luxury Uşak karşılama ve danışmanlık alanı" },
+  { src: "/images/real/dudak-oncesi-sonrasi.webp", title: "Dudak Renklendirme", category: "Kalıcı Makyaj", alt: "TDA Luxury gerçek danışan dudak renklendirme öncesi sonrası" },
 ];
 
 const results = [
-  { src: "/images/result-lazer.svg", title: "Lazer Epilasyon Sonucu" },
-  { src: "/images/result-belly.svg", title: "Bölgesel Bakım Sonucu" },
-  { src: "/images/result-leg.svg", title: "Bacak Bakımı Sonucu" },
+  { src: "/images/real/dudak-oncesi-sonrasi.webp", title: "Gerçek danışan dudak renklendirme sonucu" },
 ];
 
 const gallerySchema = {
@@ -68,7 +61,7 @@ export default async function GalleryPage() {
       <main className="gallery-premium-page gallery-v20-page">
         <section className="gallery-premium-hero gallery-v20-hero">
           <Image
-            src="/images/services-premium/services-hero.webp"
+            src="/images/real/salon-03.webp"
             alt="TDA Luxury Uşak salon galerisi"
             fill
             priority

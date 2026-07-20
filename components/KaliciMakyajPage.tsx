@@ -116,7 +116,7 @@ export default function KaliciMakyajPage() {
         </section>
 
         <section className="laser-areas-section">
-          <div className="container"><p className="section-label">KALICI MAKYAJ HİZMETLERİ</p><h2>Uygulama Seçenekleri</h2><div className="laser-area-grid">{services.map(item=><div key={item}>{item}<span>→</span></div>)}</div><div className="laser-link-row"><Link href="/kalici-makyaj/microblading">Microblading</Link><Link href="/kalici-makyaj/pudralama-kas">Pudralama kaş</Link><Link href="/kalici-makyaj/dipliner">Dipliner</Link><Link href="/kalici-makyaj/dudak-renklendirme">Dudak renklendirme</Link></div></div>
+          <div className="container"><p className="section-label">KALICI MAKYAJ HİZMETLERİ</p><h2>Uygulama Seçenekleri</h2><div className="laser-area-grid">{services.map(item=><div key={item}>{item}<span>→</span></div>)}</div><div className="laser-link-row"><Link href="/kalici-makyaj/microblading">Microblading</Link><Link href="/kalici-makyaj/pudralama-kas">Pudralama kaş</Link><Link href="/kalici-makyaj/dipliner">Dipliner</Link><Link href="/kalici-makyaj/eyeliner">Eyeliner</Link><Link href="/kalici-makyaj/dudak-renklendirme">Dudak renklendirme</Link></div></div>
         </section>
 
         <section className="section-light laser-faq-section">

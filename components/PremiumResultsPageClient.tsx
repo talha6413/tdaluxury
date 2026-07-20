@@ -16,8 +16,6 @@ type ResultItem = {
   note?: string;
 };
 
-const filters: Category[] = ["Tümü", "Lazer", "Kalıcı Makyaj", "Cilt Bakımı", "Vücut"];
-
 export const fallbackPageResults: ResultItem[] = [
   {
     title: "Dudak Renklendirme",
@@ -26,45 +24,11 @@ export const fallbackPageResults: ResultItem[] = [
     description: "Dudak tonu ve formu için kişiye özel planlanan uygulama görünümü.",
     note: "Gerçek danışan görseli",
   },
-  {
-    title: "Lazer Epilasyon",
-    category: "Lazer",
-    image: "url(/images/result-lazer.svg)",
-    description: "Seans planına ve kişisel özelliklere göre değişebilen bakım görünümü.",
-    note: "Temsilî karşılaştırma",
-  },
-  {
-    title: "Bacak Lazer Epilasyon",
-    category: "Lazer",
-    image: "url(/images/result-leg.svg)",
-    description: "Bölge, kıl yapısı ve seans düzenine bağlı olarak farklılaşan sonuç görünümü.",
-    note: "Temsilî karşılaştırma",
-  },
-  {
-    title: "Bölgesel Bakım",
-    category: "Vücut",
-    image: "url(/images/result-belly.svg)",
-    description: "Vücut yapısı, yaşam alışkanlıkları ve uygulama planına göre değişen görünüm.",
-    note: "Temsilî karşılaştırma",
-  },
-  {
-    title: "Cilt Görünümü",
-    category: "Cilt Bakımı",
-    image: "url(/images/result-leg.svg)",
-    description: "Nem, doku ve canlılık görünümüne yönelik bakım sürecinin örnek karşılaştırması.",
-    note: "Temsilî karşılaştırma",
-  },
-  {
-    title: "Bakım Sonrası Görünüm",
-    category: "Cilt Bakımı",
-    image: "url(/images/result-belly.svg)",
-    description: "Cilt ihtiyacına göre planlanan bakımın örnek görünüm karşılaştırması.",
-    note: "Temsilî karşılaştırma",
-  },
 ];
 
 export default function PremiumResultsPageClient({ results = fallbackPageResults }: { results?: ManagedResult[] }) {
-  const [active, setActive] = useState<Category>("Tümü");
+  const filters = useMemo(() => ["Tümü", ...new Set(results.map((item) => item.category))], [results]);
+  const [active, setActive] = useState("Tümü");
 
   const visibleResults = useMemo(
     () => (active === "Tümü" ? results : results.filter((item) => item.category === active)),
@@ -110,7 +74,7 @@ export default function PremiumResultsPageClient({ results = fallbackPageResults
           <strong>Şeffaf bilgilendirme</strong>
           <p>
             Sonuçlar kişiden kişiye değişebilir. Gerçek danışan görselleri yalnızca açık onayla yayınlanır.
-            Temsilî görseller sonuç garantisi anlamına gelmez.
+            Yayımlanan görseller sonuç garantisi anlamına gelmez.
           </p>
         </div>
       </div>

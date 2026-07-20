@@ -12,37 +12,11 @@ export const fallbackResults: ManagedResult[] = [
     category: "Kalıcı Makyaj",
     image: "url(/images/real/dudak-oncesi-sonrasi.webp)",
   },
-  {
-    title: "Lazer epilasyon", description: "Kişisel özelliklere göre değişebilen uygulama görünümü.",
-    category: "Lazer",
-    image: "url(/images/result-lazer.svg)",
-  },
-  {
-    title: "Bacak lazer epilasyon", description: "Bacak lazer epilasyon karşılaştırması.",
-    category: "Lazer",
-    image: "url(/images/result-leg.svg)",
-  },
-  {
-    title: "Bölgesel bakım", description: "Bölgesel bakım uygulama görünümü.",
-    category: "Vücut",
-    image: "url(/images/result-belly.svg)",
-  },
-  {
-    title: "Cilt görünümü", description: "Cilt bakımı sonrası görünüm.",
-    category: "Cilt Bakımı",
-    image: "url(/images/result-leg.svg)",
-  },
-  {
-    title: "Bakım sonrası görünüm", description: "Bakım sonrası örnek görünüm.",
-    category: "Cilt Bakımı",
-    image: "url(/images/result-belly.svg)",
-  },
 ];
 
-const filters = ["Tümü", "Lazer", "Kalıcı Makyaj", "Cilt Bakımı", "Vücut"] as const;
-
 export default function PremiumResultsGallery({ items = fallbackResults }: { items?: ManagedResult[] }) {
-  const [active, setActive] = useState<(typeof filters)[number]>("Tümü");
+  const filters = useMemo(() => ["Tümü", ...new Set(items.map((item) => item.category))], [items]);
+  const [active, setActive] = useState("Tümü");
 
   const visibleItems = useMemo(
     () => (active === "Tümü" ? items : items.filter((item) => item.category === active)),

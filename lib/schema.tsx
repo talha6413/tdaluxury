@@ -56,8 +56,13 @@ export function LocalBusinessSchema() {
           "@type": name === "Uşak Merkez" ? "City" : "AdministrativeArea",
           name,
         })),
-        sameAs: [site.instagram],
+        sameAs: [site.instagram, site.mapsUrl],
         hasMap: site.mapsUrl,
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: 38.6415326,
+          longitude: 29.3987024,
+        },
         priceRange: "₺₺₺",
         knowsAbout: [
           "Lazer epilasyon",
