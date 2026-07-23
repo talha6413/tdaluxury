@@ -1,19 +1,32 @@
-TDA Luxury Bundle Analyzer Patch
+TDA Luxury — Final Hizmetler Sayfası Paketi
 
-1) ZIP içindeki package.json ve next.config.ts dosyalarını proje kök klasöründeki dosyaların üzerine kopyalayın.
+Bu paket son gönderdiğiniz görseldeki düzene göre hazırlanmıştır.
 
-2) Terminalde:
-   npm install
+İçerik:
+- app/hizmetler/page.tsx
+- components/ServicesCatalog.tsx
+- components/ServicesCatalog.module.css
+- public/images/services-premium/*.webp
 
-3) Analiz raporunu açmak için:
-   npm run analyze
+Öne çıkan hizmetler:
+1. Lazer Epilasyon
+2. Protez Tırnak
+3. Cilt Bakımı
+4. Kalıcı Makyaj
 
-Windows'ta da çalışır. Tarayıcıda bundle analyzer raporu otomatik açılır.
+Sayfa yapısı:
+- Üstte büyük öne çıkan hizmet alanı
+- Küçük görsel seçimleri
+- Altı ana kategori kartı
+- İğneli Epilasyon ve VIP Cilt Bakımı yatay kartları
+- En altta hızlı randevu, WhatsApp ve telefon şeridi
+- Mobil ve masaüstü uyumu
 
-Normal geliştirme:
-   npm run dev
+Kurulum:
+1. ZIP dosyasını tdaluxury proje klasörüne çıkarın.
+2. Mevcut dosyaların üzerine yazılmasına izin verin.
+3. VS Code terminalinde çalıştırın:
 
-Normal production build:
-   npm run build
-
-Not: npm install sonrasında package-lock.json otomatik güncellenir.
+git add .
+git commit -m "Hizmetler sayfasını final premium tasarıma geçir"
+git push origin main
