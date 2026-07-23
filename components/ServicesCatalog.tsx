@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Service } from "@/data/services";
+import { getServiceImage } from "@/lib/service-media";
 import styles from "./ServicesCatalog.module.css";
 
 const featuredServices = [
@@ -85,12 +86,32 @@ const categoryCards = [
   },
 ];
 
+const parentOrder = [
+  "/lazer-epilasyon",
+  "/cilt-bakimi",
+  "/kalici-makyaj",
+  "/kas-kirpik",
+  "/tirnak",
+  "/bolgesel-incelme",
+];
+
 export default function ServicesCatalog({ services }: { services: Service[] }) {
   const [activeFeatured, setActiveFeatured] = useState(1);
   const featured = featuredServices[activeFeatured];
 
   const validServiceSlugs = useMemo(
     () => new Set(services.map((service) => service.slug)),
+    [services]
+  );
+
+  const groupedSubServices = useMemo(
+    () =>
+      parentOrder
+        .map((parentSlug) => ({
+          parent: services.find((service) => service.slug === parentSlug),
+          children: services.filter((service) => service.parent === parentSlug),
+        }))
+        .filter((group) => group.parent && group.children.length > 0),
     [services]
   );
 
@@ -200,6 +221,56 @@ export default function ServicesCatalog({ services }: { services: Service[] }) {
                   HİZMETLERİ GÖR <b>→</b>
                 </span>
               </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.subServicesSection}>
+        <div className={styles.container}>
+          <p className={styles.subKicker}>DETAYLI UYGULAMALAR</p>
+          <h2 className={styles.subTitle}>Alt Hizmetlerimiz</h2>
+          <p className={styles.subLead}>
+            Her uygulamayı kendi görseliyle inceleyin ve doğrudan detay sayfasına geçin.
+          </p>
+
+          <div className={styles.subGroups}>
+            {groupedSubServices.map(({ parent, children }) => (
+              <section key={parent!.slug} className={styles.subGroup}>
+                <div className={styles.subGroupHead}>
+                  <div>
+                    <span>{children.length} HİZMET</span>
+                    <h3>{parent!.title}</h3>
+                  </div>
+                  <Link href={parent!.slug}>TÜMÜNÜ GÖR →</Link>
+                </div>
+
+                <div className={styles.subServiceGrid}>
+                  {children.map((service) => (
+                    <Link
+                      key={service.slug}
+                      href={service.slug}
+                      className={styles.subServiceCard}
+                    >
+                      <div className={styles.subServiceImage}>
+                        <Image
+                          src={getServiceImage(service.slug)}
+                          alt={service.title}
+                          fill
+                          sizes="(max-width: 650px) 100vw, (max-width: 1000px) 50vw, 25vw"
+                        />
+                        <div className={styles.subServiceShade} />
+                      </div>
+                      <div className={styles.subServiceContent}>
+                        <span>PROFESYONEL UYGULAMA</span>
+                        <h4>{service.title}</h4>
+                        <p>{service.description}</p>
+                        <b>DETAYLI BİLGİ →</b>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
             ))}
           </div>
         </div>
