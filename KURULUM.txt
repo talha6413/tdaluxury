@@ -1,0 +1,14 @@
+TDA Luxury - Protez Tırnak 404 Düzeltmesi
+
+1. ZIP dosyasını bilgisayarında aç.
+2. İçindeki "app" klasörünü TDA Luxury proje ana klasörüne kopyala.
+3. Dosyaları birleştir/değiştir sorusu çıkarsa "Birleştir" seç.
+4. GitHub'a yükleyip commit et.
+5. Vercel otomatik yeniden yayınlayacaktır.
+
+Bu yama:
+/protez-tirnak adresini kalıcı olarak /tirnak/protez-tirnak adresine yönlendirir.
+
+Ek kontrol:
+Menü veya butonlarda href="/protez-tirnak" varsa doğrudan
+href="/tirnak/protez-tirnak" olarak değiştirmek daha doğrudur.

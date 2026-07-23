@@ -1,0 +1,474 @@
+From b9130e2c059dd257c9b61c0580441faa8d605598 Mon Sep 17 00:00:00 2001
+From: Codex <codex@openai.com>
+Date: Sun, 19 Jul 2026 13:34:14 +0000
+Subject: [PATCH] Tam kapsamli icerik yonetim modullerini ekle
+
+---
+ app/globals.css                 |   5 +-
+ app/sss/page.tsx                |  24 +++----
+ components/ServicesHome.tsx     |  27 +++----
+ components/admin/AdminPanel.tsx |  56 ++++++++++++---
+ lib/managed-content.ts          |  27 +++++++
+ supabase/schema.sql             | 124 ++++++++++++++++++++++++++++++++
+ 6 files changed, 229 insertions(+), 34 deletions(-)
+
+diff --git a/app/globals.css b/app/globals.css
+index b9b2eec..04fd4b7 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1300,6 +1300,7 @@ main > .motion-reveal,
+ .stage19-service-card:hover{transform:translateY(-10px);box-shadow:0 34px 72px rgba(41,31,21,.26)}
+ .stage19-service-card:hover:after{border-color:rgba(217,170,85,.86);box-shadow:inset 0 0 0 1px rgba(217,170,85,.12)}
+ .stage19-service-image{position:absolute;inset:0;background:var(--service-image) center/cover no-repeat;filter:saturate(.88) contrast(1.02);transition:transform .8s cubic-bezier(.2,.75,.25,1),filter .45s ease}
++.stage19-service-image{background-position:var(--service-position,center center)}
+ .stage19-service-card:hover .stage19-service-image{transform:scale(1.075);filter:saturate(1.05) contrast(1.05)}
+ .stage19-service-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,4,4,.03) 0%,rgba(4,4,4,.14) 36%,rgba(4,4,4,.92) 84%,#080706 100%);transition:background .45s ease}
+ .stage19-service-card:hover .stage19-service-shade{background:linear-gradient(180deg,rgba(4,4,4,.02) 0%,rgba(4,4,4,.09) 30%,rgba(4,4,4,.94) 82%,#080706 100%)}
+@@ -1471,6 +1472,7 @@ main > .motion-reveal,
+ @media(max-width:1180px){.v20-hero-inner{grid-template-columns:1fr .56fr;gap:38px}.v20-title{font-size:68px}.v20-trust-card{padding:28px}.v20-trust-card h2{font-size:32px}}
+ @media(max-width:920px){.v20-hero{min-height:auto}.v20-hero-inner{min-height:auto;grid-template-columns:1fr;padding-top:145px;padding-bottom:120px}.v20-title{font-size:62px}.v20-trust-card{max-width:620px}.v20-hero-bg{object-position:62% center}}
+ @media(max-width:700px){.v20-hero-inner{padding-top:120px;padding-bottom:105px}.v20-kicker{font-size:10px;line-height:1.6;letter-spacing:.22em}.v20-title{font-size:46px;line-height:.98}.v20-lead{font-size:16px;line-height:1.65}.v20-actions{align-items:stretch;flex-direction:column}.v20-primary-btn,.v20-secondary-btn,.v20-actions .hero-video-btn{width:100%;min-height:56px}.v20-quick-links{gap:14px;font-size:12px}.v20-trust-card{padding:24px;border-radius:21px}.v20-trust-card h2{font-size:30px}.v20-scroll-cue{bottom:22px}.v20-hero-bg{object-position:68% center}.v20-hero-overlay{background:linear-gradient(90deg,rgba(4,4,4,.93),rgba(4,4,4,.65)),linear-gradient(180deg,rgba(0,0,0,.16),rgba(0,0,0,.62))}}
++@media(max-width:700px){.v20-hero-bg{object-position:center center}.laser-image-panel img,.gallery-premium-card img,.premium-gallery-tile img{object-position:center center}}
+ @media(prefers-reduced-motion:reduce){.v20-hero-bg,.v20-hero-copy,.v20-trust-card,.v20-scroll-cue span{animation:none!important}.v20-primary-btn,.v20-secondary-btn{transition:none}}
+ 
+ /* V20.3 — mobile polish: compact hero, safer navigation and thumb-friendly CTAs */
+@@ -1508,7 +1510,7 @@ main > .motion-reveal,
+   .v20-trust-list div{font-size:12px}
+   .v20-trust-bottom{margin-top:17px;padding-top:15px;font-size:11px}
+   .v20-scroll-cue{display:none}
+-  .v20-hero-bg{object-position:70% center;animation:none}
++  .v20-hero-bg{object-position:center center;animation:none}
+ 
+   .global-mobile-booking{left:8px;right:8px;bottom:max(8px,env(safe-area-inset-bottom));min-height:60px;border-radius:16px;grid-template-columns:.7fr 1.05fr 1.35fr}
+   .global-mobile-booking-item{min-height:60px;padding:0 8px;font-size:10.5px}
+@@ -1546,6 +1548,7 @@ main > .motion-reveal,
+ .admin-login{border-color:rgba(217,170,85,.2);background:rgba(20,19,17,.86);backdrop-filter:blur(20px)}.admin-login-brand{display:flex;align-items:flex-end;gap:12px}.admin-login-brand strong{color:#d9aa55;font-family:Georgia,serif;font-size:36px}.admin-login-brand span{padding-bottom:4px;color:rgba(255,255,255,.48);font-size:9px;font-weight:900;letter-spacing:.24em}.admin-login h1{font-size:35px}.admin-login>button{display:flex;align-items:center;justify-content:center;gap:8px}.admin-login>small{display:block;margin-top:20px;color:rgba(255,255,255,.32);font-size:10px;text-align:center}
+ @media(max-width:1050px){.admin-page{grid-template-columns:230px 1fr}.admin-content{padding:35px 28px}.admin-table-head,.admin-table-row{grid-template-columns:minmax(230px,1fr) 115px 90px}.admin-table-head span:nth-child(3),.admin-table-row time{display:none}.admin-dashboard-grid{grid-template-columns:1fr}.admin-stat-grid article{padding:19px}}
+ @media(max-width:760px){.admin-page{display:block}.admin-mobile-menu{position:fixed;z-index:45;top:14px;left:14px;display:grid;width:43px;height:43px;place-items:center;border:1px solid #dedee2;border-radius:10px;background:#fff;box-shadow:0 8px 25px rgba(0,0,0,.1)}.admin-sidebar{position:fixed;left:0;top:0;width:280px;height:100dvh;padding:24px 17px;transform:translateX(-105%);transition:.28s ease}.admin-sidebar.is-open{transform:translateX(0)}.admin-brand>button{display:flex!important}.admin-sidebar nav{display:grid;grid-template-columns:1fr}.admin-sidebar nav button{justify-content:flex-start;font-size:12px}.admin-sidebar-scrim{position:fixed;inset:0;z-index:40;border:0;background:rgba(0,0,0,.5)}.admin-content{padding:78px 14px 45px}.admin-header{align-items:flex-start;flex-direction:column}.admin-header h1{font-size:37px}.admin-header>button{width:100%}.admin-dashboard-header>div:last-child{width:100%}.admin-dashboard-header>div:last-child>*{flex:1}.admin-stat-grid{grid-template-columns:1fr}.admin-toolbar{align-items:stretch;flex-direction:column}.admin-toolbar>label{width:100%}.admin-toolbar>div{display:grid;grid-template-columns:repeat(3,1fr)}.admin-table-head{display:none}.admin-table-row{grid-template-columns:1fr auto;gap:12px;min-height:0;padding:16px}.admin-row-title{grid-column:1/-1}.admin-table-row time{display:none}.admin-status{grid-column:1}.admin-row-actions{grid-column:2}.admin-drawer>header,.admin-drawer form{padding-left:18px;padding-right:18px}.admin-drawer form>footer{padding:13px 18px}.admin-fields>section{padding:19px}.admin-login{padding:28px}.admin-login h1{font-size:31px}}
++.admin-fields select{width:100%;padding:12px 13px;border:1px solid #dddde2;border-radius:9px;background:#fafafa;color:#18181b;outline:none}.admin-fields select:focus{border-color:#b88a47;box-shadow:0 0 0 3px rgba(184,138,71,.1)}.admin-input-help,.admin-field-note{color:#8b8b93;font-size:10px;line-height:1.5}
+ 
+ /* ===== AŞAMA 20.2 — PREMIUM GALLERY ===== */
+ .gallery-v20-hero{min-height:790px}
+diff --git a/app/sss/page.tsx b/app/sss/page.tsx
+index 3063246..758a528 100644
+--- a/app/sss/page.tsx
++++ b/app/sss/page.tsx
+@@ -5,6 +5,7 @@ import Nav from "@/components/Nav";
+ import Footer from "@/components/Footer";
+ import { buildMetadata } from "@/lib/seo";
+ import { JsonLd } from "@/lib/schema";
++import { getManagedFaqGroups, type ManagedFaqGroup } from "@/lib/managed-content";
+ 
+ export const metadata: Metadata = buildMetadata({
+   title: "Sık Sorulan Sorular | TDA Luxury Uşak",
+@@ -13,7 +14,7 @@ export const metadata: Metadata = buildMetadata({
+   path: "/sss",
+ });
+ 
+-const groups = [
++const fallbackGroups: ManagedFaqGroup[] = [
+   {
+     title: "Lazer Epilasyon",
+     items: [
+@@ -48,17 +49,16 @@ const groups = [
+   },
+ ];
+ 
+-const faqSchema = {
+-  "@context": "https://schema.org",
+-  "@type": "FAQPage",
+-  mainEntity: groups.flatMap((group) => group.items.map(([question, answer]) => ({
+-    "@type": "Question",
+-    name: question,
+-    acceptedAnswer: { "@type": "Answer", text: answer },
+-  }))),
+-};
+-
+-export default function FAQPage() {
++export default async function FAQPage() {
++  const groups = await getManagedFaqGroups(fallbackGroups);
++  const faqSchema = {
++    "@context": "https://schema.org",
++    "@type": "FAQPage",
++    mainEntity: groups.flatMap((group) => group.items.map(([question, answer]) => ({
++      "@type": "Question", name: question,
++      acceptedAnswer: { "@type": "Answer", text: answer },
++    }))),
++  };
+   return (
+     <>
+       <JsonLd data={faqSchema} />
+diff --git a/components/ServicesHome.tsx b/components/ServicesHome.tsx
+index a437f1d..9a3028e 100644
+--- a/components/ServicesHome.tsx
++++ b/components/ServicesHome.tsx
+@@ -1,19 +1,22 @@
+ import type { CSSProperties } from "react";
+ import Link from "next/link";
+ import { ArrowUpRight, ScanFace, Sparkles, UserRound, Waves, Eye, PenTool, Gem, Clock3 } from "lucide-react";
++import { getManagedFeaturedServices, type ManagedService } from "@/lib/managed-content";
+ 
+-const services = [
+-  { title: "Lazer Epilasyon", subtitle: "Kişiye özel bölge ve seans planlaması", meta: "Kadın & Erkek", duration: "Ön görüşme", href: "/lazer-epilasyon", image: "url(/images/services-premium/lazer-epilasyon.webp)", icon: UserRound },
+-  { title: "Kadın Lazer", subtitle: "Konforlu ve kontrollü uygulama süreci", meta: "Lazer Epilasyon", duration: "Kişiye özel", href: "/lazer-epilasyon/kadin-lazer-epilasyon", image: "url(/images/services-premium/kadin-lazer.webp)", icon: Sparkles },
+-  { title: "Erkek Lazer", subtitle: "Erkek cildine ve kıl yapısına özel plan", meta: "Erkek Bakım", duration: "Kişiye özel", href: "/lazer-epilasyon/erkek-lazer-epilasyon", image: "url(/images/services-premium/erkek-lazer.webp)", icon: UserRound },
+-  { title: "Cilt Bakımı", subtitle: "Cilt ihtiyacına göre profesyonel bakım", meta: "Cilt Analizi", duration: "45–90 dk", href: "/cilt-bakimi", image: "url(/images/services-premium/cilt-bakimi.webp)", icon: ScanFace },
+-  { title: "Hydrafacial", subtitle: "Arındırma, nem ve canlı görünüm desteği", meta: "Cilt Bakımı", duration: "45–75 dk", href: "/cilt-bakimi/hydrafacial", image: "url(/images/services-premium/hydrafacial.webp)", icon: Waves },
+-  { title: "Kalıcı Makyaj", subtitle: "Yüz hatlarına uyumlu zarif uygulamalar", meta: "Kaş & Dudak", duration: "Ön görüşme", href: "/kalici-makyaj", image: "url(/images/services-premium/leke-bakimi.webp)", icon: PenTool },
+-  { title: "Kirpik Lifting", subtitle: "Daha belirgin ve kıvrımlı kirpik görünümü", meta: "Kaş & Kirpik", duration: "45–60 dk", href: "/kas-kirpik/kirpik-lifting", image: "url(/images/services-premium/kirpik-lifting.webp)", icon: Eye },
+-  { title: "Bölgesel İncelme", subtitle: "Kişiye özel destekleyici bakım programı", meta: "Vücut Bakımı", duration: "Planlı seans", href: "/bolgesel-incelme", image: "url(/images/services-premium/bolgesel-incelme.webp)", icon: Gem },
++const services: (ManagedService & { icon: typeof UserRound })[] = [
++  { title: "Lazer Epilasyon", subtitle: "Kişiye özel bölge ve seans planlaması", meta: "Kadın & Erkek", duration: "Ön görüşme", price: "Bilgi alın", href: "/lazer-epilasyon", image: "/images/services-premium/lazer-epilasyon.webp", imagePosition: "center center", icon: UserRound },
++  { title: "Kadın Lazer", subtitle: "Konforlu ve kontrollü uygulama süreci", meta: "Lazer Epilasyon", duration: "Kişiye özel", price: "Bilgi alın", href: "/lazer-epilasyon/kadin-lazer-epilasyon", image: "/images/services-premium/kadin-lazer.webp", imagePosition: "center center", icon: Sparkles },
++  { title: "Erkek Lazer", subtitle: "Erkek cildine ve kıl yapısına özel plan", meta: "Erkek Bakım", duration: "Kişiye özel", price: "Bilgi alın", href: "/lazer-epilasyon/erkek-lazer-epilasyon", image: "/images/services-premium/erkek-lazer.webp", imagePosition: "center center", icon: UserRound },
++  { title: "Cilt Bakımı", subtitle: "Cilt ihtiyacına göre profesyonel bakım", meta: "Cilt Analizi", duration: "45–90 dk", price: "Bilgi alın", href: "/cilt-bakimi", image: "/images/services-premium/cilt-bakimi.webp", imagePosition: "center center", icon: ScanFace },
++  { title: "Hydrafacial", subtitle: "Arındırma, nem ve canlı görünüm desteği", meta: "Cilt Bakımı", duration: "45–75 dk", price: "Bilgi alın", href: "/cilt-bakimi/hydrafacial", image: "/images/services-premium/hydrafacial.webp", imagePosition: "center center", icon: Waves },
++  { title: "Kalıcı Makyaj", subtitle: "Yüz hatlarına uyumlu zarif uygulamalar", meta: "Kaş & Dudak", duration: "Ön görüşme", price: "Bilgi alın", href: "/kalici-makyaj", image: "/images/services-premium/leke-bakimi.webp", imagePosition: "center center", icon: PenTool },
++  { title: "Kirpik Lifting", subtitle: "Daha belirgin ve kıvrımlı kirpik görünümü", meta: "Kaş & Kirpik", duration: "45–60 dk", price: "Bilgi alın", href: "/kas-kirpik/kirpik-lifting", image: "/images/services-premium/kirpik-lifting.webp", imagePosition: "center center", icon: Eye },
++  { title: "Bölgesel İncelme", subtitle: "Kişiye özel destekleyici bakım programı", meta: "Vücut Bakımı", duration: "Planlı seans", price: "Bilgi alın", href: "/bolgesel-incelme", image: "/images/services-premium/bolgesel-incelme.webp", imagePosition: "center center", icon: Gem },
+ ];
+ 
+-export default function ServicesHome() {
++export default async function ServicesHome() {
++  const managed = await getManagedFeaturedServices(services);
++  const displayServices = managed.map((service, index) => ({ ...service, icon: services[index]?.icon ?? Sparkles }));
+   return (
+     <section className="stage19-services" id="hizmetler">
+       <div className="container">
+@@ -27,12 +30,12 @@ export default function ServicesHome() {
+         </div>
+ 
+         <div className="stage19-service-grid">
+-          {services.map(({ title, subtitle, meta, duration, href, image, icon: Icon }, index) => (
++          {displayServices.map(({ title, subtitle, meta, duration, href, image, imagePosition, icon: Icon }, index) => (
+             <Link
+               key={href}
+               href={href}
+               className="stage19-service-card"
+-              style={{ "--service-image": image, "--service-index": index } as CSSProperties}
++              style={{ "--service-image": `url(${image})`, "--service-position": imagePosition, "--service-index": index } as CSSProperties}
+             >
+               <div className="stage19-service-image" />
+               <div className="stage19-service-shade" />
+diff --git a/components/admin/AdminPanel.tsx b/components/admin/AdminPanel.tsx
+index 078ad75..f91ec48 100644
+--- a/components/admin/AdminPanel.tsx
++++ b/components/admin/AdminPanel.tsx
+@@ -3,12 +3,13 @@
+ import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+ import {
+   BookOpen, Check, ChevronRight, CircleUserRound, ExternalLink, Eye, FileText,
+-  ImageIcon, LayoutDashboard, LogOut, Megaphone, Menu, Pencil, Plus, RefreshCw,
+-  Save, Search, Trash2, Upload, X,
++  BadgeHelp, BriefcaseBusiness, ImageIcon, LayoutDashboard, LogOut, Megaphone,
++  Menu, PanelsTopLeft, Pencil, Plus, RefreshCw, Save, Search, Sparkles,
++  Trash2, Upload, X,
+ } from "lucide-react";
+ import { getSupabaseBrowserClient } from "@/lib/supabase";
+ 
+-type Tab = "campaigns" | "blog_posts" | "gallery_items";
++type Tab = "services" | "campaigns" | "blog_posts" | "gallery_items" | "results" | "faqs" | "page_content";
+ type View = "dashboard" | Tab;
+ type Row = Record<string, unknown> & {
+   id: string;
+@@ -19,17 +20,29 @@ type Row = Record<string, unknown> & {
+ };
+ 
+ const tabConfig = {
++  services: { label: "Hizmetler & Fiyatlar", singular: "Hizmet", icon: BriefcaseBusiness, description: "Hizmet, fiyat, süre ve SEO bilgilerini yönetin" },
+   campaigns: { label: "Kampanyalar", singular: "Kampanya", icon: Megaphone, description: "Dönemsel fırsatları yönetin" },
+   blog_posts: { label: "Blog Yazıları", singular: "Blog yazısı", icon: BookOpen, description: "Yazıları hazırlayın ve yayınlayın" },
+   gallery_items: { label: "Galeri", singular: "Galeri öğesi", icon: ImageIcon, description: "Salon ve sonuç görsellerini yönetin" },
++  results: { label: "Öncesi / Sonrası", singular: "Sonuç", icon: Sparkles, description: "Uygulama sonuçlarını ve açıklamalarını yönetin" },
++  faqs: { label: "Sık Sorulan Sorular", singular: "Soru", icon: BadgeHelp, description: "Soru, yanıt ve kategorileri yönetin" },
++  page_content: { label: "Sayfalar & SEO", singular: "Sayfa içeriği", icon: PanelsTopLeft, description: "Sayfa başlıkları, butonlar ve SEO alanlarını yönetin" },
+ } satisfies Record<Tab, { label: string; singular: string; icon: typeof Megaphone; description: string }>;
+ 
+ const emptyRows: Record<Tab, Record<string, unknown>> = {
+-  campaigns: { title: "", eyebrow: "DÖNEMSEL AVANTAJ", description: "", image_url: "", href: "/hizmetler", published: false, sort_order: 0 },
++  services: { title: "", slug: "", category: "Genel", description: "", short_description: "", price_text: "Bilgi alın", duration: "Kişiye özel", image_url: "", image_position: "center center", featured: false, published: false, sort_order: 0, seo_title: "", seo_description: "" },
++  campaigns: { title: "", eyebrow: "DÖNEMSEL AVANTAJ", description: "", image_url: "", image_position: "center center", href: "/hizmetler", published: false, sort_order: 0 },
+   blog_posts: { slug: "", title: "", excerpt: "", category: "Güzellik", read_time: "5 dk", image_url: "", intro: "", sections: [], keywords: [], published: false, published_at: new Date().toISOString().slice(0, 10) },
+-  gallery_items: { title: "", category: "Salon", alt_text: "", image_url: "", published: false, sort_order: 0 },
++  gallery_items: { title: "", category: "Salon", alt_text: "", image_url: "", image_position: "center center", published: false, sort_order: 0 },
++  results: { title: "", category: "Sonuç", description: "", before_image_url: "", after_image_url: "", image_position: "center center", disclaimer: "Sonuçlar kişiden kişiye değişebilir.", published: false, sort_order: 0 },
++  faqs: { title: "", answer: "", category: "Genel", published: false, sort_order: 0 },
++  page_content: { title: "", page_key: "", eyebrow: "", description: "", button_text: "", button_url: "", image_url: "", image_position: "center center", seo_title: "", seo_description: "", published: false, sort_order: 0 },
+ };
+ 
++function emptyRowsByTab(): Record<Tab, Row[]> {
++  return { services: [], campaigns: [], blog_posts: [], gallery_items: [], results: [], faqs: [], page_content: [] };
++}
++
+ function slugify(value: string) {
+   return value.toLocaleLowerCase("tr-TR").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i").replace(/ğ/g, "g").replace(/ü/g, "u").replace(/ş/g, "s").replace(/ö/g, "o").replace(/ç/g, "c").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+ }
+@@ -47,7 +60,7 @@ export default function AdminPanel() {
+   const [email, setEmail] = useState("");
+   const [password, setPassword] = useState("");
+   const [view, setView] = useState<View>("dashboard");
+-  const [rowsByTab, setRowsByTab] = useState<Record<Tab, Row[]>>({ campaigns: [], blog_posts: [], gallery_items: [] });
++  const [rowsByTab, setRowsByTab] = useState<Record<Tab, Row[]>>(emptyRowsByTab);
+   const [draft, setDraft] = useState<Record<string, unknown>>({ ...emptyRows.campaigns });
+   const [editingId, setEditingId] = useState<string | null>(null);
+   const [editorOpen, setEditorOpen] = useState(false);
+@@ -67,7 +80,7 @@ export default function AdminPanel() {
+       const result = await supabase.from(table).select("*").order(orderColumn, { ascending: false });
+       return [table, result] as const;
+     }));
+-    const next = { campaigns: [], blog_posts: [], gallery_items: [] } as Record<Tab, Row[]>;
++    const next = emptyRowsByTab();
+     for (const [table, result] of results) {
+       next[table] = (result.data as Row[]) ?? [];
+       if (result.error) setMessage(result.error.message);
+@@ -122,7 +135,8 @@ export default function AdminPanel() {
+     if (!supabase) return;
+     setBusy(true); setMessage("");
+     const payload: Record<string, unknown> = { ...draft, updated_at: new Date().toISOString() };
+-    if (activeTab === "blog_posts" && !payload.slug) payload.slug = slugify(String(payload.title));
++    if ((activeTab === "blog_posts" || activeTab === "services") && !payload.slug) payload.slug = slugify(String(payload.title));
++    if (activeTab === "page_content" && !payload.page_key) payload.page_key = slugify(String(payload.title));
+     delete payload.id; delete payload.created_at;
+     const query = editingId ? supabase.from(activeTab).update(payload).eq("id", editingId) : supabase.from(activeTab).insert(payload);
+     const { error } = await query;
+@@ -214,5 +228,29 @@ function Dashboard({ rows, total, published, busy, navigate, refresh }: { rows:
+ 
+ function AdminFields({ tab, draft, setDraft, uploadImage }: { tab: Tab; draft: Record<string, unknown>; setDraft: React.Dispatch<React.SetStateAction<Record<string, unknown>>>; uploadImage: (file: File) => void }) {
+   const field = (name: string, label: string, type = "text", placeholder = "") => <label><span>{label}</span><input type={type} value={String(draft[name] ?? "")} placeholder={placeholder} onChange={(e) => setDraft((d) => ({ ...d, [name]: type === "number" ? Number(e.target.value) : e.target.value }))} required={name === "title"} /></label>;
+-  return <div className="admin-fields"><section><h3>Temel bilgiler</h3>{field("title", "Başlık", "text", "İçerik başlığını yazın")}{tab === "campaigns" && <>{field("eyebrow", "Üst etiket")}<label><span>Açıklama</span><textarea rows={5} value={String(draft.description ?? "")} onChange={(e) => setDraft((d) => ({ ...d, description: e.target.value }))} placeholder="Kampanyayı kısa ve anlaşılır biçimde anlatın" /></label>{field("href", "Yönlendirme bağlantısı", "text", "/hizmetler")}{field("sort_order", "Sıralama", "number")}</>}{tab === "blog_posts" && <>{field("slug", "URL adresi", "text", "Boş bırakılırsa otomatik oluşturulur")}{field("category", "Kategori")}{field("read_time", "Okuma süresi")}<label><span>Kısa açıklama</span><textarea rows={4} value={String(draft.excerpt ?? "")} onChange={(e) => setDraft((d) => ({ ...d, excerpt: e.target.value }))} /></label><label><span>Giriş metni</span><textarea rows={6} value={String(draft.intro ?? "")} onChange={(e) => setDraft((d) => ({ ...d, intro: e.target.value }))} /></label><label><span>İçerik bölümleri (JSON)</span><textarea rows={9} value={JSON.stringify(draft.sections ?? [], null, 2)} onChange={(e) => { try { setDraft((d) => ({ ...d, sections: JSON.parse(e.target.value) })); } catch { /* only apply valid JSON */ } }} /></label>{field("published_at", "Yayın tarihi", "date")}</>}{tab === "gallery_items" && <>{field("category", "Kategori")}{field("alt_text", "Görsel açıklaması", "text", "Erişilebilirlik ve SEO için açıklayın")}{field("sort_order", "Sıralama", "number")}</>}</section><section><h3>Görsel ve yayın</h3>{String(draft.image_url || "") && <div className="admin-image-preview"><img src={String(draft.image_url)} alt="Önizleme" /></div>}<label><span>Görsel URL</span><input value={String(draft.image_url ?? "")} onChange={(e) => setDraft((d) => ({ ...d, image_url: e.target.value }))} placeholder="https://…" /><span className="admin-upload"><Upload size={18} /><b>Bilgisayardan görsel seç</b><small>JPG, PNG veya WEBP</small><input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && uploadImage(e.target.files[0])} /></span></label><label className="admin-switch"><input type="checkbox" checked={Boolean(draft.published)} onChange={(e) => setDraft((d) => ({ ...d, published: e.target.checked }))} /><span /><div><b>Yayında göster</b><small>Aktif olduğunda ziyaretçiler bu içeriği görür.</small></div></label></section></div>;
++  const area = (name: string, label: string, rows = 5, placeholder = "") => <label><span>{label}</span><textarea rows={rows} value={String(draft[name] ?? "")} placeholder={placeholder} onChange={(e) => setDraft((d) => ({ ...d, [name]: e.target.value }))} /></label>;
++  const imageUpload = (name = "image_url", label = "Görsel URL") => <label><span>{label}</span><input value={String(draft[name] ?? "")} onChange={(e) => setDraft((d) => ({ ...d, [name]: e.target.value }))} placeholder="https://…" />{name === "image_url" && <span className="admin-upload"><Upload size={18} /><b>Bilgisayardan görsel seç</b><small>JPG, PNG veya WEBP</small><input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && uploadImage(e.target.files[0])} /></span>}</label>;
++  const imagePosition = <label><span>Görsel odak noktası</span><select value={String(draft.image_position ?? "center center")} onChange={(e) => setDraft((d) => ({ ...d, image_position: e.target.value }))}><option value="center center">Tam orta</option><option value="center top">Üst orta</option><option value="center bottom">Alt orta</option><option value="left center">Sol orta</option><option value="right center">Sağ orta</option><option value="left top">Sol üst</option><option value="right top">Sağ üst</option></select><small className="admin-input-help">Önemli yüz veya uygulama bölgesinin kesilmesini önler.</small></label>;
++
++  return <div className="admin-fields">
++    <section><h3>Temel bilgiler</h3>
++      {field("title", tab === "faqs" ? "Soru" : "Başlık", "text", tab === "faqs" ? "Soruyu yazın" : "İçerik başlığını yazın")}
++      {tab === "services" && <>{field("slug", "Sayfa adresi", "text", "Boş bırakılırsa otomatik oluşur")}{field("category", "Kategori")}{area("short_description", "Kart açıklaması", 3)}{area("description", "Detaylı açıklama", 7)}{field("price_text", "Fiyat / fiyat bilgisi", "text", "Örn. 1.500 TL veya Bilgi alın")}{field("duration", "İşlem süresi", "text", "Örn. 45–60 dk")}{field("sort_order", "Sıralama", "number")}</>}
++      {tab === "campaigns" && <>{field("eyebrow", "Üst etiket")}{area("description", "Açıklama", 5, "Kampanyayı kısa ve anlaşılır biçimde anlatın")}{field("href", "Yönlendirme bağlantısı", "text", "/hizmetler")}{field("sort_order", "Sıralama", "number")}</>}
++      {tab === "blog_posts" && <>{field("slug", "URL adresi", "text", "Boş bırakılırsa otomatik oluşturulur")}{field("category", "Kategori")}{field("read_time", "Okuma süresi")}{area("excerpt", "Kısa açıklama", 4)}{area("intro", "Giriş metni", 6)}<label><span>İçerik bölümleri (JSON)</span><textarea rows={9} value={JSON.stringify(draft.sections ?? [], null, 2)} onChange={(e) => { try { setDraft((d) => ({ ...d, sections: JSON.parse(e.target.value) })); } catch { /* only apply valid JSON */ } }} /></label>{field("published_at", "Yayın tarihi", "date")}</>}
++      {tab === "gallery_items" && <>{field("category", "Kategori")}{field("alt_text", "Görsel açıklaması", "text", "Erişilebilirlik ve SEO için açıklayın")}{field("sort_order", "Sıralama", "number")}</>}
++      {tab === "results" && <>{field("category", "Hizmet kategorisi")}{area("description", "Sonuç açıklaması", 4)}{area("disclaimer", "Yasal bilgilendirme", 3)}{field("sort_order", "Sıralama", "number")}</>}
++      {tab === "faqs" && <>{field("category", "Kategori")}{area("answer", "Yanıt", 7, "Açık ve anlaşılır yanıtı yazın")}{field("sort_order", "Sıralama", "number")}</>}
++      {tab === "page_content" && <>{field("page_key", "Bölüm anahtarı", "text", "Örn. ana-sayfa-hero")}{field("eyebrow", "Üst etiket")}{area("description", "Açıklama", 6)}{field("button_text", "Buton yazısı")}{field("button_url", "Buton bağlantısı")}{field("sort_order", "Sıralama", "number")}</>}
++    </section>
++    <section><h3>{tab === "faqs" ? "Yayın ayarları" : "Görsel ve yayın"}</h3>
++      {String(draft.image_url || "") && <div className="admin-image-preview"><img src={String(draft.image_url)} alt="Önizleme" /></div>}
++      {!["faqs", "results"].includes(tab) && imageUpload()}
++      {tab === "results" && <>{imageUpload("before_image_url", "Öncesi görsel URL")}{imageUpload("after_image_url", "Sonrası görsel URL")}</>}
++      {tab !== "faqs" && imagePosition}
++      {tab === "services" && <label className="admin-switch"><input type="checkbox" checked={Boolean(draft.featured)} onChange={(e) => setDraft((d) => ({ ...d, featured: e.target.checked }))} /><span /><div><b>Ana sayfada öne çıkar</b><small>Hizmeti ana sayfa kartlarında gösterir.</small></div></label>}
++      <label className="admin-switch"><input type="checkbox" checked={Boolean(draft.published)} onChange={(e) => setDraft((d) => ({ ...d, published: e.target.checked }))} /><span /><div><b>Yayında göster</b><small>Aktif olduğunda ziyaretçiler bu içeriği görür.</small></div></label>
++    </section>
++    {(tab === "services" || tab === "page_content") && <section><h3>Arama motoru ayarları</h3>{field("seo_title", "SEO başlığı", "text", "Google sonuçlarında görünen başlık")}{area("seo_description", "SEO açıklaması", 4, "Google sonuçlarında görünen kısa açıklama")}<p className="admin-field-note">Başlık için yaklaşık 50–60, açıklama için 140–160 karakter önerilir.</p></section>}
++  </div>;
+ }
+diff --git a/lib/managed-content.ts b/lib/managed-content.ts
+index 546d401..e5a6629 100644
+--- a/lib/managed-content.ts
++++ b/lib/managed-content.ts
+@@ -3,6 +3,8 @@ import { blogPosts as fallbackBlogPosts, type BlogPost } from "@/data/blog";
+ 
+ export type ManagedCampaign = { id?: string; title: string; eyebrow: string; description: string; image: string; href: string };
+ export type ManagedGalleryItem = { id?: string; src: string; title: string; category: string; alt: string };
++export type ManagedService = { id?: string; title: string; subtitle: string; meta: string; duration: string; price: string; href: string; image: string; imagePosition: string };
++export type ManagedFaqGroup = { title: string; items: [string, string][] };
+ 
+ function serverClient() {
+   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+@@ -26,6 +28,31 @@ export async function getManagedGallery(fallback: ManagedGalleryItem[]) {
+   return data.map((row) => ({ id: row.id, src: row.image_url, title: row.title, category: row.category, alt: row.alt_text || row.title }));
+ }
+ 
++export async function getManagedFeaturedServices(fallback: ManagedService[]) {
++  const client = serverClient();
++  if (!client) return fallback;
++  const { data, error } = await client.from("services").select("*").eq("published", true).eq("featured", true).order("sort_order").limit(8);
++  if (error || !data?.length) return fallback;
++  return data.map((row) => ({
++    id: row.id, title: row.title, subtitle: row.short_description || row.description,
++    meta: row.category, duration: row.duration, price: row.price_text, href: row.slug,
++    image: row.image_url, imagePosition: row.image_position || "center center",
++  }));
++}
++
++export async function getManagedFaqGroups(fallback: ManagedFaqGroup[]) {
++  const client = serverClient();
++  if (!client) return fallback;
++  const { data, error } = await client.from("faqs").select("*").eq("published", true).order("sort_order");
++  if (error || !data?.length) return fallback;
++  const groups = new Map<string, [string, string][]>();
++  for (const row of data) {
++    const category = String(row.category || "Genel");
++    groups.set(category, [...(groups.get(category) ?? []), [String(row.title), String(row.answer)]]);
++  }
++  return Array.from(groups, ([title, items]) => ({ title, items }));
++}
++
+ function mapBlogRow(row: Record<string, unknown>): BlogPost {
+   const publishedAt = String(row.published_at ?? new Date().toISOString().slice(0, 10));
+   return {
+diff --git a/supabase/schema.sql b/supabase/schema.sql
+index e345a5d..e6f16dc 100644
+--- a/supabase/schema.sql
++++ b/supabase/schema.sql
+@@ -67,19 +67,26 @@ alter table public.campaigns enable row level security;
+ alter table public.blog_posts enable row level security;
+ alter table public.gallery_items enable row level security;
+ 
++drop policy if exists "Admins can view admin list" on public.admin_users;
+ create policy "Admins can view admin list" on public.admin_users
+ for select using (auth.uid() = user_id);
+ 
++drop policy if exists "Public can view published campaigns" on public.campaigns;
++drop policy if exists "Admins can manage campaigns" on public.campaigns;
+ create policy "Public can view published campaigns" on public.campaigns
+ for select using (published or public.is_admin());
+ create policy "Admins can manage campaigns" on public.campaigns
+ for all using (public.is_admin()) with check (public.is_admin());
+ 
++drop policy if exists "Public can view published blog posts" on public.blog_posts;
++drop policy if exists "Admins can manage blog posts" on public.blog_posts;
+ create policy "Public can view published blog posts" on public.blog_posts
+ for select using (published or public.is_admin());
+ create policy "Admins can manage blog posts" on public.blog_posts
+ for all using (public.is_admin()) with check (public.is_admin());
+ 
++drop policy if exists "Public can view published gallery" on public.gallery_items;
++drop policy if exists "Admins can manage gallery" on public.gallery_items;
+ create policy "Public can view published gallery" on public.gallery_items
+ for select using (published or public.is_admin());
+ create policy "Admins can manage gallery" on public.gallery_items
+@@ -89,6 +96,10 @@ insert into storage.buckets (id, name, public)
+ values ('tda-media', 'tda-media', true)
+ on conflict (id) do update set public = true;
+ 
++drop policy if exists "Public can view TDA media" on storage.objects;
++drop policy if exists "Admins can upload TDA media" on storage.objects;
++drop policy if exists "Admins can update TDA media" on storage.objects;
++drop policy if exists "Admins can delete TDA media" on storage.objects;
+ create policy "Public can view TDA media" on storage.objects
+ for select using (bucket_id = 'tda-media');
+ create policy "Admins can upload TDA media" on storage.objects
+@@ -98,6 +109,119 @@ for update using (bucket_id = 'tda-media' and public.is_admin());
+ create policy "Admins can delete TDA media" on storage.objects
+ for delete using (bucket_id = 'tda-media' and public.is_admin());
+ 
++-- Full website management modules (no customer or appointment data is stored)
++create table if not exists public.services (
++  id uuid primary key default gen_random_uuid(),
++  title text not null,
++  slug text not null unique,
++  category text not null default 'Genel',
++  description text not null default '',
++  short_description text not null default '',
++  price_text text not null default 'Bilgi alın',
++  duration text not null default 'Kişiye özel',
++  image_url text not null default '',
++  image_position text not null default 'center center',
++  featured boolean not null default false,
++  published boolean not null default false,
++  sort_order integer not null default 0,
++  seo_title text not null default '',
++  seo_description text not null default '',
++  created_at timestamptz not null default now(),
++  updated_at timestamptz not null default now()
++);
++
++create table if not exists public.results (
++  id uuid primary key default gen_random_uuid(),
++  title text not null,
++  category text not null default 'Sonuç',
++  description text not null default '',
++  before_image_url text not null default '',
++  after_image_url text not null default '',
++  image_position text not null default 'center center',
++  disclaimer text not null default 'Sonuçlar kişiden kişiye değişebilir.',
++  published boolean not null default false,
++  sort_order integer not null default 0,
++  created_at timestamptz not null default now(),
++  updated_at timestamptz not null default now()
++);
++
++create table if not exists public.faqs (
++  id uuid primary key default gen_random_uuid(),
++  title text not null,
++  answer text not null default '',
++  category text not null default 'Genel',
++  published boolean not null default false,
++  sort_order integer not null default 0,
++  created_at timestamptz not null default now(),
++  updated_at timestamptz not null default now()
++);
++
++create table if not exists public.page_content (
++  id uuid primary key default gen_random_uuid(),
++  title text not null,
++  page_key text not null unique,
++  eyebrow text not null default '',
++  description text not null default '',
++  button_text text not null default '',
++  button_url text not null default '',
++  image_url text not null default '',
++  image_position text not null default 'center center',
++  seo_title text not null default '',
++  seo_description text not null default '',
++  published boolean not null default false,
++  sort_order integer not null default 0,
++  created_at timestamptz not null default now(),
++  updated_at timestamptz not null default now()
++);
++
++create table if not exists public.site_settings (
++  id boolean primary key default true check (id),
++  business_name text not null default 'TDA Luxury',
++  phone_display text not null default '0536 665 10 64',
++  whatsapp_number text not null default '905366651064',
++  whatsapp_message text not null default 'Merhaba, TDA Luxury hizmetleri hakkında bilgi almak ve randevu oluşturmak istiyorum.',
++  instagram_url text not null default 'https://www.instagram.com/tdaluxuryusak',
++  address text not null default '',
++  maps_url text not null default '',
++  opening_hours jsonb not null default '[]'::jsonb,
++  maintenance_mode boolean not null default false,
++  updated_at timestamptz not null default now()
++);
++
++insert into public.site_settings (id, address)
++values (true, 'Fatih Mahallesi, Yavuz Sultan Selim Caddesi No: 10/B, 64300 Merkez/Uşak')
++on conflict (id) do nothing;
++
++alter table public.campaigns add column if not exists image_position text not null default 'center center';
++alter table public.gallery_items add column if not exists image_position text not null default 'center center';
++
++alter table public.services enable row level security;
++alter table public.results enable row level security;
++alter table public.faqs enable row level security;
++alter table public.page_content enable row level security;
++alter table public.site_settings enable row level security;
++
++drop policy if exists "Public can view published services" on public.services;
++drop policy if exists "Admins can manage services" on public.services;
++drop policy if exists "Public can view published results" on public.results;
++drop policy if exists "Admins can manage results" on public.results;
++drop policy if exists "Public can view published faqs" on public.faqs;
++drop policy if exists "Admins can manage faqs" on public.faqs;
++drop policy if exists "Public can view published page content" on public.page_content;
++drop policy if exists "Admins can manage page content" on public.page_content;
++drop policy if exists "Public can view site settings" on public.site_settings;
++drop policy if exists "Admins can update site settings" on public.site_settings;
++create policy "Public can view published services" on public.services for select using (published or public.is_admin());
++create policy "Admins can manage services" on public.services for all using (public.is_admin()) with check (public.is_admin());
++create policy "Public can view published results" on public.results for select using (published or public.is_admin());
++create policy "Admins can manage results" on public.results for all using (public.is_admin()) with check (public.is_admin());
++create policy "Public can view published faqs" on public.faqs for select using (published or public.is_admin());
++create policy "Admins can manage faqs" on public.faqs for all using (public.is_admin()) with check (public.is_admin());
++create policy "Public can view published page content" on public.page_content for select using (published or public.is_admin());
++create policy "Admins can manage page content" on public.page_content for all using (public.is_admin()) with check (public.is_admin());
++create policy "Public can view site settings" on public.site_settings for select using (true);
++create policy "Admins can update site settings" on public.site_settings for update using (public.is_admin()) with check (public.is_admin());
++
+ -- After creating the first Auth user, make that user an admin:
+ -- insert into public.admin_users (user_id)
+ -- select id from auth.users where email = 'YOUR_EMAIL';
+-- 
+2.51.1
+

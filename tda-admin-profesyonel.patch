@@ -1,0 +1,331 @@
+From 917255f38b5b1680a7bf02d6eea072c669da1f4b Mon Sep 17 00:00:00 2001
+From: Codex <codex@openai.com>
+Date: Sat, 18 Jul 2026 17:14:31 +0300
+Subject: [PATCH] Admin panelini profesyonel arayuzle yenile
+
+---
+ app/globals.css                 |  15 +++
+ components/admin/AdminPanel.tsx | 203 ++++++++++++++++++++------------
+ 2 files changed, 145 insertions(+), 73 deletions(-)
+
+diff --git a/app/globals.css b/app/globals.css
+index 04d7963..b9b2eec 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1532,6 +1532,21 @@ main > .motion-reveal,
+ @media(max-width:1050px){.admin-grid{grid-template-columns:1fr}.admin-page{grid-template-columns:210px 1fr}.admin-content{padding:30px}}
+ @media(max-width:700px){.admin-page{display:block;padding-bottom:0}.admin-sidebar{position:static;height:auto;padding:16px}.admin-sidebar>div{padding-bottom:16px}.admin-sidebar nav{grid-template-columns:repeat(3,1fr);margin-top:14px}.admin-sidebar nav button{justify-content:center;padding:0 7px;font-size:11px}.admin-logout{margin-top:12px!important}.admin-content{padding:22px 14px 50px}.admin-content>header{align-items:flex-start;flex-direction:column}.admin-content>header h1{font-size:38px}.admin-content>header>button{width:100%;justify-content:center}.admin-editor,.admin-list{padding:20px}.admin-login,.admin-setup{padding:28px}.admin-login h1,.admin-setup h1{font-size:34px}}
+ 
++/* Professional admin workspace */
++.admin-page{grid-template-columns:272px 1fr;background:#f6f7f9;color:#18181b;font-family:Arial,sans-serif}
++.admin-sidebar{z-index:50;padding:26px 18px 18px;background:#101113;border-right:1px solid rgba(255,255,255,.07)}
++.admin-brand{position:relative;display:grid!important;padding:0 12px 28px!important;border-bottom:1px solid rgba(255,255,255,.08)!important}
++.admin-brand strong{font-size:34px!important;letter-spacing:-.04em}.admin-brand span{font-size:9px!important}.admin-brand>button{display:none;position:absolute;right:0;top:0;width:40px!important;min-height:40px!important;padding:0!important;justify-content:center}
++.admin-sidebar nav{gap:5px;margin-top:22px}.admin-sidebar nav>p{margin:23px 13px 8px;color:rgba(255,255,255,.3);font-size:9px;font-weight:900;letter-spacing:.18em}.admin-sidebar nav button{width:100%;transition:.2s ease}.admin-sidebar nav button:hover{background:rgba(255,255,255,.055);color:#fff}.admin-sidebar nav button.active{background:linear-gradient(90deg,rgba(207,165,91,.2),rgba(207,165,91,.08));color:#e5c68e}.admin-sidebar nav button span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.admin-sidebar nav button b{display:grid;min-width:23px;height:23px;margin-left:auto;place-items:center;border-radius:7px;background:rgba(255,255,255,.08);font-size:10px}.admin-account{display:flex!important;align-items:center;gap:10px;margin-top:auto;padding:16px 11px!important;border-top:1px solid rgba(255,255,255,.08)!important;border-bottom:0!important}.admin-account>svg{flex:none;color:#d4ac67}.admin-account>span{display:grid!important;min-width:0;margin:0!important;letter-spacing:0!important}.admin-account b{font-size:12px}.admin-account small{margin-top:4px;overflow:hidden;color:rgba(255,255,255,.42);font-size:10px;text-overflow:ellipsis}.admin-logout{margin-top:2px!important;color:rgba(255,255,255,.45)!important}.admin-mobile-menu{display:none}
++.admin-content{padding:44px clamp(28px,4vw,64px);overflow:hidden}.admin-header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:30px}.admin-header>div:first-child>span{color:#9a6a2b;font-size:10px;font-weight:900;letter-spacing:.2em}.admin-header h1{margin:7px 0 0;font-family:Georgia,serif;font-size:44px;font-weight:500;letter-spacing:-.035em}.admin-header p{margin:8px 0 0;color:#71717a;font-size:14px}.admin-header>button,.admin-dashboard-header>div:last-child button,.admin-dashboard-header>div:last-child a{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 17px;border:1px solid #18181b;border-radius:10px;background:#18181b;color:#fff;font-size:12px;font-weight:800;cursor:pointer}.admin-dashboard-header>div:last-child{display:flex;gap:9px}.admin-dashboard-header>div:last-child a{background:#fff;color:#18181b;border-color:#dedee3}
++.admin-message{display:flex;align-items:center;gap:9px;margin:0 0 20px;border-color:#d8c29e;background:#fffaf1;color:#825b21}.admin-message>button{display:grid;margin-left:auto;padding:0;border:0;background:transparent;cursor:pointer}.admin-toolbar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:17px}.admin-toolbar>label{display:flex;align-items:center;gap:10px;width:min(390px,100%);height:44px;padding:0 13px;border:1px solid #dedee3;border-radius:10px;background:#fff;color:#a1a1aa}.admin-toolbar input{width:100%;border:0;outline:0;background:transparent;color:#18181b}.admin-toolbar>div{display:flex;padding:4px;border:1px solid #e1e1e5;border-radius:10px;background:#fff}.admin-toolbar>div button{height:34px;padding:0 13px;border:0;border-radius:7px;background:transparent;color:#71717a;font-size:11px;font-weight:800;cursor:pointer}.admin-toolbar>div button.active{background:#18181b;color:#fff}
++.admin-table-card{overflow:hidden;border:1px solid #e2e2e7;border-radius:15px;background:#fff;box-shadow:0 8px 30px rgba(25,25,30,.04)}.admin-table-head,.admin-table-row{display:grid;grid-template-columns:minmax(260px,1.6fr) 130px 145px 95px;align-items:center;gap:18px}.admin-table-head{min-height:45px;padding:0 21px;border-bottom:1px solid #ececf0;background:#fafafa;color:#8b8b93;font-size:9px;font-weight:900;letter-spacing:.11em;text-transform:uppercase}.admin-table-row{min-height:82px;padding:12px 21px;border-bottom:1px solid #efeff2}.admin-table-row:last-child{border-bottom:0}.admin-row-title{display:flex;align-items:center;gap:13px;min-width:0}.admin-row-title>img,.admin-row-title>span{width:48px;height:48px;flex:none;border-radius:9px;object-fit:cover}.admin-row-title>span{display:grid;place-items:center;background:#f2eee7;color:#a77939}.admin-row-title div{min-width:0}.admin-row-title h3{margin:0;overflow:hidden;font-size:13px;text-overflow:ellipsis;white-space:nowrap}.admin-row-title small{display:block;margin-top:6px;overflow:hidden;color:#8a8a92;font-size:10px;text-overflow:ellipsis;white-space:nowrap}.admin-status{display:inline-flex;align-items:center;gap:7px;width:max-content;padding:7px 9px;border:0;border-radius:999px;font-size:10px;font-weight:800;cursor:pointer}.admin-status i{width:6px;height:6px;border-radius:50%}.admin-status.published{background:#e9f7ef;color:#277347}.admin-status.published i{background:#35a66a}.admin-status.draft{background:#f2f2f4;color:#6f6f76}.admin-status.draft i{background:#9b9ba2}.admin-table-row time{color:#71717a;font-size:11px}.admin-row-actions{display:flex;justify-content:flex-end;gap:6px}.admin-row-actions button{display:grid;width:36px;height:36px;place-items:center;border:1px solid #e2e2e6;border-radius:8px;background:#fff;color:#52525b;cursor:pointer}.admin-row-actions button:hover{border-color:#caa25e;color:#8a6128}.admin-row-actions button.danger:hover{border-color:#efb8b8;background:#fff5f5;color:#b43232}.admin-empty{display:grid;min-height:280px;place-items:center;align-content:center;gap:8px;color:#a1a1aa;text-align:center}.admin-empty h3{margin:7px 0 0;color:#3f3f46}.admin-empty p{margin:0;font-size:12px}
++.admin-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px;margin-bottom:24px}.admin-stat-grid article{display:flex;align-items:center;gap:18px;padding:24px;border:1px solid #e3e3e7;border-radius:15px;background:#fff}.admin-stat-grid article>span{display:grid;width:48px;height:48px;flex:none;place-items:center;border-radius:12px;background:#f3ece1;color:#9b6e30}.admin-stat-grid article:nth-child(2)>span{background:#e8f5ee;color:#2f8154}.admin-stat-grid article:nth-child(3)>span{background:#eeeeF2;color:#64646d}.admin-stat-grid small{color:#71717a;font-size:10px;font-weight:800;text-transform:uppercase}.admin-stat-grid strong{display:block;margin-top:4px;font-family:Georgia,serif;font-size:31px}.admin-stat-grid p{margin:2px 0 0;color:#a1a1aa;font-size:10px}.admin-dashboard-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:20px}.admin-quick,.admin-recent{overflow:hidden;border:1px solid #e3e3e7;border-radius:15px;background:#fff}.admin-quick>header,.admin-recent>header{padding:21px 22px;border-bottom:1px solid #ededf0}.admin-quick h2,.admin-recent h2{margin:0;font-size:16px}.admin-quick header p,.admin-recent header p{margin:6px 0 0;color:#8b8b93;font-size:11px}.admin-quick>button,.admin-recent>button{display:flex;align-items:center;gap:13px;width:100%;min-height:75px;padding:13px 20px;border:0;border-bottom:1px solid #efeff2;background:#fff;color:#18181b;text-align:left;cursor:pointer}.admin-quick>button:last-child,.admin-recent>button:last-child{border-bottom:0}.admin-quick>button:hover,.admin-recent>button:hover{background:#faf9f7}.admin-quick>button>span{display:grid;width:39px;height:39px;place-items:center;border-radius:10px;background:#f3ece1;color:#9b6e30}.admin-quick button div,.admin-recent button div{min-width:0;flex:1}.admin-quick h3,.admin-recent h3{margin:0;overflow:hidden;font-size:12px;text-overflow:ellipsis;white-space:nowrap}.admin-quick p,.admin-recent p{margin:5px 0 0;color:#8b8b93;font-size:10px}.admin-quick>button>svg,.admin-recent>button>svg{color:#aaaab1}.admin-recent>button>span{width:8px;height:8px;border-radius:50%}.admin-recent>button>span.live{background:#37a66c}.admin-recent>button>span.draft{background:#a2a2aa}
++.admin-drawer-backdrop,.admin-modal-backdrop{position:fixed;inset:0;z-index:100;display:flex;justify-content:flex-end;background:rgba(8,9,11,.54);backdrop-filter:blur(3px)}.admin-drawer{width:min(720px,100%);height:100dvh;overflow:auto;background:#f7f7f8;box-shadow:-20px 0 70px rgba(0,0,0,.2)}.admin-drawer>header{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:24px 28px;border-bottom:1px solid #e1e1e5;background:rgba(255,255,255,.94);backdrop-filter:blur(12px)}.admin-drawer header span{color:#9a6a2b;font-size:9px;font-weight:900;letter-spacing:.16em}.admin-drawer h2{margin:5px 0 0;font-family:Georgia,serif;font-size:27px}.admin-drawer header>button{display:grid;width:39px;height:39px;place-items:center;border:1px solid #dedee3;border-radius:9px;background:#fff;cursor:pointer}.admin-drawer form{padding:24px 28px 110px}.admin-fields{display:grid;gap:18px}.admin-fields>section{padding:24px;border:1px solid #e3e3e6;border-radius:14px;background:#fff}.admin-fields section>h3{margin:0 0 19px;font-size:13px}.admin-fields label{display:grid;gap:7px;margin-top:15px}.admin-fields label>span:first-child{font-size:11px;font-weight:800}.admin-fields input,.admin-fields textarea{width:100%;padding:12px 13px;border:1px solid #dddde2;border-radius:9px;background:#fafafa;color:#18181b;outline:none;resize:vertical}.admin-fields input:focus,.admin-fields textarea:focus{border-color:#b88a47;box-shadow:0 0 0 3px rgba(184,138,71,.1)}.admin-image-preview{overflow:hidden;height:190px;border-radius:11px;background:#eee}.admin-image-preview img{width:100%;height:100%;object-fit:cover}.admin-upload{position:relative;display:grid;min-height:105px;margin-top:10px;place-items:center;align-content:center;gap:6px;border:1px dashed #c8a978;border-radius:10px;background:#fcf9f3;color:#93672c;cursor:pointer}.admin-upload small{color:#9a9aa1;font-size:10px}.admin-upload input{position:absolute;inset:0;opacity:0;cursor:pointer}.admin-switch{display:flex!important;align-items:center;gap:12px;padding:15px;border:1px solid #e4e4e7;border-radius:10px;background:#fafafa}.admin-switch>input{display:none}.admin-switch>span{width:43px;height:24px;flex:none;padding:3px;border-radius:999px;background:#ccc;transition:.2s}.admin-switch>span:after{content:"";display:block;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.2);transition:.2s}.admin-switch>input:checked+span{background:#b78948}.admin-switch>input:checked+span:after{transform:translateX(19px)}.admin-switch>div{display:grid}.admin-switch b{font-size:11px}.admin-switch small{margin-top:4px;color:#8b8b93;font-size:10px}.admin-drawer form>footer{position:fixed;right:0;bottom:0;display:flex;justify-content:flex-end;gap:10px;width:min(720px,100%);padding:16px 28px;border-top:1px solid #dddde2;background:rgba(255,255,255,.95);backdrop-filter:blur(12px)}.admin-drawer footer button{min-height:43px;padding:0 18px;border:1px solid #d8d8dd;border-radius:9px;background:#fff;font-weight:800;cursor:pointer}.admin-drawer footer .admin-save{display:flex;width:auto;margin:0;align-items:center;gap:8px;border-color:#18181b;background:#18181b;color:#fff}.admin-modal-backdrop{align-items:center;justify-content:center;padding:20px}.admin-confirm{width:min(420px,100%);padding:30px;border-radius:17px;background:#fff;text-align:center}.admin-confirm>span{display:grid;width:52px;height:52px;margin:auto;place-items:center;border-radius:50%;background:#fff0f0;color:#b52f2f}.admin-confirm h2{margin:17px 0 8px}.admin-confirm p{margin:0;color:#71717a;font-size:13px;line-height:1.6}.admin-confirm>div{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:24px}.admin-confirm button{min-height:43px;border:1px solid #dddde2;border-radius:9px;background:#fff;font-weight:800;cursor:pointer}.admin-confirm button:last-child{border-color:#b83232;background:#b83232;color:#fff}.admin-spinner{animation:adminSpin .8s linear infinite}@keyframes adminSpin{to{transform:rotate(360deg)}}
++.admin-login{border-color:rgba(217,170,85,.2);background:rgba(20,19,17,.86);backdrop-filter:blur(20px)}.admin-login-brand{display:flex;align-items:flex-end;gap:12px}.admin-login-brand strong{color:#d9aa55;font-family:Georgia,serif;font-size:36px}.admin-login-brand span{padding-bottom:4px;color:rgba(255,255,255,.48);font-size:9px;font-weight:900;letter-spacing:.24em}.admin-login h1{font-size:35px}.admin-login>button{display:flex;align-items:center;justify-content:center;gap:8px}.admin-login>small{display:block;margin-top:20px;color:rgba(255,255,255,.32);font-size:10px;text-align:center}
++@media(max-width:1050px){.admin-page{grid-template-columns:230px 1fr}.admin-content{padding:35px 28px}.admin-table-head,.admin-table-row{grid-template-columns:minmax(230px,1fr) 115px 90px}.admin-table-head span:nth-child(3),.admin-table-row time{display:none}.admin-dashboard-grid{grid-template-columns:1fr}.admin-stat-grid article{padding:19px}}
++@media(max-width:760px){.admin-page{display:block}.admin-mobile-menu{position:fixed;z-index:45;top:14px;left:14px;display:grid;width:43px;height:43px;place-items:center;border:1px solid #dedee2;border-radius:10px;background:#fff;box-shadow:0 8px 25px rgba(0,0,0,.1)}.admin-sidebar{position:fixed;left:0;top:0;width:280px;height:100dvh;padding:24px 17px;transform:translateX(-105%);transition:.28s ease}.admin-sidebar.is-open{transform:translateX(0)}.admin-brand>button{display:flex!important}.admin-sidebar nav{display:grid;grid-template-columns:1fr}.admin-sidebar nav button{justify-content:flex-start;font-size:12px}.admin-sidebar-scrim{position:fixed;inset:0;z-index:40;border:0;background:rgba(0,0,0,.5)}.admin-content{padding:78px 14px 45px}.admin-header{align-items:flex-start;flex-direction:column}.admin-header h1{font-size:37px}.admin-header>button{width:100%}.admin-dashboard-header>div:last-child{width:100%}.admin-dashboard-header>div:last-child>*{flex:1}.admin-stat-grid{grid-template-columns:1fr}.admin-toolbar{align-items:stretch;flex-direction:column}.admin-toolbar>label{width:100%}.admin-toolbar>div{display:grid;grid-template-columns:repeat(3,1fr)}.admin-table-head{display:none}.admin-table-row{grid-template-columns:1fr auto;gap:12px;min-height:0;padding:16px}.admin-row-title{grid-column:1/-1}.admin-table-row time{display:none}.admin-status{grid-column:1}.admin-row-actions{grid-column:2}.admin-drawer>header,.admin-drawer form{padding-left:18px;padding-right:18px}.admin-drawer form>footer{padding:13px 18px}.admin-fields>section{padding:19px}.admin-login{padding:28px}.admin-login h1{font-size:31px}}
++
+ /* ===== AŞAMA 20.2 — PREMIUM GALLERY ===== */
+ .gallery-v20-hero{min-height:790px}
+ .gallery-v20-hero .gallery-premium-hero-overlay{background:linear-gradient(90deg,rgba(0,0,0,.96),rgba(0,0,0,.68) 44%,rgba(0,0,0,.18)),linear-gradient(180deg,rgba(0,0,0,.06),rgba(0,0,0,.66))}
+diff --git a/components/admin/AdminPanel.tsx b/components/admin/AdminPanel.tsx
+index 53c7070..078ad75 100644
+--- a/components/admin/AdminPanel.tsx
++++ b/components/admin/AdminPanel.tsx
+@@ -1,17 +1,28 @@
+ "use client";
+ 
+-import { FormEvent, useCallback, useEffect, useState } from "react";
+-import { BookOpen, ImageIcon, LogOut, Megaphone, Pencil, Plus, Save, Trash2, Upload } from "lucide-react";
++import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
++import {
++  BookOpen, Check, ChevronRight, CircleUserRound, ExternalLink, Eye, FileText,
++  ImageIcon, LayoutDashboard, LogOut, Megaphone, Menu, Pencil, Plus, RefreshCw,
++  Save, Search, Trash2, Upload, X,
++} from "lucide-react";
+ import { getSupabaseBrowserClient } from "@/lib/supabase";
+ 
+ type Tab = "campaigns" | "blog_posts" | "gallery_items";
+-type Row = Record<string, unknown> & { id: string; title: string; published: boolean };
++type View = "dashboard" | Tab;
++type Row = Record<string, unknown> & {
++  id: string;
++  title: string;
++  published: boolean;
++  created_at?: string;
++  updated_at?: string;
++};
+ 
+ const tabConfig = {
+-  campaigns: { label: "Kampanyalar", icon: Megaphone },
+-  blog_posts: { label: "Blog", icon: BookOpen },
+-  gallery_items: { label: "Galeri", icon: ImageIcon },
+-} satisfies Record<Tab, { label: string; icon: typeof Megaphone }>;
++  campaigns: { label: "Kampanyalar", singular: "Kampanya", icon: Megaphone, description: "Dönemsel fırsatları yönetin" },
++  blog_posts: { label: "Blog Yazıları", singular: "Blog yazısı", icon: BookOpen, description: "Yazıları hazırlayın ve yayınlayın" },
++  gallery_items: { label: "Galeri", singular: "Galeri öğesi", icon: ImageIcon, description: "Salon ve sonuç görsellerini yönetin" },
++} satisfies Record<Tab, { label: string; singular: string; icon: typeof Megaphone; description: string }>;
+ 
+ const emptyRows: Record<Tab, Record<string, unknown>> = {
+   campaigns: { title: "", eyebrow: "DÖNEMSEL AVANTAJ", description: "", image_url: "", href: "/hizmetler", published: false, sort_order: 0 },
+@@ -23,26 +34,45 @@ function slugify(value: string) {
+   return value.toLocaleLowerCase("tr-TR").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i").replace(/ğ/g, "g").replace(/ü/g, "u").replace(/ş/g, "s").replace(/ö/g, "o").replace(/ç/g, "c").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+ }
+ 
++function formatDate(value?: string) {
++  if (!value) return "—";
++  return new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "short", year: "numeric" }).format(new Date(value));
++}
++
+ export default function AdminPanel() {
+   const supabase = getSupabaseBrowserClient();
+   const [ready, setReady] = useState(!supabase);
+   const [signedIn, setSignedIn] = useState(false);
++  const [userEmail, setUserEmail] = useState("");
+   const [email, setEmail] = useState("");
+   const [password, setPassword] = useState("");
+-  const [tab, setTab] = useState<Tab>("campaigns");
+-  const [rows, setRows] = useState<Row[]>([]);
+-  const [draft, setDraft] = useState<Record<string, unknown>>(emptyRows.campaigns);
++  const [view, setView] = useState<View>("dashboard");
++  const [rowsByTab, setRowsByTab] = useState<Record<Tab, Row[]>>({ campaigns: [], blog_posts: [], gallery_items: [] });
++  const [draft, setDraft] = useState<Record<string, unknown>>({ ...emptyRows.campaigns });
+   const [editingId, setEditingId] = useState<string | null>(null);
++  const [editorOpen, setEditorOpen] = useState(false);
++  const [menuOpen, setMenuOpen] = useState(false);
++  const [search, setSearch] = useState("");
++  const [status, setStatus] = useState<"all" | "published" | "draft">("all");
+   const [message, setMessage] = useState("");
+   const [busy, setBusy] = useState(false);
++  const [deleteTarget, setDeleteTarget] = useState<Row | null>(null);
+ 
+-  const loadRows = useCallback(async (table: Tab) => {
++  const loadAll = useCallback(async () => {
+     if (!supabase) return;
+     setBusy(true);
+-    const orderColumn = table === "blog_posts" ? "published_at" : "sort_order";
+-    const { data, error } = await supabase.from(table).select("*").order(orderColumn, { ascending: false });
+-    setRows((data as Row[]) ?? []);
+-    if (error) setMessage(error.message);
++    const tables = Object.keys(tabConfig) as Tab[];
++    const results = await Promise.all(tables.map(async (table) => {
++      const orderColumn = table === "blog_posts" ? "published_at" : "sort_order";
++      const result = await supabase.from(table).select("*").order(orderColumn, { ascending: false });
++      return [table, result] as const;
++    }));
++    const next = { campaigns: [], blog_posts: [], gallery_items: [] } as Record<Tab, Row[]>;
++    for (const [table, result] of results) {
++      next[table] = (result.data as Row[]) ?? [];
++      if (result.error) setMessage(result.error.message);
++    }
++    setRowsByTab(next);
+     setBusy(false);
+   }, [supabase]);
+ 
+@@ -50,26 +80,40 @@ export default function AdminPanel() {
+     if (!supabase) return;
+     supabase.auth.getSession().then(({ data }) => {
+       setSignedIn(Boolean(data.session));
++      setUserEmail(data.session?.user.email ?? "");
+       setReady(true);
+-      if (data.session) loadRows("campaigns");
++      if (data.session) loadAll();
+     });
+-  }, [supabase, loadRows]);
++  }, [supabase, loadAll]);
++
++  const activeTab: Tab = view === "dashboard" ? "campaigns" : view;
++  const activeRows = rowsByTab[activeTab];
++  const filteredRows = useMemo(() => activeRows.filter((row) => {
++    const matchesSearch = row.title.toLocaleLowerCase("tr-TR").includes(search.toLocaleLowerCase("tr-TR"));
++    const matchesStatus = status === "all" || (status === "published" ? row.published : !row.published);
++    return matchesSearch && matchesStatus;
++  }), [activeRows, search, status]);
++  const total = Object.values(rowsByTab).reduce((sum, rows) => sum + rows.length, 0);
++  const published = Object.values(rowsByTab).flat().filter((row) => row.published).length;
++
++  function navigate(next: View) {
++    setView(next); setSearch(""); setStatus("all"); setMessage(""); setEditorOpen(false); setMenuOpen(false);
++  }
+ 
+-  const switchTab = (next: Tab) => {
+-    setTab(next);
+-    setDraft({ ...emptyRows[next] });
+-    setEditingId(null);
++  function openEditor(row?: Row) {
++    setDraft(row ? { ...row } : { ...emptyRows[activeTab] });
++    setEditingId(row?.id ?? null);
++    setEditorOpen(true);
+     setMessage("");
+-    loadRows(next);
+-  };
++  }
+ 
+   async function signIn(event: FormEvent) {
+     event.preventDefault();
+     if (!supabase) return;
+     setBusy(true); setMessage("");
+-    const { error } = await supabase.auth.signInWithPassword({ email, password });
++    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+     if (error) setMessage("Giriş başarısız: " + error.message);
+-    else { setSignedIn(true); await loadRows(tab); }
++    else { setSignedIn(true); setUserEmail(data.user.email ?? email); await loadAll(); }
+     setBusy(false);
+   }
+ 
+@@ -77,85 +121,98 @@ export default function AdminPanel() {
+     event.preventDefault();
+     if (!supabase) return;
+     setBusy(true); setMessage("");
+-    const payload: Record<string, unknown> = {
+-      ...draft,
+-      updated_at: new Date().toISOString(),
+-    };
+-    if (tab === "blog_posts" && !payload.slug) payload.slug = slugify(String(payload.title));
+-    const query = editingId ? supabase.from(tab).update(payload).eq("id", editingId) : supabase.from(tab).insert(payload);
++    const payload: Record<string, unknown> = { ...draft, updated_at: new Date().toISOString() };
++    if (activeTab === "blog_posts" && !payload.slug) payload.slug = slugify(String(payload.title));
++    delete payload.id; delete payload.created_at;
++    const query = editingId ? supabase.from(activeTab).update(payload).eq("id", editingId) : supabase.from(activeTab).insert(payload);
+     const { error } = await query;
+     if (error) setMessage("Kaydedilemedi: " + error.message);
+-    else { setMessage("İçerik kaydedildi."); setDraft({ ...emptyRows[tab] }); setEditingId(null); await loadRows(tab); }
++    else { setMessage("Değişiklikler başarıyla kaydedildi."); setEditorOpen(false); await loadAll(); }
+     setBusy(false);
+   }
+ 
+-  async function remove(id: string) {
+-    if (!supabase || !window.confirm("Bu içeriği kalıcı olarak silmek istiyor musunuz?")) return;
+-    const { error } = await supabase.from(tab).delete().eq("id", id);
++  async function togglePublish(row: Row) {
++    if (!supabase) return;
++    const { error } = await supabase.from(activeTab).update({ published: !row.published, updated_at: new Date().toISOString() }).eq("id", row.id);
++    setMessage(error ? "Durum değiştirilemedi: " + error.message : row.published ? "İçerik taslağa alındı." : "İçerik yayınlandı.");
++    if (!error) await loadAll();
++  }
++
++  async function remove() {
++    if (!supabase || !deleteTarget) return;
++    setBusy(true);
++    const { error } = await supabase.from(activeTab).delete().eq("id", deleteTarget.id);
+     setMessage(error ? "Silinemedi: " + error.message : "İçerik silindi.");
+-    if (!error) loadRows(tab);
++    setDeleteTarget(null); setBusy(false);
++    if (!error) await loadAll();
+   }
+ 
+   async function uploadImage(file: File) {
+     if (!supabase) return;
+     setBusy(true); setMessage("Görsel yükleniyor…");
+-    const path = `${tab}/${Date.now()}-${slugify(file.name.replace(/\.[^.]+$/, ""))}.${file.name.split(".").pop()?.toLowerCase()}`;
++    const extension = file.name.split(".").pop()?.toLowerCase();
++    const path = `${activeTab}/${Date.now()}-${slugify(file.name.replace(/\.[^.]+$/, ""))}.${extension}`;
+     const { error } = await supabase.storage.from("tda-media").upload(path, file, { upsert: false, cacheControl: "3600" });
+     if (error) setMessage("Görsel yüklenemedi: " + error.message);
+     else {
+       const { data } = supabase.storage.from("tda-media").getPublicUrl(path);
+       setDraft((current) => ({ ...current, image_url: data.publicUrl }));
+-      setMessage("Görsel yüklendi.");
++      setMessage("Görsel hazır.");
+     }
+     setBusy(false);
+   }
+ 
+-  if (!ready) return <main className="admin-shell"><p>Yükleniyor…</p></main>;
++  if (!ready) return <main className="admin-shell"><RefreshCw className="admin-spinner" /><p>Panel hazırlanıyor…</p></main>;
+   if (!supabase) return <main className="admin-shell"><section className="admin-setup"><strong>TDA LUXURY</strong><h1>Admin paneli kuruluma hazır</h1><p>Supabase bağlantı bilgileri henüz Vercel ortam değişkenlerine eklenmedi.</p></section></main>;
+-
+-  if (!signedIn) return (
+-    <main className="admin-shell">
+-      <form className="admin-login" onSubmit={signIn}>
+-        <strong>TDA LUXURY</strong><h1>Yönetim Paneli</h1><p>Yetkili hesabınızla giriş yapın.</p>
+-        <label>E-posta<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" /></label>
+-        <label>Şifre<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" /></label>
+-        {message && <div className="admin-message">{message}</div>}
+-        <button disabled={busy}>{busy ? "Giriş yapılıyor…" : "Giriş Yap"}</button>
+-      </form>
+-    </main>
+-  );
++  if (!signedIn) return <AdminLogin email={email} password={password} message={message} busy={busy} setEmail={setEmail} setPassword={setPassword} signIn={signIn} />;
+ 
+   return (
+     <main className="admin-page">
+-      <aside className="admin-sidebar">
+-        <div><strong>TDA</strong><span>LUXURY YÖNETİM</span></div>
+-        <nav>{(Object.keys(tabConfig) as Tab[]).map((key) => { const Icon = tabConfig[key].icon; return <button key={key} className={tab === key ? "active" : ""} onClick={() => switchTab(key)}><Icon size={19} />{tabConfig[key].label}</button>; })}</nav>
++      <button className="admin-mobile-menu" onClick={() => setMenuOpen(true)} aria-label="Menüyü aç"><Menu /></button>
++      <aside className={`admin-sidebar ${menuOpen ? "is-open" : ""}`}>
++        <div className="admin-brand"><strong>TDA</strong><span>LUXURY YÖNETİM</span><button onClick={() => setMenuOpen(false)} aria-label="Menüyü kapat"><X /></button></div>
++        <nav>
++          <button className={view === "dashboard" ? "active" : ""} onClick={() => navigate("dashboard")}><LayoutDashboard size={19} /><span>Genel Bakış</span></button>
++          <p>İÇERİK</p>
++          {(Object.keys(tabConfig) as Tab[]).map((key) => { const Icon = tabConfig[key].icon; return <button key={key} className={view === key ? "active" : ""} onClick={() => navigate(key)}><Icon size={19} /><span>{tabConfig[key].label}</span><b>{rowsByTab[key].length}</b></button>; })}
++        </nav>
++        <div className="admin-account"><CircleUserRound /><span><b>Yönetici</b><small>{userEmail}</small></span></div>
+         <button className="admin-logout" onClick={async () => { await supabase.auth.signOut(); setSignedIn(false); }}><LogOut size={18} /> Çıkış Yap</button>
+       </aside>
++
+       <section className="admin-content">
+-        <header><div><span>İÇERİK YÖNETİMİ</span><h1>{tabConfig[tab].label}</h1></div><button onClick={() => { setDraft({ ...emptyRows[tab] }); setEditingId(null); }}><Plus size={18} /> Yeni Ekle</button></header>
+-        {message && <div className="admin-message">{message}</div>}
+-        <div className="admin-grid">
+-          <form className="admin-editor" onSubmit={save}>
+-            <h2>{editingId ? "İçeriği Düzenle" : "Yeni İçerik"}</h2>
+-            <AdminFields tab={tab} draft={draft} setDraft={setDraft} uploadImage={uploadImage} />
+-            <button className="admin-save" disabled={busy}><Save size={18} /> {busy ? "İşleniyor…" : "Kaydet"}</button>
+-          </form>
+-          <div className="admin-list"><h2>Mevcut İçerikler</h2>{!busy && rows.length === 0 && <p className="admin-empty">Henüz içerik bulunmuyor.</p>}{rows.map((row) => <article key={row.id}><div><span className={row.published ? "published" : "draft"}>{row.published ? "Yayında" : "Taslak"}</span><h3>{row.title}</h3></div><div><button aria-label="Düzenle" onClick={() => { setDraft(row); setEditingId(row.id); }}><Pencil size={17} /></button><button aria-label="Sil" onClick={() => remove(row.id)}><Trash2 size={17} /></button></div></article>)}</div>
+-        </div>
++        {view === "dashboard" ? (
++          <Dashboard rows={rowsByTab} total={total} published={published} busy={busy} navigate={navigate} refresh={loadAll} />
++        ) : (
++          <>
++            <header className="admin-header"><div><span>İÇERİK YÖNETİMİ</span><h1>{tabConfig[activeTab].label}</h1><p>{tabConfig[activeTab].description}</p></div><button onClick={() => openEditor()}><Plus size={18} /> Yeni {tabConfig[activeTab].singular}</button></header>
++            {message && <div className="admin-message"><Check size={17} />{message}<button onClick={() => setMessage("")}><X size={16} /></button></div>}
++            <div className="admin-toolbar"><label><Search size={18} /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="İçeriklerde ara…" /></label><div>{(["all", "published", "draft"] as const).map((item) => <button key={item} className={status === item ? "active" : ""} onClick={() => setStatus(item)}>{item === "all" ? "Tümü" : item === "published" ? "Yayında" : "Taslak"}</button>)}</div></div>
++            <div className="admin-table-card">
++              <div className="admin-table-head"><span>İçerik</span><span>Durum</span><span>Son güncelleme</span><span>İşlemler</span></div>
++              {busy && activeRows.length === 0 ? <div className="admin-empty"><RefreshCw className="admin-spinner" />İçerikler yükleniyor…</div> : filteredRows.length === 0 ? <div className="admin-empty"><FileText /><h3>İçerik bulunamadı</h3><p>Aramanızı değiştirin veya yeni bir içerik ekleyin.</p></div> : filteredRows.map((row) => <article className="admin-table-row" key={row.id}><div className="admin-row-title">{String(row.image_url || "") ? <img src={String(row.image_url)} alt="" /> : <span><FileText /></span>}<div><h3>{row.title}</h3><small>{activeTab === "blog_posts" ? `/${String(row.slug || "")}` : String(row.category || row.eyebrow || tabConfig[activeTab].singular)}</small></div></div><button className={`admin-status ${row.published ? "published" : "draft"}`} onClick={() => togglePublish(row)}><i />{row.published ? "Yayında" : "Taslak"}</button><time>{formatDate(row.updated_at || row.created_at)}</time><div className="admin-row-actions"><button onClick={() => openEditor(row)} aria-label="Düzenle"><Pencil size={17} /></button><button className="danger" onClick={() => setDeleteTarget(row)} aria-label="Sil"><Trash2 size={17} /></button></div></article>)}
++            </div>
++          </>
++        )}
+       </section>
++
++      {editorOpen && <div className="admin-drawer-backdrop" onMouseDown={(e) => e.target === e.currentTarget && setEditorOpen(false)}><section className="admin-drawer"><header><div><span>{editingId ? "İÇERİĞİ DÜZENLE" : "YENİ İÇERİK"}</span><h2>{editingId ? String(draft.title) : tabConfig[activeTab].singular}</h2></div><button type="button" onClick={() => setEditorOpen(false)}><X /></button></header><form onSubmit={save}><AdminFields tab={activeTab} draft={draft} setDraft={setDraft} uploadImage={uploadImage} /><footer><button type="button" onClick={() => setEditorOpen(false)}>Vazgeç</button><button className="admin-save" disabled={busy}><Save size={18} />{busy ? "Kaydediliyor…" : "Kaydet"}</button></footer></form></section></div>}
++      {deleteTarget && <div className="admin-modal-backdrop"><section className="admin-confirm"><span><Trash2 /></span><h2>İçeriği sil?</h2><p><b>{deleteTarget.title}</b> kalıcı olarak silinecek. Bu işlem geri alınamaz.</p><div><button onClick={() => setDeleteTarget(null)}>Vazgeç</button><button onClick={remove} disabled={busy}>Evet, sil</button></div></section></div>}
++      {menuOpen && <button className="admin-sidebar-scrim" onClick={() => setMenuOpen(false)} aria-label="Menüyü kapat" />}
+     </main>
+   );
+ }
+ 
++function AdminLogin({ email, password, message, busy, setEmail, setPassword, signIn }: { email: string; password: string; message: string; busy: boolean; setEmail: (value: string) => void; setPassword: (value: string) => void; signIn: (event: FormEvent) => void }) {
++  return <main className="admin-shell"><form className="admin-login" onSubmit={signIn}><div className="admin-login-brand"><strong>TDA</strong><span>LUXURY</span></div><h1>Tekrar hoş geldiniz</h1><p>İçeriklerinizi yönetmek için hesabınıza giriş yapın.</p><label>E-posta adresi<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" placeholder="ornek@tdaluxury.com" /></label><label>Şifre<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" placeholder="••••••••" /></label>{message && <div className="admin-message">{message}</div>}<button disabled={busy}>{busy ? "Giriş yapılıyor…" : "Giriş Yap"}<ChevronRight size={19} /></button><small>Güvenli yönetim alanı · TDA Luxury</small></form></main>;
++}
++
++function Dashboard({ rows, total, published, busy, navigate, refresh }: { rows: Record<Tab, Row[]>; total: number; published: number; busy: boolean; navigate: (view: View) => void; refresh: () => void }) {
++  const recent = (Object.entries(rows) as [Tab, Row[]][]).flatMap(([tab, items]) => items.map((row) => ({ ...row, tab }))).sort((a, b) => new Date(String(b.updated_at || b.created_at || 0)).getTime() - new Date(String(a.updated_at || a.created_at || 0)).getTime()).slice(0, 5);
++  return <><header className="admin-header admin-dashboard-header"><div><span>YÖNETİM PANELİ</span><h1>Genel Bakış</h1><p>Sitenizdeki tüm içeriklerin güncel durumu.</p></div><div><a href="/" target="_blank">Siteyi Görüntüle <ExternalLink size={17} /></a><button onClick={refresh} disabled={busy}><RefreshCw size={17} className={busy ? "admin-spinner" : ""} /> Yenile</button></div></header><div className="admin-stat-grid"><article><span><FileText /></span><div><small>Toplam içerik</small><strong>{total}</strong><p>Tüm içerik türleri</p></div></article><article><span><Eye /></span><div><small>Yayındaki içerik</small><strong>{published}</strong><p>Ziyaretçilere açık</p></div></article><article><span><Pencil /></span><div><small>Taslak içerik</small><strong>{total - published}</strong><p>Yayın bekliyor</p></div></article></div><div className="admin-dashboard-grid"><section className="admin-quick"><header><div><h2>İçerik alanları</h2><p>Yönetmek istediğiniz alanı seçin.</p></div></header>{(Object.keys(tabConfig) as Tab[]).map((tab) => { const Icon = tabConfig[tab].icon; const live = rows[tab].filter((row) => row.published).length; return <button key={tab} onClick={() => navigate(tab)}><span><Icon /></span><div><h3>{tabConfig[tab].label}</h3><p>{live} yayında · {rows[tab].length - live} taslak</p></div><ChevronRight /></button>; })}</section><section className="admin-recent"><header><div><h2>Son güncellenenler</h2><p>En yeni içerik hareketleri.</p></div></header>{recent.length === 0 ? <div className="admin-empty"><FileText /><p>Henüz içerik eklenmedi.</p></div> : recent.map((row) => <button key={`${row.tab}-${row.id}`} onClick={() => navigate(row.tab)}><span className={row.published ? "live" : "draft"} /><div><h3>{row.title}</h3><p>{tabConfig[row.tab].label} · {formatDate(row.updated_at || row.created_at)}</p></div><ChevronRight /></button>)}</section></div></>;
++}
++
+ function AdminFields({ tab, draft, setDraft, uploadImage }: { tab: Tab; draft: Record<string, unknown>; setDraft: React.Dispatch<React.SetStateAction<Record<string, unknown>>>; uploadImage: (file: File) => void }) {
+-  const field = (name: string, label: string, type = "text") => <label>{label}<input type={type} value={String(draft[name] ?? "")} onChange={(e) => setDraft((d) => ({ ...d, [name]: type === "number" ? Number(e.target.value) : e.target.value }))} required={name === "title"} /></label>;
+-  return <>
+-    {field("title", "Başlık")}
+-    {tab === "campaigns" && <>{field("eyebrow", "Üst Etiket")}<label>Açıklama<textarea value={String(draft.description ?? "")} onChange={(e) => setDraft((d) => ({ ...d, description: e.target.value }))} /></label>{field("href", "Hizmet Bağlantısı")}{field("sort_order", "Sıralama", "number")}</>}
+-    {tab === "blog_posts" && <>{field("slug", "URL Adresi (boş bırakılabilir)")}{field("category", "Kategori")}{field("read_time", "Okuma Süresi")}<label>Kısa Açıklama<textarea value={String(draft.excerpt ?? "")} onChange={(e) => setDraft((d) => ({ ...d, excerpt: e.target.value }))} /></label><label>Giriş Metni<textarea value={String(draft.intro ?? "")} onChange={(e) => setDraft((d) => ({ ...d, intro: e.target.value }))} /></label><label>İçerik Bölümleri (JSON)<textarea rows={8} value={JSON.stringify(draft.sections ?? [], null, 2)} onChange={(e) => { try { const sections = JSON.parse(e.target.value); setDraft((d) => ({ ...d, sections })); } catch { /* keep last valid value */ } }} /></label>{field("published_at", "Yayın Tarihi", "date")}</>}
+-    {tab === "gallery_items" && <>{field("category", "Kategori")}{field("alt_text", "Görsel Açıklaması")}{field("sort_order", "Sıralama", "number")}</>}
+-    <label>Görsel URL<input value={String(draft.image_url ?? "")} onChange={(e) => setDraft((d) => ({ ...d, image_url: e.target.value }))} /><span className="admin-upload"><Upload size={16} /> Bilgisayardan yükle<input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && uploadImage(e.target.files[0])} /></span></label>
+-    <label className="admin-switch"><input type="checkbox" checked={Boolean(draft.published)} onChange={(e) => setDraft((d) => ({ ...d, published: e.target.checked }))} /><span /> Yayında göster</label>
+-  </>;
++  const field = (name: string, label: string, type = "text", placeholder = "") => <label><span>{label}</span><input type={type} value={String(draft[name] ?? "")} placeholder={placeholder} onChange={(e) => setDraft((d) => ({ ...d, [name]: type === "number" ? Number(e.target.value) : e.target.value }))} required={name === "title"} /></label>;
++  return <div className="admin-fields"><section><h3>Temel bilgiler</h3>{field("title", "Başlık", "text", "İçerik başlığını yazın")}{tab === "campaigns" && <>{field("eyebrow", "Üst etiket")}<label><span>Açıklama</span><textarea rows={5} value={String(draft.description ?? "")} onChange={(e) => setDraft((d) => ({ ...d, description: e.target.value }))} placeholder="Kampanyayı kısa ve anlaşılır biçimde anlatın" /></label>{field("href", "Yönlendirme bağlantısı", "text", "/hizmetler")}{field("sort_order", "Sıralama", "number")}</>}{tab === "blog_posts" && <>{field("slug", "URL adresi", "text", "Boş bırakılırsa otomatik oluşturulur")}{field("category", "Kategori")}{field("read_time", "Okuma süresi")}<label><span>Kısa açıklama</span><textarea rows={4} value={String(draft.excerpt ?? "")} onChange={(e) => setDraft((d) => ({ ...d, excerpt: e.target.value }))} /></label><label><span>Giriş metni</span><textarea rows={6} value={String(draft.intro ?? "")} onChange={(e) => setDraft((d) => ({ ...d, intro: e.target.value }))} /></label><label><span>İçerik bölümleri (JSON)</span><textarea rows={9} value={JSON.stringify(draft.sections ?? [], null, 2)} onChange={(e) => { try { setDraft((d) => ({ ...d, sections: JSON.parse(e.target.value) })); } catch { /* only apply valid JSON */ } }} /></label>{field("published_at", "Yayın tarihi", "date")}</>}{tab === "gallery_items" && <>{field("category", "Kategori")}{field("alt_text", "Görsel açıklaması", "text", "Erişilebilirlik ve SEO için açıklayın")}{field("sort_order", "Sıralama", "number")}</>}</section><section><h3>Görsel ve yayın</h3>{String(draft.image_url || "") && <div className="admin-image-preview"><img src={String(draft.image_url)} alt="Önizleme" /></div>}<label><span>Görsel URL</span><input value={String(draft.image_url ?? "")} onChange={(e) => setDraft((d) => ({ ...d, image_url: e.target.value }))} placeholder="https://…" /><span className="admin-upload"><Upload size={18} /><b>Bilgisayardan görsel seç</b><small>JPG, PNG veya WEBP</small><input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && uploadImage(e.target.files[0])} /></span></label><label className="admin-switch"><input type="checkbox" checked={Boolean(draft.published)} onChange={(e) => setDraft((d) => ({ ...d, published: e.target.checked }))} /><span /><div><b>Yayında göster</b><small>Aktif olduğunda ziyaretçiler bu içeriği görür.</small></div></label></section></div>;
+ }
+-- 
+2.51.1
+

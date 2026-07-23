@@ -1,0 +1,39 @@
+From cec939466d18378f7bf42d42ff30eb32cc8a6ed0 Mon Sep 17 00:00:00 2001
+From: Codex <codex@openai.com>
+Date: Sun, 19 Jul 2026 13:43:35 +0000
+Subject: [PATCH] Panel iceriklerini otomatik yenile
+
+---
+ app/page.tsx     | 2 ++
+ app/sss/page.tsx | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/app/page.tsx b/app/page.tsx
+index 99cef3a..6711b85 100644
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -5,6 +5,8 @@ import Hero from "@/components/Hero";
+ import Footer from "@/components/Footer";
+ import { buildMetadata } from "@/lib/seo";
+ 
++export const revalidate = 60;
++
+ const ServicesHome = dynamic(() => import("@/components/ServicesHome"));
+ const Results = dynamic(() => import("@/components/Results"));
+ const AboutStrip = dynamic(() => import("@/components/AboutStrip"));
+diff --git a/app/sss/page.tsx b/app/sss/page.tsx
+index 758a528..5c9485c 100644
+--- a/app/sss/page.tsx
++++ b/app/sss/page.tsx
+@@ -7,6 +7,8 @@ import { buildMetadata } from "@/lib/seo";
+ import { JsonLd } from "@/lib/schema";
+ import { getManagedFaqGroups, type ManagedFaqGroup } from "@/lib/managed-content";
+ 
++export const revalidate = 60;
++
+ export const metadata: Metadata = buildMetadata({
+   title: "Sık Sorulan Sorular | TDA Luxury Uşak",
+   description:
+-- 
+2.51.1
+

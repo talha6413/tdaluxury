@@ -1,0 +1,1092 @@
+From 738b77c0f712c7197a3f8ef569ed75abf368d3c1 Mon Sep 17 00:00:00 2001
+From: Codex <codex@openai.com>
+Date: Sun, 19 Jul 2026 14:14:29 +0000
+Subject: [PATCH 1/2] Panel verilerini tum temel sayfalara bagla
+
+---
+ app/blog/page.tsx                       |  7 +++---
+ app/galeri/page.tsx                     |  7 +++---
+ app/globals.css                         |  1 +
+ app/hakkimizda/page.tsx                 |  7 +++---
+ app/hizmetler/page.tsx                  |  7 +++---
+ app/iletisim/page.tsx                   |  7 +++---
+ app/kampanyalar/page.tsx                |  7 +++---
+ app/page.tsx                            |  7 +++---
+ app/randevu/page.tsx                    |  7 +++---
+ app/sonuclar/page.tsx                   | 16 ++++++++-----
+ app/sss/page.tsx                        |  7 +++---
+ components/PremiumResultsGallery.tsx    | 31 +++++++++++--------------
+ components/PremiumResultsPageClient.tsx |  7 +++---
+ components/Results.tsx                  |  8 ++++---
+ components/admin/AdminPanel.tsx         | 29 ++++++++++++++++++++---
+ lib/managed-content.ts                  | 31 +++++++++++++++++++++++++
+ lib/seo.ts                              | 13 ++++++++++-
+ 17 files changed, 129 insertions(+), 70 deletions(-)
+
+diff --git a/app/blog/page.tsx b/app/blog/page.tsx
+index a478b17..8950b91 100644
+--- a/app/blog/page.tsx
++++ b/app/blog/page.tsx
+@@ -1,19 +1,18 @@
+-import type { Metadata } from "next";
+ import Image from "next/image";
+ import Link from "next/link";
+ import { ArrowRight, Clock3 } from "lucide-react";
+ import Nav from "@/components/Nav";
+ import Footer from "@/components/Footer";
+-import { buildMetadata } from "@/lib/seo";
++import { buildManagedMetadata } from "@/lib/seo";
+ import { getManagedBlogPosts } from "@/lib/managed-content";
+ 
+-export const metadata: Metadata = buildMetadata({
++export async function generateMetadata() { return buildManagedMetadata("blog", {
+   title: "Güzellik Blogu | Uşak Lazer Epilasyon ve Cilt Bakımı | TDA Luxury",
+   description:
+     "Lazer epilasyon, cilt bakımı, kalıcı makyaj, kaş-kirpik ve bölgesel incelme üzerine güncel içerikler ve uzman ipuçları.",
+   path: "/blog",
+   image: "/images/services-premium/cilt-bakimi.webp",
+-});
++}); }
+ 
+ export const revalidate = 60;
+ 
+diff --git a/app/galeri/page.tsx b/app/galeri/page.tsx
+index 4310f29..d07c264 100644
+--- a/app/galeri/page.tsx
++++ b/app/galeri/page.tsx
+@@ -1,20 +1,19 @@
+-import type { Metadata } from "next";
+ import Image from "next/image";
+ import Link from "next/link";
+ import { ArrowRight, Camera, CheckCircle2, MessageCircle, Sparkles } from "lucide-react";
+ import Nav from "@/components/Nav";
+ import Footer from "@/components/Footer";
+ import PremiumGalleryClient from "@/components/PremiumGalleryClient";
+-import { buildMetadata } from "@/lib/seo";
++import { buildManagedMetadata } from "@/lib/seo";
+ import { getManagedGallery } from "@/lib/managed-content";
+ 
+-export const metadata: Metadata = buildMetadata({
++export async function generateMetadata() { return buildManagedMetadata("galeri", {
+   title: "TDA Luxury Galeri | Uşak Güzellik Salonu Fotoğrafları",
+   description:
+     "TDA Luxury Uşak salon atmosferini, uygulama alanlarını, lazer epilasyon, cilt bakımı, kalıcı makyaj ve seçili sonuç görsellerini keşfedin.",
+   path: "/galeri",
+   image: "/images/services-premium/services-hero.webp",
+-});
++}); }
+ 
+ const gallery = [
+   { src: "/images/services-premium/services-hero.webp", title: "Premium Salon Atmosferi", category: "Salon", alt: "TDA Luxury Uşak premium salon atmosferi" },
+diff --git a/app/globals.css b/app/globals.css
+index 04fd4b7..3a9082b 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1549,6 +1549,7 @@ main > .motion-reveal,
+ @media(max-width:1050px){.admin-page{grid-template-columns:230px 1fr}.admin-content{padding:35px 28px}.admin-table-head,.admin-table-row{grid-template-columns:minmax(230px,1fr) 115px 90px}.admin-table-head span:nth-child(3),.admin-table-row time{display:none}.admin-dashboard-grid{grid-template-columns:1fr}.admin-stat-grid article{padding:19px}}
+ @media(max-width:760px){.admin-page{display:block}.admin-mobile-menu{position:fixed;z-index:45;top:14px;left:14px;display:grid;width:43px;height:43px;place-items:center;border:1px solid #dedee2;border-radius:10px;background:#fff;box-shadow:0 8px 25px rgba(0,0,0,.1)}.admin-sidebar{position:fixed;left:0;top:0;width:280px;height:100dvh;padding:24px 17px;transform:translateX(-105%);transition:.28s ease}.admin-sidebar.is-open{transform:translateX(0)}.admin-brand>button{display:flex!important}.admin-sidebar nav{display:grid;grid-template-columns:1fr}.admin-sidebar nav button{justify-content:flex-start;font-size:12px}.admin-sidebar-scrim{position:fixed;inset:0;z-index:40;border:0;background:rgba(0,0,0,.5)}.admin-content{padding:78px 14px 45px}.admin-header{align-items:flex-start;flex-direction:column}.admin-header h1{font-size:37px}.admin-header>button{width:100%}.admin-dashboard-header>div:last-child{width:100%}.admin-dashboard-header>div:last-child>*{flex:1}.admin-stat-grid{grid-template-columns:1fr}.admin-toolbar{align-items:stretch;flex-direction:column}.admin-toolbar>label{width:100%}.admin-toolbar>div{display:grid;grid-template-columns:repeat(3,1fr)}.admin-table-head{display:none}.admin-table-row{grid-template-columns:1fr auto;gap:12px;min-height:0;padding:16px}.admin-row-title{grid-column:1/-1}.admin-table-row time{display:none}.admin-status{grid-column:1}.admin-row-actions{grid-column:2}.admin-drawer>header,.admin-drawer form{padding-left:18px;padding-right:18px}.admin-drawer form>footer{padding:13px 18px}.admin-fields>section{padding:19px}.admin-login{padding:28px}.admin-login h1{font-size:31px}}
+ .admin-fields select{width:100%;padding:12px 13px;border:1px solid #dddde2;border-radius:9px;background:#fafafa;color:#18181b;outline:none}.admin-fields select:focus{border-color:#b88a47;box-shadow:0 0 0 3px rgba(184,138,71,.1)}.admin-input-help,.admin-field-note{color:#8b8b93;font-size:10px;line-height:1.5}
++.admin-settings-form{display:grid;grid-template-columns:1fr 1fr;gap:20px}.admin-settings-form>section{padding:26px;border:1px solid #e3e3e7;border-radius:15px;background:#fff}.admin-settings-form h2{margin:0 0 20px;font-family:Georgia,serif;font-size:24px;font-weight:500}.admin-settings-form label{display:grid;gap:7px;margin-top:15px}.admin-settings-form label>span:first-child{font-size:11px;font-weight:800}.admin-settings-form input,.admin-settings-form textarea{width:100%;padding:12px 13px;border:1px solid #dddde2;border-radius:9px;background:#fafafa;color:#18181b;outline:none;resize:vertical}.admin-settings-form input:focus,.admin-settings-form textarea:focus{border-color:#b88a47;box-shadow:0 0 0 3px rgba(184,138,71,.1)}.admin-settings-form>footer{grid-column:1/-1;display:flex;justify-content:flex-end}.admin-settings-save{display:flex;align-items:center;gap:8px;min-height:46px;padding:0 20px;border:0;border-radius:10px;background:#18181b;color:#fff;font-weight:800;cursor:pointer}.admin-settings-save:disabled{opacity:.55}@media(max-width:850px){.admin-settings-form{grid-template-columns:1fr}}
+ 
+ /* ===== AŞAMA 20.2 — PREMIUM GALLERY ===== */
+ .gallery-v20-hero{min-height:790px}
+diff --git a/app/hakkimizda/page.tsx b/app/hakkimizda/page.tsx
+index ec9ad54..73453c0 100644
+--- a/app/hakkimizda/page.tsx
++++ b/app/hakkimizda/page.tsx
+@@ -1,18 +1,17 @@
+-import type { Metadata } from "next";
+ import Image from "next/image";
+ import Link from "next/link";
+ import { Award, HeartHandshake, ShieldCheck, Sparkles } from "lucide-react";
+ import Nav from "@/components/Nav";
+ import Footer from "@/components/Footer";
+-import { buildMetadata } from "@/lib/seo";
++import { buildManagedMetadata } from "@/lib/seo";
+ 
+-export const metadata: Metadata = buildMetadata({
++export async function generateMetadata() { return buildManagedMetadata("hakkimizda", {
+   title: "Hakkımızda | Uşak Güzellik Salonu | TDA Luxury",
+   description:
+     "TDA Luxury’nin hizmet anlayışını, uzman yaklaşımını, hijyen standartlarını ve Uşak’taki premium salon deneyimini keşfedin.",
+   path: "/hakkimizda",
+   image: "/images/services-premium/services-hero.webp",
+-});
++}); }
+ 
+ const values = [
+   { icon: ShieldCheck, title: "Hijyen ve Güven", text: "Her uygulamada temiz, düzenli ve kontrollü bir salon standardı." },
+diff --git a/app/hizmetler/page.tsx b/app/hizmetler/page.tsx
+index 5379754..daa9b89 100644
+--- a/app/hizmetler/page.tsx
++++ b/app/hizmetler/page.tsx
+@@ -1,15 +1,14 @@
+-import type { Metadata } from "next";
+ import Nav from "@/components/Nav";
+ import Footer from "@/components/Footer";
+ import ServicesCatalog from "@/components/ServicesCatalog";
+ import { services } from "@/data/services";
+-import { buildMetadata } from "@/lib/seo";
++import { buildManagedMetadata } from "@/lib/seo";
+ 
+-export const metadata: Metadata = buildMetadata({
++export async function generateMetadata() { return buildManagedMetadata("hizmetler", {
+   title: "Hizmetlerimiz | TDA Luxury Uşak",
+   description: "Lazer epilasyon, cilt bakımı, kalıcı makyaj, bölgesel incelme, kaş-kirpik ve tırnak hizmetlerimizin tamamını inceleyin.",
+   path: "/hizmetler",
+-});
++}); }
+ 
+ export default function Page() {
+   return (
+diff --git a/app/iletisim/page.tsx b/app/iletisim/page.tsx
+index a3c6125..391d91c 100644
+--- a/app/iletisim/page.tsx
++++ b/app/iletisim/page.tsx
+@@ -1,4 +1,3 @@
+-import type { Metadata } from "next";
+ import Link from "next/link";
+ import {
+   ArrowRight,
+@@ -15,16 +14,16 @@ import {
+ import Nav from "@/components/Nav";
+ import Footer from "@/components/Footer";
+ import ContactForm from "@/components/contact/ContactForm";
+-import { buildMetadata } from "@/lib/seo";
++import { buildManagedMetadata } from "@/lib/seo";
+ import { BreadcrumbSchema, JsonLd } from "@/lib/schema";
+ import { site, waUrl } from "@/lib/site";
+ 
+-export const metadata: Metadata = buildMetadata({
++export async function generateMetadata() { return buildManagedMetadata("iletisim", {
+   title: "İletişim | Uşak Merkez Güzellik Salonu",
+   description:
+     "TDA Luxury Uşak iletişim bilgileri, WhatsApp randevu, çalışma saatleri, Instagram ve Google Haritalar yol tarifi bilgileri.",
+   path: "/iletisim",
+-});
++}); }
+ 
+ const mapsUrl = site.mapsUrl;
+ const mapsEmbedUrl = site.mapsEmbedUrl;
+diff --git a/app/kampanyalar/page.tsx b/app/kampanyalar/page.tsx
+index 1bed43e..ab3e519 100644
+--- a/app/kampanyalar/page.tsx
++++ b/app/kampanyalar/page.tsx
+@@ -1,18 +1,17 @@
+-import type { Metadata } from "next";
+ import Image from "next/image";
+ import Link from "next/link";
+ import { ArrowRight, BadgePercent, CalendarDays, CheckCircle2, Gift, MessageCircle, Sparkles } from "lucide-react";
+ import Nav from "@/components/Nav";
+ import Footer from "@/components/Footer";
+-import { buildMetadata } from "@/lib/seo";
++import { buildManagedMetadata } from "@/lib/seo";
+ import { getManagedCampaigns } from "@/lib/managed-content";
+ 
+-export const metadata: Metadata = buildMetadata({
++export async function generateMetadata() { return buildManagedMetadata("kampanyalar", {
+   title: "TDA Luxury Kampanyalar | Uşak Güzellik Salonu",
+   description:
+     "TDA Luxury Uşak güncel kampanyalarını, dönemsel avantajlarını ve özel bakım fırsatlarını inceleyin. Randevu ve detaylar için WhatsApp’tan ulaşın.",
+   path: "/kampanyalar",
+-});
++}); }
+ 
+ const campaigns = [
+   {
+diff --git a/app/page.tsx b/app/page.tsx
+index 6711b85..d5f0e6a 100644
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -1,9 +1,8 @@
+-import type { Metadata } from "next";
+ import dynamic from "next/dynamic";
+ import Nav from "@/components/Nav";
+ import Hero from "@/components/Hero";
+ import Footer from "@/components/Footer";
+-import { buildMetadata } from "@/lib/seo";
++import { buildManagedMetadata } from "@/lib/seo";
+ 
+ export const revalidate = 60;
+ 
+@@ -22,14 +21,14 @@ const ScrollProgress = dynamic(() => import("@/components/ScrollProgress"));
+ const MotionReveal = dynamic(() => import("@/components/MotionReveal"));
+ const PremiumSplash = dynamic(() => import("@/components/PremiumSplash"));
+ 
+-export const metadata: Metadata = buildMetadata({
++export async function generateMetadata() { return buildManagedMetadata("ana-sayfa", {
+   title:
+     "Uşak Güzellik Salonu | Lazer Epilasyon, Cilt Bakımı | TDA Luxury",
+   description:
+     "TDA Luxury Uşak'ta lazer epilasyon, cilt bakımı, kalıcı makyaj, bölgesel incelme, kaş-kirpik ve tırnak hizmetleri sunan premium güzellik salonudur.",
+   path: "/",
+   image: "/og/home.jpg",
+-});
++}); }
+ 
+ export default function Home() {
+   return (
+diff --git a/app/randevu/page.tsx b/app/randevu/page.tsx
+index 597fc4e..8695b0d 100644
+--- a/app/randevu/page.tsx
++++ b/app/randevu/page.tsx
+@@ -1,15 +1,14 @@
+-import type { Metadata } from "next";
+ import Nav from "@/components/Nav";
+ import Footer from "@/components/Footer";
+ import AppointmentPlanner from "@/components/AppointmentPlanner";
+-import { buildMetadata } from "@/lib/seo";
++import { buildManagedMetadata } from "@/lib/seo";
+ 
+-export const metadata: Metadata = buildMetadata({
++export async function generateMetadata() { return buildManagedMetadata("randevu", {
+   title: "Randevu Al | TDA Luxury Uşak",
+   description:
+     "TDA Luxury Uşak için lazer epilasyon, cilt bakımı, kalıcı makyaj ve diğer güzellik hizmetlerinde hızlı randevu talebi oluşturun.",
+   path: "/randevu",
+-});
++}); }
+ 
+ const breadcrumb = {
+   "@context": "https://schema.org",
+diff --git a/app/sonuclar/page.tsx b/app/sonuclar/page.tsx
+index 67270a4..bec5485 100644
+--- a/app/sonuclar/page.tsx
++++ b/app/sonuclar/page.tsx
+@@ -1,19 +1,22 @@
+-import type { Metadata } from "next";
+ import Image from "next/image";
+ import Link from "next/link";
+ import { ArrowRight, MessageCircle, Sparkles } from "lucide-react";
+ import Nav from "@/components/Nav";
+ import Footer from "@/components/Footer";
+ import PremiumResultsPageClient from "@/components/PremiumResultsPageClient";
+-import { buildMetadata } from "@/lib/seo";
++import { buildManagedMetadata } from "@/lib/seo";
++import { getManagedResults } from "@/lib/managed-content";
++import { fallbackPageResults } from "@/components/PremiumResultsPageClient";
+ 
+-export const metadata: Metadata = buildMetadata({
++export const revalidate = 60;
++
++export async function generateMetadata() { return buildManagedMetadata("sonuclar", {
+   title: "Öncesi Sonrası | TDA Luxury Uşak Güzellik Salonu",
+   description:
+     "TDA Luxury Uşak lazer epilasyon, cilt bakımı, kalıcı makyaj ve bölgesel bakım öncesi sonrası görsellerini inceleyin. Sonuçlar kişiden kişiye değişebilir.",
+   path: "/sonuclar",
+   image: "/images/real/dudak-oncesi-sonrasi.webp",
+-});
++}); }
+ 
+ const schema = {
+   "@context": "https://schema.org",
+@@ -29,7 +32,8 @@ const schema = {
+   },
+ };
+ 
+-export default function ResultsPage() {
++export default async function ResultsPage() {
++  const results = await getManagedResults(fallbackPageResults);
+   return (
+     <>
+       <Nav />
+@@ -79,7 +83,7 @@ export default function ResultsPage() {
+               </p>
+             </div>
+ 
+-            <PremiumResultsPageClient />
++            <PremiumResultsPageClient results={results} />
+           </div>
+         </section>
+       </main>
+diff --git a/app/sss/page.tsx b/app/sss/page.tsx
+index 5c9485c..4a766be 100644
+--- a/app/sss/page.tsx
++++ b/app/sss/page.tsx
+@@ -1,20 +1,19 @@
+-import type { Metadata } from "next";
+ import Link from "next/link";
+ import { ArrowRight, HelpCircle, MessageCircle, ShieldCheck, Sparkles } from "lucide-react";
+ import Nav from "@/components/Nav";
+ import Footer from "@/components/Footer";
+-import { buildMetadata } from "@/lib/seo";
++import { buildManagedMetadata } from "@/lib/seo";
+ import { JsonLd } from "@/lib/schema";
+ import { getManagedFaqGroups, type ManagedFaqGroup } from "@/lib/managed-content";
+ 
+ export const revalidate = 60;
+ 
+-export const metadata: Metadata = buildMetadata({
++export async function generateMetadata() { return buildManagedMetadata("sss", {
+   title: "Sık Sorulan Sorular | TDA Luxury Uşak",
+   description:
+     "Lazer epilasyon, cilt bakımı, kalıcı makyaj, bölgesel incelme, randevu ve bakım süreçleri hakkında sık sorulan soruların yanıtları.",
+   path: "/sss",
+-});
++}); }
+ 
+ const fallbackGroups: ManagedFaqGroup[] = [
+   {
+diff --git a/components/PremiumResultsGallery.tsx b/components/PremiumResultsGallery.tsx
+index e54e580..182ff12 100644
+--- a/components/PremiumResultsGallery.tsx
++++ b/components/PremiumResultsGallery.tsx
+@@ -4,41 +4,36 @@ import { useMemo, useState } from "react";
+ import Link from "next/link";
+ import { ArrowRight, ShieldCheck } from "lucide-react";
+ import BeforeAfterSlider from "@/components/BeforeAfterSlider";
++import type { ManagedResult } from "@/lib/managed-content";
+ 
+-type ResultItem = {
+-  label: string;
+-  category: "Lazer" | "Kalıcı Makyaj" | "Cilt Bakımı" | "Vücut";
+-  image: string;
+-};
+-
+-const items: ResultItem[] = [
++export const fallbackResults: ManagedResult[] = [
+   {
+-    label: "Dudak renklendirme",
++    title: "Dudak renklendirme", description: "Kişiye özel planlanan dudak renklendirme görünümü.",
+     category: "Kalıcı Makyaj",
+     image: "url(/images/real/dudak-oncesi-sonrasi.webp)",
+   },
+   {
+-    label: "Lazer epilasyon",
++    title: "Lazer epilasyon", description: "Kişisel özelliklere göre değişebilen uygulama görünümü.",
+     category: "Lazer",
+     image: "url(/images/result-lazer.svg)",
+   },
+   {
+-    label: "Bacak lazer epilasyon",
++    title: "Bacak lazer epilasyon", description: "Bacak lazer epilasyon karşılaştırması.",
+     category: "Lazer",
+     image: "url(/images/result-leg.svg)",
+   },
+   {
+-    label: "Bölgesel bakım",
++    title: "Bölgesel bakım", description: "Bölgesel bakım uygulama görünümü.",
+     category: "Vücut",
+     image: "url(/images/result-belly.svg)",
+   },
+   {
+-    label: "Cilt görünümü",
++    title: "Cilt görünümü", description: "Cilt bakımı sonrası görünüm.",
+     category: "Cilt Bakımı",
+     image: "url(/images/result-leg.svg)",
+   },
+   {
+-    label: "Bakım sonrası görünüm",
++    title: "Bakım sonrası görünüm", description: "Bakım sonrası örnek görünüm.",
+     category: "Cilt Bakımı",
+     image: "url(/images/result-belly.svg)",
+   },
+@@ -46,12 +41,12 @@ const items: ResultItem[] = [
+ 
+ const filters = ["Tümü", "Lazer", "Kalıcı Makyaj", "Cilt Bakımı", "Vücut"] as const;
+ 
+-export default function PremiumResultsGallery() {
++export default function PremiumResultsGallery({ items = fallbackResults }: { items?: ManagedResult[] }) {
+   const [active, setActive] = useState<(typeof filters)[number]>("Tümü");
+ 
+   const visibleItems = useMemo(
+     () => (active === "Tümü" ? items : items.filter((item) => item.category === active)),
+-    [active],
++    [active, items],
+   );
+ 
+   return (
+@@ -87,11 +82,11 @@ export default function PremiumResultsGallery() {
+ 
+         <div className="stage19-result-grid">
+           {visibleItems.map((result) => (
+-            <article key={`${result.category}-${result.label}`} className="stage19-result-item">
+-              <BeforeAfterSlider image={result.image} label={result.label} />
++            <article key={`${result.category}-${result.title}`} className="stage19-result-item">
++              <BeforeAfterSlider image={result.image} label={result.title} />
+               <div className="stage19-result-meta">
+                 <span>{result.category}</span>
+-                <h3>{result.label}</h3>
++                <h3>{result.title}</h3>
+               </div>
+             </article>
+           ))}
+diff --git a/components/PremiumResultsPageClient.tsx b/components/PremiumResultsPageClient.tsx
+index 3887162..c590d63 100644
+--- a/components/PremiumResultsPageClient.tsx
++++ b/components/PremiumResultsPageClient.tsx
+@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
+ import Link from "next/link";
+ import { ArrowRight, Info, MessageCircle, ShieldCheck } from "lucide-react";
+ import BeforeAfterSlider from "@/components/BeforeAfterSlider";
++import type { ManagedResult } from "@/lib/managed-content";
+ 
+ type Category = "Tümü" | "Lazer" | "Kalıcı Makyaj" | "Cilt Bakımı" | "Vücut";
+ 
+@@ -17,7 +18,7 @@ type ResultItem = {
+ 
+ const filters: Category[] = ["Tümü", "Lazer", "Kalıcı Makyaj", "Cilt Bakımı", "Vücut"];
+ 
+-const results: ResultItem[] = [
++export const fallbackPageResults: ResultItem[] = [
+   {
+     title: "Dudak Renklendirme",
+     category: "Kalıcı Makyaj",
+@@ -62,12 +63,12 @@ const results: ResultItem[] = [
+   },
+ ];
+ 
+-export default function PremiumResultsPageClient() {
++export default function PremiumResultsPageClient({ results = fallbackPageResults }: { results?: ManagedResult[] }) {
+   const [active, setActive] = useState<Category>("Tümü");
+ 
+   const visibleResults = useMemo(
+     () => (active === "Tümü" ? results : results.filter((item) => item.category === active)),
+-    [active],
++    [active, results],
+   );
+ 
+   return (
+diff --git a/components/Results.tsx b/components/Results.tsx
+index 5ee4203..a22dc60 100644
+--- a/components/Results.tsx
++++ b/components/Results.tsx
+@@ -1,5 +1,7 @@
+-import PremiumResultsGallery from "@/components/PremiumResultsGallery";
++import PremiumResultsGallery, { fallbackResults } from "@/components/PremiumResultsGallery";
++import { getManagedResults } from "@/lib/managed-content";
+ 
+-export default function Results() {
+-  return <PremiumResultsGallery />;
++export default async function Results() {
++  const items = await getManagedResults(fallbackResults);
++  return <PremiumResultsGallery items={items} />;
+ }
+diff --git a/components/admin/AdminPanel.tsx b/components/admin/AdminPanel.tsx
+index f91ec48..16c493d 100644
+--- a/components/admin/AdminPanel.tsx
++++ b/components/admin/AdminPanel.tsx
+@@ -5,12 +5,12 @@ import {
+   BookOpen, Check, ChevronRight, CircleUserRound, ExternalLink, Eye, FileText,
+   BadgeHelp, BriefcaseBusiness, ImageIcon, LayoutDashboard, LogOut, Megaphone,
+   Menu, PanelsTopLeft, Pencil, Plus, RefreshCw, Save, Search, Sparkles,
+-  Trash2, Upload, X,
++  Settings, Trash2, Upload, X,
+ } from "lucide-react";
+ import { getSupabaseBrowserClient } from "@/lib/supabase";
+ 
+ type Tab = "services" | "campaigns" | "blog_posts" | "gallery_items" | "results" | "faqs" | "page_content";
+-type View = "dashboard" | Tab;
++type View = "dashboard" | "settings" | Tab;
+ type Row = Record<string, unknown> & {
+   id: string;
+   title: string;
+@@ -70,6 +70,7 @@ export default function AdminPanel() {
+   const [message, setMessage] = useState("");
+   const [busy, setBusy] = useState(false);
+   const [deleteTarget, setDeleteTarget] = useState<Row | null>(null);
++  const [settings, setSettings] = useState<Record<string, unknown>>({ business_name: "TDA Luxury", phone_display: "", whatsapp_number: "", whatsapp_message: "", instagram_url: "", address: "", maps_url: "", maintenance_mode: false });
+ 
+   const loadAll = useCallback(async () => {
+     if (!supabase) return;
+@@ -85,6 +86,8 @@ export default function AdminPanel() {
+       next[table] = (result.data as Row[]) ?? [];
+       if (result.error) setMessage(result.error.message);
+     }
++    const { data: siteSettings } = await supabase.from("site_settings").select("*").eq("id", true).maybeSingle();
++    if (siteSettings) setSettings(siteSettings);
+     setRowsByTab(next);
+     setBusy(false);
+   }, [supabase]);
+@@ -99,7 +102,7 @@ export default function AdminPanel() {
+     });
+   }, [supabase, loadAll]);
+ 
+-  const activeTab: Tab = view === "dashboard" ? "campaigns" : view;
++  const activeTab: Tab = view === "dashboard" || view === "settings" ? "campaigns" : view;
+   const activeRows = rowsByTab[activeTab];
+   const filteredRows = useMemo(() => activeRows.filter((row) => {
+     const matchesSearch = row.title.toLocaleLowerCase("tr-TR").includes(search.toLocaleLowerCase("tr-TR"));
+@@ -176,6 +179,17 @@ export default function AdminPanel() {
+     setBusy(false);
+   }
+ 
++  async function saveSettings(event: FormEvent) {
++    event.preventDefault();
++    if (!supabase) return;
++    setBusy(true); setMessage("");
++    const payload: Record<string, unknown> = { ...settings, updated_at: new Date().toISOString() };
++    delete payload.id;
++    const { error } = await supabase.from("site_settings").update(payload).eq("id", true);
++    setMessage(error ? "Ayarlar kaydedilemedi: " + error.message : "İşletme ayarları kaydedildi.");
++    setBusy(false);
++  }
++
+   if (!ready) return <main className="admin-shell"><RefreshCw className="admin-spinner" /><p>Panel hazırlanıyor…</p></main>;
+   if (!supabase) return <main className="admin-shell"><section className="admin-setup"><strong>TDA LUXURY</strong><h1>Admin paneli kuruluma hazır</h1><p>Supabase bağlantı bilgileri henüz Vercel ortam değişkenlerine eklenmedi.</p></section></main>;
+   if (!signedIn) return <AdminLogin email={email} password={password} message={message} busy={busy} setEmail={setEmail} setPassword={setPassword} signIn={signIn} />;
+@@ -189,6 +203,8 @@ export default function AdminPanel() {
+           <button className={view === "dashboard" ? "active" : ""} onClick={() => navigate("dashboard")}><LayoutDashboard size={19} /><span>Genel Bakış</span></button>
+           <p>İÇERİK</p>
+           {(Object.keys(tabConfig) as Tab[]).map((key) => { const Icon = tabConfig[key].icon; return <button key={key} className={view === key ? "active" : ""} onClick={() => navigate(key)}><Icon size={19} /><span>{tabConfig[key].label}</span><b>{rowsByTab[key].length}</b></button>; })}
++          <p>YAPILANDIRMA</p>
++          <button className={view === "settings" ? "active" : ""} onClick={() => navigate("settings")}><Settings size={19} /><span>İşletme Ayarları</span></button>
+         </nav>
+         <div className="admin-account"><CircleUserRound /><span><b>Yönetici</b><small>{userEmail}</small></span></div>
+         <button className="admin-logout" onClick={async () => { await supabase.auth.signOut(); setSignedIn(false); }}><LogOut size={18} /> Çıkış Yap</button>
+@@ -197,6 +213,8 @@ export default function AdminPanel() {
+       <section className="admin-content">
+         {view === "dashboard" ? (
+           <Dashboard rows={rowsByTab} total={total} published={published} busy={busy} navigate={navigate} refresh={loadAll} />
++        ) : view === "settings" ? (
++          <SettingsPanel settings={settings} setSettings={setSettings} save={saveSettings} busy={busy} message={message} />
+         ) : (
+           <>
+             <header className="admin-header"><div><span>İÇERİK YÖNETİMİ</span><h1>{tabConfig[activeTab].label}</h1><p>{tabConfig[activeTab].description}</p></div><button onClick={() => openEditor()}><Plus size={18} /> Yeni {tabConfig[activeTab].singular}</button></header>
+@@ -217,6 +235,11 @@ export default function AdminPanel() {
+   );
+ }
+ 
++function SettingsPanel({ settings, setSettings, save, busy, message }: { settings: Record<string, unknown>; setSettings: React.Dispatch<React.SetStateAction<Record<string, unknown>>>; save: (event: FormEvent) => void; busy: boolean; message: string }) {
++  const field = (name: string, label: string, placeholder = "") => <label><span>{label}</span><input value={String(settings[name] ?? "")} placeholder={placeholder} onChange={(e) => setSettings((current) => ({ ...current, [name]: e.target.value }))} /></label>;
++  return <><header className="admin-header"><div><span>YAPILANDIRMA</span><h1>İşletme Ayarları</h1><p>Sitedeki iletişim ve işletme bilgilerini tek noktadan yönetin.</p></div></header>{message && <div className="admin-message"><Check size={17} />{message}</div>}<form className="admin-settings-form" onSubmit={save}><section><h2>İletişim bilgileri</h2>{field("business_name", "İşletme adı", "TDA Luxury")}{field("phone_display", "Görünen telefon", "0536 665 10 64")}{field("whatsapp_number", "WhatsApp numarası", "905366651064")}{field("instagram_url", "Instagram bağlantısı", "https://instagram.com/...")}</section><section><h2>Konum ve WhatsApp</h2><label><span>Adres</span><textarea rows={4} value={String(settings.address ?? "")} onChange={(e) => setSettings((current) => ({ ...current, address: e.target.value }))} /></label>{field("maps_url", "Google Haritalar bağlantısı", "https://maps.google.com/...")}<label><span>Varsayılan WhatsApp mesajı</span><textarea rows={5} value={String(settings.whatsapp_message ?? "")} onChange={(e) => setSettings((current) => ({ ...current, whatsapp_message: e.target.value }))} /></label><label className="admin-switch"><input type="checkbox" checked={Boolean(settings.maintenance_mode)} onChange={(e) => setSettings((current) => ({ ...current, maintenance_mode: e.target.checked }))} /><span /><div><b>Bakım modu</b><small>Hazırlık tamamlanana kadar kullanılmak üzere kaydedilir.</small></div></label></section><footer><button className="admin-settings-save" disabled={busy}><Save size={18} />{busy ? "Kaydediliyor…" : "Ayarları Kaydet"}</button></footer></form></>;
++}
++
+ function AdminLogin({ email, password, message, busy, setEmail, setPassword, signIn }: { email: string; password: string; message: string; busy: boolean; setEmail: (value: string) => void; setPassword: (value: string) => void; signIn: (event: FormEvent) => void }) {
+   return <main className="admin-shell"><form className="admin-login" onSubmit={signIn}><div className="admin-login-brand"><strong>TDA</strong><span>LUXURY</span></div><h1>Tekrar hoş geldiniz</h1><p>İçeriklerinizi yönetmek için hesabınıza giriş yapın.</p><label>E-posta adresi<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" placeholder="ornek@tdaluxury.com" /></label><label>Şifre<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" placeholder="••••••••" /></label>{message && <div className="admin-message">{message}</div>}<button disabled={busy}>{busy ? "Giriş yapılıyor…" : "Giriş Yap"}<ChevronRight size={19} /></button><small>Güvenli yönetim alanı · TDA Luxury</small></form></main>;
+ }
+diff --git a/lib/managed-content.ts b/lib/managed-content.ts
+index e5a6629..9f059a6 100644
+--- a/lib/managed-content.ts
++++ b/lib/managed-content.ts
+@@ -5,6 +5,8 @@ export type ManagedCampaign = { id?: string; title: string; eyebrow: string; des
+ export type ManagedGalleryItem = { id?: string; src: string; title: string; category: string; alt: string };
+ export type ManagedService = { id?: string; title: string; subtitle: string; meta: string; duration: string; price: string; href: string; image: string; imagePosition: string };
+ export type ManagedFaqGroup = { title: string; items: [string, string][] };
++export type ManagedResult = { id?: string; title: string; category: string; image: string; description: string; note?: string };
++export type ManagedPageContent = { title: string; pageKey: string; eyebrow: string; description: string; buttonText: string; buttonUrl: string; image: string; imagePosition: string; seoTitle: string; seoDescription: string };
+ 
+ function serverClient() {
+   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+@@ -53,6 +55,35 @@ export async function getManagedFaqGroups(fallback: ManagedFaqGroup[]) {
+   return Array.from(groups, ([title, items]) => ({ title, items }));
+ }
+ 
++export async function getManagedResults(fallback: ManagedResult[]) {
++  const client = serverClient();
++  if (!client) return fallback;
++  const { data, error } = await client.from("results").select("*").eq("published", true).order("sort_order");
++  if (error || !data?.length) return fallback;
++  return data.map((row) => ({
++    id: row.id,
++    title: String(row.title),
++    category: String(row.category || "Sonuç"),
++    image: `url(${String(row.before_image_url || row.after_image_url || "/images/result-lazer.svg")})`,
++    description: String(row.description || ""),
++    note: String(row.disclaimer || "Sonuçlar kişiden kişiye değişebilir."),
++  }));
++}
++
++export async function getManagedPageContent(pageKey: string) {
++  const client = serverClient();
++  if (!client) return null;
++  const { data, error } = await client.from("page_content").select("*").eq("page_key", pageKey).eq("published", true).maybeSingle();
++  if (error || !data) return null;
++  return {
++    title: String(data.title), pageKey: String(data.page_key), eyebrow: String(data.eyebrow || ""),
++    description: String(data.description || ""), buttonText: String(data.button_text || ""),
++    buttonUrl: String(data.button_url || ""), image: String(data.image_url || ""),
++    imagePosition: String(data.image_position || "center center"), seoTitle: String(data.seo_title || ""),
++    seoDescription: String(data.seo_description || ""),
++  } satisfies ManagedPageContent;
++}
++
+ function mapBlogRow(row: Record<string, unknown>): BlogPost {
+   const publishedAt = String(row.published_at ?? new Date().toISOString().slice(0, 10));
+   return {
+diff --git a/lib/seo.ts b/lib/seo.ts
+index 25bec1a..81a691f 100644
+--- a/lib/seo.ts
++++ b/lib/seo.ts
+@@ -1,7 +1,8 @@
+ import type { Metadata } from "next";
+ import { site } from "@/lib/site";
++import { getManagedPageContent } from "@/lib/managed-content";
+ 
+-type SeoInput = { title: string; description: string; path: string; image?: string; type?: "website" | "article"; noindex?: boolean };
++export type SeoInput = { title: string; description: string; path: string; image?: string; type?: "website" | "article"; noindex?: boolean };
+ export function buildMetadata({ title, description, path, image = "/og/default.jpg", type = "website", noindex = false }: SeoInput): Metadata {
+   const canonical = new URL(path, site.url).toString();
+   const ogImage = new URL(image, site.url).toString();
+@@ -15,3 +16,13 @@ export function buildMetadata({ title, description, path, image = "/og/default.j
+     twitter: { card: "summary_large_image", title, description, images: [ogImage] },
+   };
+ }
++
++export async function buildManagedMetadata(pageKey: string, fallback: SeoInput): Promise<Metadata> {
++  const managed = await getManagedPageContent(pageKey);
++  return buildMetadata({
++    ...fallback,
++    title: managed?.seoTitle || fallback.title,
++    description: managed?.seoDescription || fallback.description,
++    image: managed?.image || fallback.image,
++  });
++}
+-- 
+2.51.1
+
+
+From f5d88c5d9faa5cb8f20eea970e1a806da23de634 Mon Sep 17 00:00:00 2001
+From: Codex <codex@openai.com>
+Date: Sun, 19 Jul 2026 14:23:01 +0000
+Subject: [PATCH 2/2] Isletme ayarlarini canli siteye bagla
+
+---
+ app/layout.tsx                        | 19 ++++++++++------
+ components/BottomBar.tsx              | 12 ++++++-----
+ components/FloatingContactDock.tsx    | 12 ++++++-----
+ components/FloatingWhatsApp.tsx       |  6 ++++--
+ components/Footer.tsx                 | 25 ++++++++++++---------
+ components/GlobalMobileBookingBar.tsx | 12 +++++------
+ components/Hero.tsx                   | 16 ++++++++------
+ components/SiteSettingsProvider.tsx   | 31 +++++++++++++++++++++++++++
+ lib/managed-content.ts                | 27 +++++++++++++++++++++++
+ supabase/schema.sql                   | 28 ++++++++++++++++++++----
+ 10 files changed, 142 insertions(+), 46 deletions(-)
+ create mode 100644 components/SiteSettingsProvider.tsx
+
+diff --git a/app/layout.tsx b/app/layout.tsx
+index 1708e31..4440719 100644
+--- a/app/layout.tsx
++++ b/app/layout.tsx
+@@ -5,6 +5,8 @@ import SkipLink from "@/components/SkipLink";
+ import DeferredSiteWidgets from "@/components/DeferredSiteWidgets";
+ import ClientOnlyGlobalWidgets from "@/components/ClientOnlyGlobalWidgets";
+ import { site } from "@/lib/site";
++import { getManagedSiteSettings } from "@/lib/managed-content";
++import { SiteSettingsProvider } from "@/components/SiteSettingsProvider";
+ 
+ export const metadata: Metadata = {
+   metadataBase: new URL(site.url),
+@@ -52,22 +54,25 @@ export const viewport: Viewport = {
+   themeColor: "#080706",
+ };
+ 
+-export default function RootLayout({
++export default async function RootLayout({
+   children,
+ }: Readonly<{
+   children: React.ReactNode;
+ }>) {
++  const settings = await getManagedSiteSettings();
+   return (
+     <html lang="tr">
+       <body>
+-        <SkipLink />
+-        <WebsiteSchema />
+-        <LocalBusinessSchema />
++        <SiteSettingsProvider settings={settings}>
++          <SkipLink />
++          <WebsiteSchema />
++          <LocalBusinessSchema />
+ 
+-        {children}
++          {children}
+ 
+-        <DeferredSiteWidgets />
+-        <ClientOnlyGlobalWidgets />
++          <DeferredSiteWidgets />
++          <ClientOnlyGlobalWidgets />
++        </SiteSettingsProvider>
+       </body>
+     </html>
+   );
+diff --git a/components/BottomBar.tsx b/components/BottomBar.tsx
+index 319b558..971250b 100644
+--- a/components/BottomBar.tsx
++++ b/components/BottomBar.tsx
+@@ -2,9 +2,11 @@
+ 
+ import { CalendarDays, MapPin, MessageCircle, Phone } from "lucide-react";
+ import { useEffect, useRef, useState } from "react";
+-import { site, waUrl } from "@/lib/site";
++import { useSiteSettings, useWhatsAppUrl } from "@/components/SiteSettingsProvider";
+ 
+ export default function BottomBar() {
++  const settings = useSiteSettings();
++  const whatsappUrl = useWhatsAppUrl();
+   const [visible, setVisible] = useState(true);
+   const lastScrollY = useRef(0);
+ 
+@@ -26,11 +28,11 @@ export default function BottomBar() {
+   return (
+     <div className={`bottom-bar ${visible ? "is-visible" : "is-hidden"}`}>
+       <div className="bottom-grid">
+-        <a className="bottom-item" href={`tel:+${site.whatsapp}`}>
++        <a className="bottom-item" href={`tel:+${settings.whatsappNumber}`}>
+           <Phone className="bottom-ico" />
+-          <div><div className="bottom-small">HEMEN ARA</div><div className="bottom-big">{site.phoneDisplay}</div></div>
++          <div><div className="bottom-small">HEMEN ARA</div><div className="bottom-big">{settings.phoneDisplay}</div></div>
+         </a>
+-        <a className="bottom-item" href={waUrl()} target="_blank" rel="noopener noreferrer">
++        <a className="bottom-item" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+           <MessageCircle className="bottom-ico" />
+           <div><div className="bottom-small">WHATSAPP</div><div className="bottom-big">Yazışma Başlat</div></div>
+         </a>
+@@ -38,7 +40,7 @@ export default function BottomBar() {
+           <MapPin className="bottom-ico" />
+           <div><div className="bottom-small">YOL TARİFİ</div><div className="bottom-big">Konumu Göster</div></div>
+         </a>
+-        <a className="bottom-item gold-bg" href={waUrl()} target="_blank" rel="noopener noreferrer">
++        <a className="bottom-item gold-bg" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+           <CalendarDays className="bottom-ico" />
+           <div><div className="bottom-small">RANDEVU AL</div><div className="bottom-big">Hemen Rezervasyon</div></div>
+         </a>
+diff --git a/components/FloatingContactDock.tsx b/components/FloatingContactDock.tsx
+index b0f31bf..2d12918 100644
+--- a/components/FloatingContactDock.tsx
++++ b/components/FloatingContactDock.tsx
+@@ -1,7 +1,7 @@
+ "use client";
+ 
+ import { ArrowUp, MapPin, MessageCircle, Phone } from "lucide-react";
+-import { site, waUrl } from "@/lib/site";
++import { useSiteSettings, useWhatsAppUrl } from "@/components/SiteSettingsProvider";
+ 
+ function InstagramIcon() {
+   return (
+@@ -14,13 +14,15 @@ function InstagramIcon() {
+ }
+ 
+ export default function FloatingContactDock() {
++  const settings = useSiteSettings();
++  const whatsappUrl = useWhatsAppUrl();
+   const items = [
+-    { label: "Ara", href: `tel:+${site.whatsapp}`, icon: <Phone size={25} />, external: false },
+-    { label: "WhatsApp", href: waUrl(), icon: <MessageCircle size={25} />, external: true },
+-    { label: "Instagram", href: site.instagram, icon: <InstagramIcon />, external: true },
++    { label: "Ara", href: `tel:+${settings.whatsappNumber}`, icon: <Phone size={25} />, external: false },
++    { label: "WhatsApp", href: whatsappUrl, icon: <MessageCircle size={25} />, external: true },
++    { label: "Instagram", href: settings.instagramUrl, icon: <InstagramIcon />, external: true },
+     {
+       label: "Yol Tarifi",
+-      href: site.mapsUrl,
++      href: settings.mapsUrl,
+       icon: <MapPin size={25} />,
+       external: true,
+     },
+diff --git a/components/FloatingWhatsApp.tsx b/components/FloatingWhatsApp.tsx
+index f5c4840..be1cab9 100644
+--- a/components/FloatingWhatsApp.tsx
++++ b/components/FloatingWhatsApp.tsx
+@@ -1,3 +1,5 @@
++"use client";
++
+ import { MessageCircle } from "lucide-react";
+-import { waUrl } from "@/lib/site";
+-export default function FloatingWhatsApp(){return <a className="floating-wa" href={waUrl()} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><MessageCircle/></a>}
++import { useWhatsAppUrl } from "@/components/SiteSettingsProvider";
++export default function FloatingWhatsApp(){const whatsappUrl = useWhatsAppUrl(); return <a className="floating-wa" href={whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><MessageCircle/></a>}
+diff --git a/components/Footer.tsx b/components/Footer.tsx
+index 0f8b6ed..acde697 100644
+--- a/components/Footer.tsx
++++ b/components/Footer.tsx
+@@ -1,3 +1,5 @@
++"use client";
++
+ import Image from "next/image";
+ import Link from "next/link";
+ import {
+@@ -8,7 +10,7 @@ import {
+   MessageCircle,
+   Phone,
+ } from "lucide-react";
+-import { site, waUrl } from "@/lib/site";
++import { useSiteSettings, useWhatsAppUrl } from "@/components/SiteSettingsProvider";
+ 
+ const footerGallery = [
+   { src: "/images/real/salon-01.webp", alt: "TDA Luxury salon iç mekanı" },
+@@ -18,6 +20,9 @@ const footerGallery = [
+ ];
+ 
+ export default function Footer() {
++  const settings = useSiteSettings();
++  const defaultWhatsAppUrl = useWhatsAppUrl();
++  const infoWhatsAppUrl = useWhatsAppUrl("Merhaba, TDA Luxury web siteniz üzerinden hizmetler hakkında bilgi almak istiyorum.");
+   return (
+     <footer className="premium-footer premium-footer-v207">
+       <div className="container premium-footer-cta premium-footer-cta-v207">
+@@ -35,7 +40,7 @@ export default function Footer() {
+             <CalendarDays size={21} /> Randevu Oluştur
+           </Link>
+           <a
+-            href={waUrl("Merhaba, TDA Luxury web siteniz üzerinden hizmetler hakkında bilgi almak istiyorum.")}
++            href={infoWhatsAppUrl}
+             target="_blank"
+             rel="noopener noreferrer"
+             className="premium-footer-outline-btn"
+@@ -58,13 +63,13 @@ export default function Footer() {
+           </p>
+ 
+           <div className="premium-footer-socials">
+-            <a href={site.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
++            <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+               <Instagram size={20} />
+             </a>
+-            <a href={waUrl()} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
++            <a href={defaultWhatsAppUrl} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+               <MessageCircle size={20} />
+             </a>
+-            <a href={`tel:+${site.whatsapp}`} aria-label="Telefon">
++            <a href={`tel:+${settings.whatsappNumber}`} aria-label="Telefon">
+               <Phone size={20} />
+             </a>
+           </div>
+@@ -92,14 +97,14 @@ export default function Footer() {
+ 
+         <div className="premium-footer-contact">
+           <h3>İletişim</h3>
+-          <a href={`tel:+${site.whatsapp}`}>
+-            <Phone size={17} /> {site.phoneDisplay}
++          <a href={`tel:+${settings.whatsappNumber}`}>
++            <Phone size={17} /> {settings.phoneDisplay}
+           </a>
+-          <a href={waUrl()} target="_blank" rel="noopener noreferrer">
++          <a href={defaultWhatsAppUrl} target="_blank" rel="noopener noreferrer">
+             <MessageCircle size={17} /> WhatsApp’tan Yazın
+           </a>
+           <Link href="/iletisim">
+-            <MapPin size={17} /> {site.address}
++            <MapPin size={17} /> {settings.address}
+           </Link>
+           <span>Pzt–Cmt: 09.00–20.00</span>
+         </div>
+@@ -145,7 +150,7 @@ export default function Footer() {
+               <MapPin size={18} /> İletişim ve Konum
+             </Link>
+             <a
+-              href={site.mapsUrl}
++              href={settings.mapsUrl}
+               target="_blank"
+               rel="noopener noreferrer"
+               className="premium-footer-location-secondary"
+diff --git a/components/GlobalMobileBookingBar.tsx b/components/GlobalMobileBookingBar.tsx
+index 41902a5..3b656d7 100644
+--- a/components/GlobalMobileBookingBar.tsx
++++ b/components/GlobalMobileBookingBar.tsx
+@@ -2,25 +2,25 @@
+ 
+ import Link from "next/link";
+ import { CalendarDays, MessageCircle, Phone } from "lucide-react";
+-import { site, waUrl } from "@/lib/site";
++import { useSiteSettings, useWhatsAppUrl } from "@/components/SiteSettingsProvider";
+ 
+ export default function GlobalMobileBookingBar() {
++  const settings = useSiteSettings();
++  const whatsappUrl = useWhatsAppUrl("Merhaba, TDA Luxury web siteniz üzerinden ulaşıyorum. Hizmetler hakkında bilgi almak istiyorum.");
+   return (
+     <nav className="global-mobile-booking" aria-label="Hızlı randevu ve iletişim">
+       <a
+-        href={`tel:+${site.whatsapp}`}
++        href={`tel:+${settings.whatsappNumber}`}
+         className="global-mobile-booking-item"
+         data-conversion-source="global_mobile_bar"
+-        aria-label={`TDA Luxury'yi ara: ${site.phoneDisplay}`}
++        aria-label={`TDA Luxury'yi ara: ${settings.phoneDisplay}`}
+       >
+         <Phone size={19} strokeWidth={1.8} />
+         <span>Ara</span>
+       </a>
+ 
+       <a
+-        href={waUrl(
+-          "Merhaba, TDA Luxury web siteniz üzerinden ulaşıyorum. Hizmetler hakkında bilgi almak istiyorum."
+-        )}
++        href={whatsappUrl}
+         target="_blank"
+         rel="noopener noreferrer"
+         className="global-mobile-booking-item"
+diff --git a/components/Hero.tsx b/components/Hero.tsx
+index 80c126a..945edfc 100644
+--- a/components/Hero.tsx
++++ b/components/Hero.tsx
+@@ -1,3 +1,5 @@
++"use client";
++
+ import Image from "next/image";
+ import Link from "next/link";
+ import {
+@@ -10,7 +12,7 @@ import {
+   ShieldCheck,
+   Sparkles,
+ } from "lucide-react";
+-import { site, waUrl } from "@/lib/site";
++import { useSiteSettings, useWhatsAppUrl } from "@/components/SiteSettingsProvider";
+ import HeroVideoButton from "@/components/HeroVideoButton";
+ 
+ const trustItems = [
+@@ -20,6 +22,8 @@ const trustItems = [
+ ];
+ 
+ export default function Hero() {
++  const settings = useSiteSettings();
++  const whatsappUrl = useWhatsAppUrl("Merhaba, TDA Luxury web siteniz üzerinden ulaşıyorum. Hizmetler ve uygun randevu saatleri hakkında bilgi almak istiyorum.");
+   return (
+     <section className="v20-hero" aria-labelledby="hero-title">
+       <Image
+@@ -58,9 +62,7 @@ export default function Hero() {
+ 
+             <a
+               data-conversion-source="hero_whatsapp"
+-              href={waUrl(
+-                "Merhaba, TDA Luxury web siteniz üzerinden ulaşıyorum. Hizmetler ve uygun randevu saatleri hakkında bilgi almak istiyorum."
+-              )}
++              href={whatsappUrl}
+               target="_blank"
+               rel="noopener noreferrer"
+               className="v20-secondary-btn"
+@@ -73,11 +75,11 @@ export default function Hero() {
+           </div>
+ 
+           <div className="v20-quick-links" aria-label="Hızlı iletişim">
+-            <a href={`tel:+${site.whatsapp}`} data-conversion-source="hero_phone">
+-              <Phone size={16} /> {site.phoneDisplay}
++            <a href={`tel:+${settings.whatsappNumber}`} data-conversion-source="hero_phone">
++              <Phone size={16} /> {settings.phoneDisplay}
+             </a>
+             <a
+-              href={site.mapsUrl}
++              href={settings.mapsUrl}
+               target="_blank"
+               rel="noopener noreferrer"
+               data-conversion-source="hero_map"
+diff --git a/components/SiteSettingsProvider.tsx b/components/SiteSettingsProvider.tsx
+new file mode 100644
+index 0000000..f177178
+--- /dev/null
++++ b/components/SiteSettingsProvider.tsx
+@@ -0,0 +1,31 @@
++"use client";
++
++import { createContext, useContext, type ReactNode } from "react";
++import type { ManagedSiteSettings } from "@/lib/managed-content";
++import { site } from "@/lib/site";
++
++const fallback: ManagedSiteSettings = {
++  businessName: site.name,
++  phoneDisplay: site.phoneDisplay,
++  whatsappNumber: site.whatsapp,
++  whatsappMessage: "Merhaba, TDA Luxury hizmetleri hakkında bilgi almak ve randevu oluşturmak istiyorum.",
++  instagramUrl: site.instagram,
++  address: site.address,
++  mapsUrl: site.mapsUrl,
++  maintenanceMode: false,
++};
++
++const SiteSettingsContext = createContext(fallback);
++
++export function SiteSettingsProvider({ settings, children }: { settings: ManagedSiteSettings | null; children: ReactNode }) {
++  return <SiteSettingsContext.Provider value={{ ...fallback, ...settings }}>{children}</SiteSettingsContext.Provider>;
++}
++
++export function useSiteSettings() {
++  return useContext(SiteSettingsContext);
++}
++
++export function useWhatsAppUrl(text?: string) {
++  const settings = useSiteSettings();
++  return `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(text || settings.whatsappMessage)}`;
++}
+diff --git a/lib/managed-content.ts b/lib/managed-content.ts
+index 9f059a6..d662ebc 100644
+--- a/lib/managed-content.ts
++++ b/lib/managed-content.ts
+@@ -7,6 +7,16 @@ export type ManagedService = { id?: string; title: string; subtitle: string; met
+ export type ManagedFaqGroup = { title: string; items: [string, string][] };
+ export type ManagedResult = { id?: string; title: string; category: string; image: string; description: string; note?: string };
+ export type ManagedPageContent = { title: string; pageKey: string; eyebrow: string; description: string; buttonText: string; buttonUrl: string; image: string; imagePosition: string; seoTitle: string; seoDescription: string };
++export type ManagedSiteSettings = {
++  businessName: string;
++  phoneDisplay: string;
++  whatsappNumber: string;
++  whatsappMessage: string;
++  instagramUrl: string;
++  address: string;
++  mapsUrl: string;
++  maintenanceMode: boolean;
++};
+ 
+ function serverClient() {
+   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+@@ -84,6 +94,23 @@ export async function getManagedPageContent(pageKey: string) {
+   } satisfies ManagedPageContent;
+ }
+ 
++export async function getManagedSiteSettings(): Promise<ManagedSiteSettings | null> {
++  const client = serverClient();
++  if (!client) return null;
++  const { data, error } = await client.from("site_settings").select("business_name,phone_display,whatsapp_number,whatsapp_message,instagram_url,address,maps_url,maintenance_mode").eq("id", true).maybeSingle();
++  if (error || !data) return null;
++  return {
++    businessName: String(data.business_name || "TDA Luxury"),
++    phoneDisplay: String(data.phone_display || ""),
++    whatsappNumber: String(data.whatsapp_number || "").replace(/\D/g, ""),
++    whatsappMessage: String(data.whatsapp_message || ""),
++    instagramUrl: String(data.instagram_url || ""),
++    address: String(data.address || ""),
++    mapsUrl: String(data.maps_url || ""),
++    maintenanceMode: Boolean(data.maintenance_mode),
++  };
++}
++
+ function mapBlogRow(row: Record<string, unknown>): BlogPost {
+   const publishedAt = String(row.published_at ?? new Date().toISOString().slice(0, 10));
+   return {
+diff --git a/supabase/schema.sql b/supabase/schema.sql
+index e6f16dc..dd708a2 100644
+--- a/supabase/schema.sql
++++ b/supabase/schema.sql
+@@ -209,16 +209,36 @@ drop policy if exists "Public can view published faqs" on public.faqs;
+ drop policy if exists "Admins can manage faqs" on public.faqs;
+ drop policy if exists "Public can view published page content" on public.page_content;
+ drop policy if exists "Admins can manage page content" on public.page_content;
++drop policy if exists "Admins can insert services" on public.services;
++drop policy if exists "Admins can update services" on public.services;
++drop policy if exists "Admins can delete services" on public.services;
++drop policy if exists "Admins can insert results" on public.results;
++drop policy if exists "Admins can update results" on public.results;
++drop policy if exists "Admins can delete results" on public.results;
++drop policy if exists "Admins can insert faqs" on public.faqs;
++drop policy if exists "Admins can update faqs" on public.faqs;
++drop policy if exists "Admins can delete faqs" on public.faqs;
++drop policy if exists "Admins can insert page content" on public.page_content;
++drop policy if exists "Admins can update page content" on public.page_content;
++drop policy if exists "Admins can delete page content" on public.page_content;
+ drop policy if exists "Public can view site settings" on public.site_settings;
+ drop policy if exists "Admins can update site settings" on public.site_settings;
+ create policy "Public can view published services" on public.services for select using (published or public.is_admin());
+-create policy "Admins can manage services" on public.services for all using (public.is_admin()) with check (public.is_admin());
++create policy "Admins can insert services" on public.services for insert to authenticated with check (public.is_admin());
++create policy "Admins can update services" on public.services for update to authenticated using (public.is_admin()) with check (public.is_admin());
++create policy "Admins can delete services" on public.services for delete to authenticated using (public.is_admin());
+ create policy "Public can view published results" on public.results for select using (published or public.is_admin());
+-create policy "Admins can manage results" on public.results for all using (public.is_admin()) with check (public.is_admin());
++create policy "Admins can insert results" on public.results for insert to authenticated with check (public.is_admin());
++create policy "Admins can update results" on public.results for update to authenticated using (public.is_admin()) with check (public.is_admin());
++create policy "Admins can delete results" on public.results for delete to authenticated using (public.is_admin());
+ create policy "Public can view published faqs" on public.faqs for select using (published or public.is_admin());
+-create policy "Admins can manage faqs" on public.faqs for all using (public.is_admin()) with check (public.is_admin());
++create policy "Admins can insert faqs" on public.faqs for insert to authenticated with check (public.is_admin());
++create policy "Admins can update faqs" on public.faqs for update to authenticated using (public.is_admin()) with check (public.is_admin());
++create policy "Admins can delete faqs" on public.faqs for delete to authenticated using (public.is_admin());
+ create policy "Public can view published page content" on public.page_content for select using (published or public.is_admin());
+-create policy "Admins can manage page content" on public.page_content for all using (public.is_admin()) with check (public.is_admin());
++create policy "Admins can insert page content" on public.page_content for insert to authenticated with check (public.is_admin());
++create policy "Admins can update page content" on public.page_content for update to authenticated using (public.is_admin()) with check (public.is_admin());
++create policy "Admins can delete page content" on public.page_content for delete to authenticated using (public.is_admin());
+ create policy "Public can view site settings" on public.site_settings for select using (true);
+ create policy "Admins can update site settings" on public.site_settings for update using (public.is_admin()) with check (public.is_admin());
+ 
+-- 
+2.51.1
+
