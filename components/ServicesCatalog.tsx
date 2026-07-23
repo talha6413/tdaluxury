@@ -12,7 +12,6 @@ const featuredServices = [
     title: "Lazer Epilasyon",
     slug: "/lazer-epilasyon",
     category: "LAZER EPİLASYON",
-    image: "/images/services-premium/lazer-epilasyon.webp",
     description:
       "Kadın ve erkeklere özel, cilt ve kıl yapısına göre planlanan profesyonel lazer epilasyon uygulamaları.",
     points: ["Kişiye özel plan", "Modern teknoloji", "Konforlu süreç"],
@@ -21,7 +20,6 @@ const featuredServices = [
     title: "Protez Tırnak",
     slug: "/tirnak/protez-tirnak",
     category: "TIRNAK HİZMETLERİ",
-    image: "/images/services-premium/protez-tirnak.webp",
     description:
       "Güçlü, estetik ve doğal görünümlü tırnaklar için profesyonel protez tırnak uygulamaları.",
     points: ["Uzun süre kalıcı", "Premium malzeme", "Hijyenik uygulama"],
@@ -30,7 +28,6 @@ const featuredServices = [
     title: "Cilt Bakımı",
     slug: "/cilt-bakimi",
     category: "CİLT BAKIMI",
-    image: "/images/services-premium/cilt-bakimi.webp",
     description:
       "Cilt analiziyle ihtiyacınıza göre planlanan arındırma, nem ve canlılık odaklı profesyonel bakım.",
     points: ["Cilt analizi", "Kişisel bakım planı", "Uzman takip"],
@@ -39,7 +36,6 @@ const featuredServices = [
     title: "Kalıcı Makyaj",
     slug: "/kalici-makyaj",
     category: "KALICI MAKYAJ",
-    image: "/images/services-premium/kalici-makyaj.webp",
     description:
       "Yüz hatlarınıza uyumlu microblading, pudralama kaş, dipliner ve dudak renklendirme seçenekleri.",
     points: ["Yüze özel tasarım", "Doğal görünüm", "Profesyonel uygulama"],
@@ -125,17 +121,19 @@ export default function ServicesCatalog({ services }: { services: Service[] }) {
         <div className={styles.decorTwo} />
 
         <div className={styles.container}>
-          <p className={styles.kicker}>TÜM GÜZELLİK HİZMETLERİMİZ</p>
-          <h1>Hizmetlerimiz</h1>
-          <p className={styles.heroLead}>
-            Uzman kadromuz ve son teknoloji cihazlarımız ile
-            <br />
-            size en iyi güzellik deneyimini sunuyoruz.
-          </p>
-          <div className={styles.goldDivider}>
-            <span />
-            <b />
-            <span />
+          <div className={styles.heroHeader}>
+            <p className={styles.kicker}>TÜM GÜZELLİK HİZMETLERİMİZ</p>
+            <h1>Hizmetlerimiz</h1>
+            <p className={styles.heroLead}>
+              Uzman kadromuz ve son teknoloji cihazlarımız ile
+              <br />
+              size en iyi güzellik deneyimini sunuyoruz.
+            </p>
+            <div className={styles.goldDivider}>
+              <span />
+              <b />
+              <span />
+            </div>
           </div>
 
           <div className={styles.featuredTabs}>
@@ -154,12 +152,13 @@ export default function ServicesCatalog({ services }: { services: Service[] }) {
           <section className={styles.featuredCard}>
             <div className={styles.featuredMedia}>
               <Image
-                src={featured.image}
+                src={getServiceImage(featured.slug)}
                 alt={featured.title}
                 fill
                 priority
-                sizes="(max-width: 900px) 100vw, 48vw"
+                sizes="(max-width: 900px) 100vw, 52vw"
               />
+              <div className={styles.featuredShade} />
               <div className={styles.featuredBadge}>☆ &nbsp; ÖNE ÇIKAN HİZMET</div>
             </div>
 
@@ -192,7 +191,12 @@ export default function ServicesCatalog({ services }: { services: Service[] }) {
                     className={index === activeFeatured ? styles.activeThumb : ""}
                     aria-label={`${item.title} hizmetini göster`}
                   >
-                    <Image src={item.image} alt={item.title} fill sizes="120px" />
+                    <Image
+                      src={getServiceImage(item.slug)}
+                      alt={item.title}
+                      fill
+                      sizes="120px"
+                    />
                   </button>
                 ))}
               </div>
@@ -284,7 +288,7 @@ export default function ServicesCatalog({ services }: { services: Service[] }) {
             <Link href="/igneli-epilasyon" className={styles.otherCard}>
               <div className={styles.otherImage}>
                 <Image
-                  src="/images/services-premium/igneli-epilasyon.webp"
+                  src={getServiceImage("/igneli-epilasyon")}
                   alt="İğneli epilasyon"
                   fill
                   sizes="(max-width: 760px) 100vw, 25vw"
@@ -301,7 +305,7 @@ export default function ServicesCatalog({ services }: { services: Service[] }) {
             <Link href="/cilt-bakimi" className={styles.otherCard}>
               <div className={styles.otherImage}>
                 <Image
-                  src="/images/services-premium/vip-cilt-bakimi.webp"
+                  src={getServiceImage("/cilt-bakimi")}
                   alt="VIP cilt bakımı"
                   fill
                   sizes="(max-width: 760px) 100vw, 25vw"

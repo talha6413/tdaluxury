@@ -1,22 +1,20 @@
-TDA Luxury — Alt Hizmet Görselleri
+TDA Luxury — Hizmetler Görsel ve Yerleşim Düzeltmesi
 
-Bu paket mevcut premium Hizmetler sayfasını korur ve tüm alt hizmetlere görsel kartlar ekler.
-
-Eklenen görselli alt hizmet alanları:
-- Lazer Epilasyon alt hizmetleri
-- Cilt Bakımı alt hizmetleri
-- Kalıcı Makyaj alt hizmetleri
-- Kaş & Kirpik alt hizmetleri
-- Tırnak alt hizmetleri
-- Bölgesel İncelme alt hizmetleri
-
-Görseller mevcut lib/service-media.ts eşlemesinden otomatik alınır. Yeni görsel dosyası yüklemek gerekmez.
+Düzeltilen sorunlar:
+- Hizmetlerimiz başlığının menünün altına girmesi engellendi.
+- Hero alanına güvenli üst boşluk eklendi.
+- Öne çıkan hizmet sekmeleri birbirinden ayrıldı.
+- Bozuk/kırpılmış paket görselleri kaldırıldı.
+- Görseller artık lib/service-media.ts üzerinden sitenin gerçek görsellerinden yüklenir.
+- Görsellerde object-fit: cover ve doğru oran kullanılır.
+- Alt hizmet görselleri de aynı sistemden yüklenir.
+- Mobil ve tablet yerleşimi düzeltildi.
 
 Kurulum:
 1. ZIP'i tdaluxury proje klasörüne çıkarın.
-2. components/ServicesCatalog.tsx ve components/ServicesCatalog.module.css dosyalarının üzerine yazılmasına izin verin.
+2. components/ServicesCatalog.tsx ve components/ServicesCatalog.module.css üzerine yazılmasına izin verin.
 3. VS Code terminalinde:
 
 git add .
-git commit -m "Alt hizmetlere görsel kartlar ekle"
+git commit -m "Hizmetler görsellerini ve üst yerleşimi düzelt"
 git push origin main
