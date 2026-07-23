@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { GoogleTagManager } from "@next/third-parties/google";
 import "./globals.css";
 import { LocalBusinessSchema, WebsiteSchema } from "@/lib/schema";
 import SkipLink from "@/components/SkipLink";
@@ -60,8 +61,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const settings = await getManagedSiteSettings();
+
   return (
     <html lang="tr">
+      <GoogleTagManager gtmId="GTM-WP8X59MJ" />
       <body>
         <SiteSettingsProvider settings={settings}>
           <SkipLink />
