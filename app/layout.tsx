@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { GoogleTagManager } from "@next/third-parties/google";
 import "./globals.css";
 import { LocalBusinessSchema, WebsiteSchema } from "@/lib/schema";
@@ -66,6 +67,25 @@ export default async function RootLayout({
     <html lang="tr">
       <GoogleTagManager gtmId="GTM-WP8X59MJ" />
       <body>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-11143224041"
+          strategy="afterInteractive"
+        />
+        <Script id="google-ads-base" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'AW-11143224041');`}
+        </Script>
+        <Script id="google-ads-phone-conversion" strategy="afterInteractive">
+          {`document.addEventListener('click', function(event) {
+  var target = event.target instanceof Element ? event.target.closest('a[href^="tel:"]') : null;
+  if (!target || typeof window.gtag !== 'function') return;
+  window.gtag('event', 'conversion', {
+    send_to: 'AW-11143224041/xt9FCNXhpJoYEOm1wMEp'
+  });
+}, true);`}
+        </Script>
         <SiteSettingsProvider settings={settings}>
           <SkipLink />
           <WebsiteSchema />
