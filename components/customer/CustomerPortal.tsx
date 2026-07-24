@@ -126,11 +126,13 @@ export default function CustomerPortal() {
       return;
     }
 
-    const { data: customer, error: customerError } = await supabase
+    const { data: customerRow, error: customerError } = await supabase
       .from("customers")
       .select("id, full_name, phone, email, birth_date")
       .eq("auth_user_id", user.id)
       .maybeSingle();
+
+    const customer = customerRow as Customer | null;
 
     if (customerError) {
       setMessage("Müşteri kartı okunamadı.");

@@ -35,3 +35,8 @@ Müşteri paneli yalnızca eşleşen müşterinin RLS ile izin verilen kayıtlar
 Aşağıdakilerin Production, Preview ve Development ortamlarında bulunduğunu kontrol edin:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+
+## TypeScript düzeltmesi
+Bu fixed sürüm, Supabase istemcisinde Database tipleri tanımlı olmadığında
+`customer` kaydının `never` olarak çıkarılması sorununu düzeltir.
