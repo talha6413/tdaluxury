@@ -1,0 +1,11 @@
+{
+  "name": "TDA Luxury",
+  "short_name": "TDA Luxury",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060605",
+  "theme_color": "#060605",
+  "lang": "tr",
+  "description": "TDA Luxury güzellik ve bakım platformu",
+  "icons": []
+}
