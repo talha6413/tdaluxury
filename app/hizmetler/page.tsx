@@ -1,24 +1,47 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ServicesCatalog from "@/components/ServicesCatalog";
-import { services } from "@/data/services";
 import { buildManagedMetadata } from "@/lib/seo";
 
 export async function generateMetadata() {
   return buildManagedMetadata("hizmetler", {
-    title: "Hizmetlerimiz | TDA Luxury Uşak",
+    title: "Güzellik Hizmetleri | TDA Luxury Uşak",
     description:
-      "TDA Luxury Uşak hizmetlerini keşfedin. Lazer epilasyon, protez tırnak, cilt bakımı, kalıcı makyaj ve diğer profesyonel güzellik uygulamalarını inceleyin.",
+      "TDA Luxury Uşak güzellik hizmetleri: lazer epilasyon, cilt bakımı, kalıcı makyaj, ipek kirpik, kirpik laminasyonu, kaş tasarımı, microblading, protez tırnak ve iğneli epilasyon.",
     path: "/hizmetler",
   });
 }
+
+const servicesSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "TDA Luxury Uşak Güzellik Hizmetleri",
+  itemListElement: [
+    ["Lazer Epilasyon", "/lazer-epilasyon"],
+    ["Cilt Bakımı", "/cilt-bakimi"],
+    ["Kalıcı Makyaj", "/kalici-makyaj"],
+    ["İpek Kirpik", "/kas-kirpik/ipek-kirpik"],
+    ["Kirpik Laminasyonu", "/kas-kirpik/kirpik-laminasyonu"],
+    ["Protez Tırnak", "/tirnak/protez-tirnak"],
+    ["İğneli Epilasyon", "/igneli-epilasyon"],
+  ].map(([name, path], index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name,
+    url: `https://www.tdaluxury.com.tr${path}`,
+  })),
+};
 
 export default function Page() {
   return (
     <>
       <Nav />
       <main>
-        <ServicesCatalog services={services} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesSchema) }}
+        />
+        <ServicesCatalog />
       </main>
       <Footer />
     </>
