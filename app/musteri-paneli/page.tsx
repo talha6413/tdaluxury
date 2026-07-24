@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import CustomerPortal from "@/components/customer/CustomerPortal";
+import AiSkinAnalysisLauncher from "@/components/customer/AiSkinAnalysisLauncher";
 
 export const metadata: Metadata = {
   title: "Müşteri Paneli | TDA Luxury Uşak",
@@ -14,6 +15,7 @@ export default function CustomerPortalPage() {
     <main>
       <Nav />
       <CustomerPortal />
+      <AiSkinAnalysisLauncher />
       <Footer />
     </main>
   );

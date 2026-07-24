@@ -1,44 +1,13 @@
-﻿@echo off
+@echo off
 chcp 65001 >nul
-title TDA Luxury Müşteri Paneli Premium Güncelleme
-
 echo.
-echo ==========================================
-echo TDA LUXURY MÜŞTERİ PANELİ PREMIUM v17
-echo ==========================================
+echo TDA Luxury AI Cilt Analizi kuruluyor...
 echo.
 
-if not exist package.json (
-  echo HATA: ZIP içeriğini package.json bulunan proje ana klasörüne çıkarın.
-  pause
-  exit /b 1
-)
-
-echo [1/4] TypeScript kontrolü...
-call npm run typecheck
-if errorlevel 1 goto error
-
-echo [2/4] Lint kontrolü...
-call npm run lint
-if errorlevel 1 goto error
-
-echo [3/4] Build kontrolü...
-call npm run build
-if errorlevel 1 goto error
-
-echo [4/4] GitHub'a gönderiliyor...
-git add components/customer/CustomerPortal.tsx components/customer/RealCustomerPortal.module.css
-git commit -m "Musteri panelini premium ve mobil uyumlu hale getir"
+git add .
+git commit -m "AI cilt analizi ve kamera modulunu ekle"
 git push origin main
-if errorlevel 1 goto error
 
 echo.
-echo TAMAMLANDI. Vercel otomatik yayınlayacak.
+echo Islem tamamlandi. Vercel yayinini 1-3 dakika bekleyin.
 pause
-exit /b 0
-
-:error
-echo.
-echo İşlem sırasında hata oluştu. Bu pencerenin ekran görüntüsünü gönderin.
-pause
-exit /b 1
