@@ -1,0 +1,17 @@
+﻿TDA LUXURY MÜŞTERİ PANELİ PREMIUM v17
+
+Bu güncelleme:
+- Üst başlığın menünün altına taşmasını düzeltir.
+- Masaüstü ve mobil görünümü iyileştirir.
+- İstatistik kartlarını dengeler.
+- Randevu, paket ve ödeme boş durumlarını premium hale getirir.
+- Paket kullanım yüzdesini gösterir.
+- Kalan seans ve kalan borcu birlikte gösterir.
+- Arşiv kartlarını daha okunaklı hale getirir.
+
+KURULUM
+1. ZIP içindeki tüm dosyaları package.json bulunan proje klasörüne çıkarın.
+2. Dosyaların üzerine yazılmasına izin verin.
+3. YUKLE-VE-YAYINLA.bat dosyasına çift tıklayın.
+4. TAMAMLANDI mesajından sonra Vercel deployment'ın Ready olmasını bekleyin.
+5. Müşteri panelini Ctrl + Shift + R ile yenileyin.

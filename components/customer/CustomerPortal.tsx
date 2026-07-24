@@ -21,7 +21,6 @@ import {
 } from "lucide-react";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
-import OnlinePaymentButton from "./OnlinePaymentButton";
 import styles from "./RealCustomerPortal.module.css";
 
 type AuthMode = "login" | "register" | "forgot" | "reset";
@@ -654,7 +653,10 @@ export default function CustomerPortal() {
         <div>
           <span>TDA LUXURY ÖZEL HESAP</span>
           <h1>Hoş geldiniz, {data.customer.full_name}</h1>
-          <p>{data.customer.phone}</p>
+          <p className={styles.accountMeta}>
+            <span>{data.customer.phone}</span>
+            <span>Güvenli müşteri hesabı</span>
+          </p>
         </div>
         <button onClick={() => void logout()}>
           <LogOut size={17} /> Çıkış
@@ -704,7 +706,11 @@ export default function CustomerPortal() {
               </div>
             ))
           ) : (
-            <p className={styles.empty}>Henüz randevu kaydı yok.</p>
+            <div className={styles.emptyState}>
+              <CalendarDays size={24} />
+              <b>Henüz randevunuz bulunmuyor</b>
+              <p>Yeni randevu talebinizi birkaç adımda oluşturabilirsiniz.</p>
+            </div>
           )}
           <Link href="/randevu">
             Yeni randevu talebi oluştur <ChevronRight size={15} />
@@ -721,37 +727,45 @@ export default function CustomerPortal() {
           </header>
           {data.packages.length ? (
             data.packages.map((item) => {
-              const remaining = Math.max(
-                0,
-                Number(item.total_sessions) - Number(item.used_sessions)
+              const totalSessions = Math.max(1, Number(item.total_sessions));
+              const usedSessions = Math.max(0, Number(item.used_sessions));
+              const remaining = Math.max(0, totalSessions - usedSessions);
+              const progress = Math.min(
+                100,
+                Math.round((usedSessions / totalSessions) * 100)
               );
               const debt = Math.max(
                 0,
                 Number(item.total_amount || 0) - Number(item.paid_amount || 0)
               );
+
               return (
                 <div className={styles.package} key={item.id}>
-                  <div>
-                    <b>{item.title}</b>
-                    <small>
-                      {remaining} / {item.total_sessions} seans kaldı
-                    </small>
-                    {debt > 0 ? <small>Kalan borç: {money(debt)}</small> : null}
+                  <div className={styles.packageTop}>
+                    <div>
+                      <b>{item.title}</b>
+                      <small>
+                        {remaining} / {totalSessions} seans kaldı
+                      </small>
+                    </div>
+                    <strong>{progress}%</strong>
                   </div>
-                  <progress max={item.total_sessions} value={remaining} />
-                  {debt > 0 ? (
-                    <OnlinePaymentButton
-                      packageId={item.id}
-                      packageTitle={item.title}
-                      debt={debt}
-                      onPaid={() => void loadPortal()}
-                    />
-                  ) : null}
+                  <progress max={100} value={progress} />
+                  <div className={styles.packageMeta}>
+                    <span>{usedSessions} seans tamamlandı</span>
+                    <span>
+                      {debt > 0 ? `Kalan borç: ${money(debt)}` : "Ödeme tamamlandı"}
+                    </span>
+                  </div>
                 </div>
               );
             })
           ) : (
-            <p className={styles.empty}>Aktif paket bulunmuyor.</p>
+            <div className={styles.emptyState}>
+              <PackageCheck size={24} />
+              <b>Aktif paketiniz bulunmuyor</b>
+              <p>Satın aldığınız paketler ve seans ilerlemeniz burada görünür.</p>
+            </div>
           )}
         </article>
 
@@ -774,7 +788,11 @@ export default function CustomerPortal() {
               </div>
             ))
           ) : (
-            <p className={styles.empty}>Ödeme kaydı bulunmuyor.</p>
+            <div className={styles.emptyState}>
+              <WalletCards size={24} />
+              <b>Henüz ödeme hareketi yok</b>
+              <p>Ödemeleriniz tarih ve referans bilgileriyle burada listelenir.</p>
+            </div>
           )}
         </article>
 
