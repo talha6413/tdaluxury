@@ -1,25 +1,14 @@
-TDA LUXURY AI CİLT ANALİZİ v20
+TDA LUXURY HİZMETLER SAYFASI — BİREBİR TASARIM v23
+
+Bu paket:
+- Referanstaki hizmetler sayfası düzenini uygular.
+- Referanstaki görselleri ayrı WebP dosyaları halinde kullanır.
+- Üç ana hizmet kartını ekler.
+- Altı diğer uygulama kartını ekler.
+- Ön görüşme, süreç ve iletişim şeridini ekler.
+- Hizmetler sayfasının SEO açıklamasını ve ItemList schema verisini günceller.
 
 KURULUM
-1. ZIP içindeki dosyaları tdaluxury proje klasörünün içine çıkarın.
-2. Dosya yollarını koruyun ve sorulduğunda değiştirmeyi onaylayın.
-3. Proje klasöründeki YUKLE-VE-YAYINLA.bat dosyasını çalıştırın.
-4. Vercel dağıtımının tamamlanmasını bekleyin.
-5. Müşteri paneline girin ve sağ alttaki "AI Cilt Analizi" butonuna basın.
-
-OPENAI AYARI
-Vercel > Project > Settings > Environment Variables bölümüne:
-OPENAI_API_KEY = OpenAI API anahtarınız
-OPENAI_VISION_MODEL = gpt-5
-
-OPENAI_API_KEY eklenmeden de kamera, kalite kontrolü, özel depolama ve kayıt çalışır.
-Anahtar bağlandığında ayrıntılı AI gözlemsel değerlendirmesi etkinleşir.
-
-GÜVENLİK
-- Fotoğraflar public değildir.
-- Müşteri yalnızca kendi klasörüne yükleme yapabilir.
-- Açık onay işaretlenmeden analiz başlamaz.
-- Sistem tıbbi tanı veya tedavi önerisi üretmeyecek şekilde sınırlandırılmıştır.
-
-NOT
-Supabase tarafındaki ai_skin_analyses tablosu, RLS kuralları ve ai-skin-photos özel bucket daha önce oluşturuldu.
+1. ZIP içeriğini tdaluxury ana proje klasörüne çıkar.
+2. Dosyaların değiştirilmesini onayla.
+3. YAYINLA.bat dosyasına çift tıkla.
