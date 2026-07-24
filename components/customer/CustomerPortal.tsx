@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
+import OnlinePaymentButton from "./OnlinePaymentButton";
 import styles from "./RealCustomerPortal.module.css";
 
 type AuthMode = "login" | "register" | "forgot" | "reset";
@@ -724,6 +725,10 @@ export default function CustomerPortal() {
                 0,
                 Number(item.total_sessions) - Number(item.used_sessions)
               );
+              const debt = Math.max(
+                0,
+                Number(item.total_amount || 0) - Number(item.paid_amount || 0)
+              );
               return (
                 <div className={styles.package} key={item.id}>
                   <div>
@@ -731,8 +736,17 @@ export default function CustomerPortal() {
                     <small>
                       {remaining} / {item.total_sessions} seans kaldı
                     </small>
+                    {debt > 0 ? <small>Kalan borç: {money(debt)}</small> : null}
                   </div>
                   <progress max={item.total_sessions} value={remaining} />
+                  {debt > 0 ? (
+                    <OnlinePaymentButton
+                      packageId={item.id}
+                      packageTitle={item.title}
+                      debt={debt}
+                      onPaid={() => void loadPortal()}
+                    />
+                  ) : null}
                 </div>
               );
             })
