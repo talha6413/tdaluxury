@@ -106,7 +106,7 @@ export default function Footer() {
           <Link href="/iletisim">
             <MapPin size={17} /> {settings.address}
           </Link>
-          <span>Pzt–Cmt: 09.00–20.00</span>
+          <span>Pzt–Cmt: 09.00–19.30</span>
         </div>
       </div>
 

@@ -17,6 +17,7 @@ import ContactForm from "@/components/contact/ContactForm";
 import { buildManagedMetadata } from "@/lib/seo";
 import { BreadcrumbSchema, JsonLd } from "@/lib/schema";
 import { site, waUrl } from "@/lib/site";
+import ConsentMap from "@/components/ConsentMap";
 
 export async function generateMetadata() { return buildManagedMetadata("iletisim", {
   title: "İletişim | Uşak Merkez Güzellik Salonu",
@@ -240,11 +241,9 @@ export default function Page() {
                 <span>Canlı Yol Tarifi</span>
               </div>
               <div className="contact-map-frame-wrap">
-                <iframe
+                <ConsentMap
                   title="TDA Luxury Uşak konumu"
                   src={mapsEmbedUrl}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
                   className="contact-map-frame"
                 />
               </div>

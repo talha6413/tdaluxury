@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { GoogleTagManager } from "@next/third-parties/google";
 import "./globals.css";
 import { LocalBusinessSchema, WebsiteSchema } from "@/lib/schema";
 import SkipLink from "@/components/SkipLink";
@@ -9,6 +8,7 @@ import ClientOnlyGlobalWidgets from "@/components/ClientOnlyGlobalWidgets";
 import { site } from "@/lib/site";
 import { getManagedSiteSettings } from "@/lib/managed-content";
 import { SiteSettingsProvider } from "@/components/SiteSettingsProvider";
+import ConsentGoogleScripts from "@/components/analytics/ConsentGoogleScripts";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -65,27 +65,19 @@ export default async function RootLayout({
 
   return (
     <html lang="tr">
-      <GoogleTagManager gtmId="GTM-WP8X59MJ" />
       <body>
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=AW-11143224041"
-          strategy="afterInteractive"
-        />
-        <Script id="google-ads-base" strategy="afterInteractive">
+        <Script id="google-consent-default" strategy="beforeInteractive">
           {`window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'AW-11143224041');`}
+window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+gtag('consent', 'default', {
+  analytics_storage: 'denied',
+  ad_storage: 'denied',
+  ad_user_data: 'denied',
+  ad_personalization: 'denied',
+  wait_for_update: 500
+});`}
         </Script>
-        <Script id="google-ads-phone-conversion" strategy="afterInteractive">
-          {`document.addEventListener('click', function(event) {
-  var target = event.target instanceof Element ? event.target.closest('a[href^="tel:"]') : null;
-  if (!target || typeof window.gtag !== 'function') return;
-  window.gtag('event', 'conversion', {
-    send_to: 'AW-11143224041/xt9FCNXhpJoYEOm1wMEp'
-  });
-}, true);`}
-        </Script>
+        <ConsentGoogleScripts />
         <SiteSettingsProvider settings={settings}>
           <SkipLink />
           <WebsiteSchema />

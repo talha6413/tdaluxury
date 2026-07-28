@@ -1738,3 +1738,18 @@ main > .motion-reveal,
 /* Gerçek salon görselleri */
 .video-card{background-image:url('/images/real/salon-04.webp')}
 .page-hero{background-image:linear-gradient(90deg,rgba(0,0,0,.92),rgba(0,0,0,.7)),url('/images/real/salon-03.webp')}
+
+.consent-map-placeholder {
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+  text-align: center;
+  background: linear-gradient(145deg, #11100f, #1b1814);
+  color: #f4ead9;
+}
+.consent-map-placeholder strong { font-size: 1.05rem; }
+.consent-map-placeholder span { max-width: 520px; color: #c8bca8; line-height: 1.6; }

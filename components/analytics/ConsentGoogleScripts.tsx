@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Script from "next/script";
 import { useEffect, useState } from "react";
@@ -9,7 +9,7 @@ const ADS_ID = "AW-11143224041";
 
 declare global {
   interface Window {
-    dataLayer?: unknown[];
+    dataLayer?: Object[];
     gtag?: (...args: unknown[]) => void;
   }
 }
@@ -69,3 +69,4 @@ gtag('config', '${ADS_ID}', { send_page_view: false });`}
     </>
   );
 }
+

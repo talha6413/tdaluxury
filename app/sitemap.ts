@@ -3,7 +3,7 @@ import { services } from "@/data/services";
 import { blogPosts } from "@/data/blog";
 import { site } from "@/lib/site";
 
-const RELEASE_DATE = "2026-07-13";
+const RELEASE_DATE = "2026-07-28";
 
 const staticPages = [
   { path: "/", priority: 1, changeFrequency: "weekly" as const },
