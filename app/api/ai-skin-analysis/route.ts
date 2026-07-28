@@ -56,6 +56,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Oturum geçersiz." }, { status: 401 });
     }
 
+    const { data: customer, error: customerError } = await supabase
+      .from("customers")
+      .select("id")
+      .eq("auth_user_id", userData.user.id)
+      .maybeSingle();
+
+    if (customerError || !customer) {
+      return NextResponse.json(
+        { error: "Doğrulanmış müşteri hesabı bulunamadı." },
+        { status: 403 }
+      );
+    }
+
     const body = (await request.json()) as RequestBody;
     if (
       !body.imageDataUrl ||

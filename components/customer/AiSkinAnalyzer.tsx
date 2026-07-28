@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Camera, CheckCircle2, ImagePlus, LoaderCircle, ScanFace, ShieldCheck } from "lucide-react";
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
 import styles from "./AiSkinAnalysis.module.css";
 
@@ -119,6 +119,9 @@ async function compressImage(file: File): Promise<{ dataUrl: string; blob: Blob 
 }
 
 export default function AiSkinAnalyzer() {
+  const [authState, setAuthState] = useState<
+    "checking" | "authenticated" | "unauthenticated"
+  >("checking");
   const [preview, setPreview] = useState("");
   const [photoBlob, setPhotoBlob] = useState<Blob | null>(null);
   const [quality, setQuality] = useState<Quality | null>(null);
@@ -133,6 +136,22 @@ export default function AiSkinAnalyzer() {
     if (quality.score >= 60) return "Orta";
     return "Yeniden çekilmeli";
   }, [quality]);
+
+  useEffect(() => {
+    const supabase = getSupabaseBrowserClient();
+
+    void supabase.auth.getSession().then(({ data }) => {
+      setAuthState(data.session ? "authenticated" : "unauthenticated");
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setAuthState(session ? "authenticated" : "unauthenticated");
+      }
+    );
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
 
   async function selectPhoto(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -253,6 +272,36 @@ export default function AiSkinAnalyzer() {
     } finally {
       setBusy(false);
     }
+  }
+
+  if (authState === "checking") {
+    return (
+      <main className={styles.page}>
+        <div className={styles.authGate}>
+          <LoaderCircle className={styles.spin} size={28} />
+          <h1>Güvenli müşteri hesabı kontrol ediliyor…</h1>
+        </div>
+      </main>
+    );
+  }
+
+  if (authState === "unauthenticated") {
+    return (
+      <main className={styles.page}>
+        <div className={styles.authGate}>
+          <ShieldCheck size={34} />
+          <span>TDA LUXURY GÜVENLİ ALAN</span>
+          <h1>AI cilt analizi için giriş yapın</h1>
+          <p>
+            Fotoğraf ve analiz kayıtları yalnızca doğrulanmış müşteri hesabınızda
+            saklanır ve görüntülenir.
+          </p>
+          <Link href="/musteri-paneli" className={styles.button}>
+            Müşteri Girişine Git
+          </Link>
+        </div>
+      </main>
+    );
   }
 
   return (

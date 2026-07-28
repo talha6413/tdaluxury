@@ -22,8 +22,11 @@ import {
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
 import styles from "./RealCustomerPortal.module.css";
+import formStyles from "./CustomerPortalEnhancements.module.css";
 
 type AuthMode = "login" | "register" | "forgot" | "reset";
+
+const REMEMBER_EMAIL_KEY = "tda-customer-remembered-email";
 
 type Customer = {
   id: string;
@@ -109,6 +112,8 @@ export default function CustomerPortal() {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [claimPhone, setClaimPhone] = useState("");
+  const [rememberMe, setRememberMe] = useState(true);
+  const [registrationAccepted, setRegistrationAccepted] = useState(false);
   const [needsClaim, setNeedsClaim] = useState(false);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -221,6 +226,12 @@ export default function CustomerPortal() {
     const supabase = getSupabaseBrowserClient();
 
     async function boot() {
+      const rememberedEmail = window.localStorage.getItem(REMEMBER_EMAIL_KEY);
+      if (rememberedEmail) {
+        setEmail(rememberedEmail);
+        setRememberMe(true);
+      }
+
       const { data: sessionData } = await supabase.auth.getSession();
       if (sessionData.session) await loadPortal();
       setLoading(false);
@@ -318,6 +329,14 @@ export default function CustomerPortal() {
         return;
       }
 
+      if (!registrationAccepted) {
+        setBusy(false);
+        setMessage(
+          "Hesap oluşturmadan önce KVKK aydınlatma ve gizlilik metinlerini okuyup onay kutusunu işaretleyin."
+        );
+        return;
+      }
+
       const emailRedirectTo =
         typeof window !== "undefined"
           ? `${window.location.origin}/musteri-paneli`
@@ -330,6 +349,11 @@ export default function CustomerPortal() {
           emailRedirectTo,
           data: {
             customer_phone: normalizedPhone,
+            legal_accepted_at: new Date().toISOString(),
+            legal_documents: [
+              "kvkk-aydinlatma-metni",
+              "gizlilik-politikasi",
+            ],
           },
         },
       });
@@ -366,6 +390,15 @@ export default function CustomerPortal() {
           : error.message
       );
       return;
+    }
+
+    if (rememberMe) {
+      window.localStorage.setItem(
+        REMEMBER_EMAIL_KEY,
+        email.trim().toLowerCase()
+      );
+    } else {
+      window.localStorage.removeItem(REMEMBER_EMAIL_KEY);
     }
 
     await loadPortal();
@@ -565,6 +598,44 @@ export default function CustomerPortal() {
                 </label>
               ) : null}
 
+              {mode === "login" ? (
+                <label className={formStyles.checkRow}>
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(event) => setRememberMe(event.target.checked)}
+                  />
+                  <span>
+                    <b>Beni hatırla</b>
+                    <small>Bu cihazda e-posta adresimi hatırla</small>
+                  </span>
+                </label>
+              ) : null}
+
+              {mode === "register" ? (
+                <label className={formStyles.checkRow}>
+                  <input
+                    type="checkbox"
+                    checked={registrationAccepted}
+                    onChange={(event) =>
+                      setRegistrationAccepted(event.target.checked)
+                    }
+                    required
+                  />
+                  <span>
+                    <Link href="/kvkk-aydinlatma-metni">
+                      KVKK Aydınlatma Metni
+                    </Link>
+                    {" ve "}
+                    <Link href="/gizlilik-politikasi">
+                      Gizlilik Politikası
+                    </Link>
+                    ’nı okudum; müşteri hesabımın oluşturulmasını ve bilgilerimin
+                    bu hizmet kapsamında işlenmesini kabul ediyorum.
+                  </span>
+                </label>
+              ) : null}
+
               <button disabled={busy}>
                 {busy ? (
                   <LoaderCircle className={styles.spin} size={18} />
@@ -586,6 +657,7 @@ export default function CustomerPortal() {
                     className={styles.secondary}
                     onClick={() => {
                       setMode("register");
+                      setRegistrationAccepted(false);
                       setMessage("");
                     }}
                   >

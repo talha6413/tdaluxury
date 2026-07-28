@@ -4,6 +4,7 @@ export type ConversionEventName =
   | "map_click"
   | "instagram_click"
   | "appointment_form_submit"
+  | "online_appointment_request"
   | "assistant_whatsapp_click"
   | "video_open"
   | "appointment_click";

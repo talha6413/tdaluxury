@@ -19,21 +19,21 @@ const mainServices = [
   {
     title: "Lazer Epilasyon",
     href: "/lazer-epilasyon",
-    image: "/images/services-reference/service-laser.webp",
+    image: "/images/services-premium/lazer-epilasyon.webp",
     description:
       "İstenmeyen tüylerden konforlu ve etkili şekilde kurtulmaya yardımcı, cilt ve kıl yapısına göre kişiselleştirilen lazer epilasyon uygulamaları.",
   },
   {
     title: "Cilt Bakımı",
     href: "/cilt-bakimi",
-    image: "/images/services-reference/service-skin.webp",
+    image: "/images/services-premium/cilt-bakimi.webp",
     description:
       "Cildinizin ihtiyacına göre planlanan profesyonel bakım uygulamaları ile daha canlı, dengeli ve bakımlı bir görünüm.",
   },
   {
     title: "Kalıcı Makyaj",
     href: "/kalici-makyaj",
-    image: "/images/services-reference/service-pmu.webp",
+    image: "/images/services-premium/kalici-makyaj.webp",
     description:
       "Yüz hatlarınıza uyum sağlayan doğal ve estetik sonuçlara odaklanan profesyonel kalıcı makyaj uygulamaları.",
   },
@@ -47,10 +47,10 @@ const otherServices = [
     description: "Doğal hacim ve uzunluk sağlayan, bakışları belirginleştiren ipek kirpik uygulaması.",
   },
   {
-    title: "Kirpik Laminasyonu",
-    href: "/kas-kirpik/kirpik-laminasyonu",
-    image: "/images/services-reference/service-lamination.webp",
-    description: "Kirpiklerin daha kalkık, düzenli ve belirgin görünmesini sağlayan bakım uygulaması.",
+    title: "Kirpik Lifting",
+    href: "/kas-kirpik/kirpik-lifting",
+    image: "/images/services-premium/kirpik-lifting.webp",
+    description: "Kirpiklerin daha kalkık, düzenli ve belirgin görünümünü destekleyen bakım uygulaması.",
   },
   {
     title: "Kaş Tasarımı",
@@ -67,13 +67,13 @@ const otherServices = [
   {
     title: "Protez Tırnak",
     href: "/tirnak/protez-tirnak",
-    image: "/images/services-reference/service-nails.webp",
+    image: "/images/services-premium/protez-tirnak.webp",
     description: "Estetik, dayanıklı ve bakımlı tırnak görünümü için profesyonel uygulama.",
   },
   {
     title: "İğneli Epilasyon",
     href: "/igneli-epilasyon",
-    image: "/images/services-reference/service-needle.webp",
+    image: "/images/services-premium/igneli-epilasyon.webp",
     description: "İnce ve açık renkli tüylerde de uygulanabilen, kişiye özel planlanan epilasyon yöntemi.",
   },
 ];
@@ -104,7 +104,7 @@ export default function ServicesCatalog() {
     <div className={styles.page}>
       <section className={styles.hero}>
         <Image
-          src="/images/services-reference/services-hero.webp"
+          src="/images/services-premium/services-hero.webp"
           alt="TDA Luxury Uşak güzellik salonu hizmet odası"
           fill
           priority
@@ -180,8 +180,8 @@ export default function ServicesCatalog() {
       <section className={styles.consultation}>
         <div className={styles.consultImage}>
           <Image
-            src="/images/services-reference/services-consultation.webp"
-            alt="TDA Luxury ücretsiz ön görüşme"
+            src="/images/real/salon-02.webp"
+            alt="TDA Luxury Uşak güzellik salonunda ön görüşme alanı"
             fill
             sizes="(max-width: 800px) 100vw, 47vw"
           />

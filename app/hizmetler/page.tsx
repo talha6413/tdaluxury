@@ -7,7 +7,7 @@ export async function generateMetadata() {
   return buildManagedMetadata("hizmetler", {
     title: "Güzellik Hizmetleri | TDA Luxury Uşak",
     description:
-      "TDA Luxury Uşak güzellik hizmetleri: lazer epilasyon, cilt bakımı, kalıcı makyaj, ipek kirpik, kirpik laminasyonu, kaş tasarımı, microblading, protez tırnak ve iğneli epilasyon.",
+      "TDA Luxury Uşak güzellik hizmetleri: lazer epilasyon, cilt bakımı, kalıcı makyaj, ipek kirpik, kirpik lifting, kaş tasarımı, microblading, protez tırnak ve iğneli epilasyon.",
     path: "/hizmetler",
   });
 }
@@ -21,7 +21,7 @@ const servicesSchema = {
     ["Cilt Bakımı", "/cilt-bakimi"],
     ["Kalıcı Makyaj", "/kalici-makyaj"],
     ["İpek Kirpik", "/kas-kirpik/ipek-kirpik"],
-    ["Kirpik Laminasyonu", "/kas-kirpik/kirpik-laminasyonu"],
+    ["Kirpik Lifting", "/kas-kirpik/kirpik-lifting"],
     ["Protez Tırnak", "/tirnak/protez-tirnak"],
     ["İğneli Epilasyon", "/igneli-epilasyon"],
   ].map(([name, path], index) => ({
