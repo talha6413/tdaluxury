@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+﻿import type { CSSProperties, ReactNode } from "react";
 import { Award, BadgeCheck, Star, UserRoundCheck } from "lucide-react";
 
 type Stat = {
@@ -11,10 +11,10 @@ type Stat = {
 };
 
 const stats: Stat[] = [
-  { target: 5000, suffix: "+", label: "Mutlu Müşteri", icon: <UserRoundCheck /> },
-  { target: 4.9, decimals: 1, suffix: " / 5", label: "Google Puanı", icon: <Star /> },
-  { target: 6, suffix: " YIL+", label: "Tecrübe", icon: <Award /> },
-  { staticValue: "FDA Onaylı", label: "Cihazlar", icon: <BadgeCheck /> },
+  { target: 5000, suffix: "+", label: "Mutlu MÃ¼ÅŸteri", icon: <UserRoundCheck /> },
+  { target: 4.9, decimals: 1, suffix: " / 5", label: "Google PuanÄ±", icon: <Star /> },
+  { target: 6, suffix: " YIL+", label: "TecrÃ¼be", icon: <Award /> },
+  { staticValue: "FDA OnaylÄ±", label: "Cihazlar", icon: <BadgeCheck /> },
 ];
 
 function Counter({ stat }: { stat: Stat }) {
@@ -44,3 +44,4 @@ export default function AnimatedStats() {
     </section>
   );
 }
+
