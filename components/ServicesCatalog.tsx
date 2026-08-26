@@ -201,10 +201,11 @@ export default function ServicesCatalog() {
   const [settings, setSettings] = useState<Record<string, unknown>>({});
 
   useEffect(() => {
-    const client = supabase;
-    if (!client) return;
+    if (!supabase) return;
 
-    async function loadManagedContent() {
+    async function loadManagedContent(
+      client: NonNullable<ReturnType<typeof getSupabaseBrowserClient>>
+    ) {
       const [servicesRes, pageRes, settingsRes] = await Promise.all([
         client
           .from("services")
@@ -239,7 +240,7 @@ export default function ServicesCatalog() {
       }
     }
 
-    void loadManagedContent();
+    void loadManagedContent(supabase);
   }, [supabase]);
 
   const activeServices = useMemo(

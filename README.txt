@@ -1,11 +1,11 @@
-TDA Luxury — Vercel Build Fix
+TDA Luxury — Vercel Build Fix v2
 
-Vercel hatası:
+Son Vercel hatası:
 components/ServicesCatalog.tsx
-Type error: 'supabase' is possibly 'null'.
+Type error: 'client' is possibly 'null'.
 
-Bu paket sadece bu TypeScript hatasını düzeltir.
-Mevcut Hizmetler/Admin bağlantısını değiştirmez.
+Bu sürüm Supabase client tipini async fonksiyona NonNullable parametre olarak geçirir.
+Böylece TypeScript null hatası kesin olarak giderilir.
 
 Kurulum:
 1. ZIP'i tdaluxury proje klasörüne çıkarın.
@@ -13,5 +13,7 @@ Kurulum:
 3. Terminal:
 
 git add .
-git commit -m "Hizmetler Supabase TypeScript hatasini duzelt"
+git commit -m "Supabase client null TypeScript hatasini kesin duzelt"
 git push origin main
+
+Sonra ChatGPT'ye "kontrol et" yazın.
