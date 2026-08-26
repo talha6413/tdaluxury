@@ -12,6 +12,7 @@ import {
   Star,
 } from "lucide-react";
 import { site, waUrl } from "@/lib/site";
+import type { HomeSection } from "@/lib/home-sections";
 
 const serviceOptions = [
   "Lazer Epilasyon",
@@ -27,36 +28,66 @@ const profileOptions = ["Kadın", "Erkek", "Belirtmek istemiyorum"];
 const mapUrl =
   "https://www.google.com/maps/search/?api=1&query=TDA%20Luxury%20U%C5%9Fak";
 
-export default function ConversionConsultation() {
+export default function ConversionConsultation({
+  section,
+}: {
+  section?: HomeSection;
+}) {
   const [profile, setProfile] = useState(profileOptions[0]);
   const [service, setService] = useState(serviceOptions[0]);
 
+  const eyebrow = section?.eyebrow?.trim() || "KİŞİYE ÖZEL DANIŞMANLIK";
+  const title =
+    section?.title?.trim() || "Size uygun hizmeti birlikte belirleyelim.";
+  const description =
+    section?.description?.trim() ||
+    "İhtiyacınızı seçin; WhatsApp'ta hazır mesajla uzman ekibimize doğrudan ulaşın. Fiyat ve seans planı, kısa değerlendirme sonrasında kişiye özel olarak netleştirilir.";
+  const buttonText =
+    section?.button_text?.trim() || "WhatsApp'tan Danışmanlık Al";
+
   const whatsappUrl = useMemo(
     () =>
-      waUrl(
-        `Merhaba, TDA Luxury web siteniz üzerinden ulaşıyorum. ${profile} danışan için ${service} hizmeti hakkında bilgi almak ve uygun randevu zamanlarını öğrenmek istiyorum.`
-      ),
-    [profile, service]
+      section?.button_url && section.button_url !== "whatsapp"
+        ? section.button_url
+        : waUrl(
+            `Merhaba, TDA Luxury web siteniz üzerinden ulaşıyorum. ${profile} danışan için ${service} hizmeti hakkında bilgi almak ve uygun randevu zamanlarını öğrenmek istiyorum.`
+          ),
+    [profile, service, section?.button_url]
   );
 
   return (
-    <section className="conversion-section" aria-labelledby="conversion-title">
+    <section
+      className="conversion-section"
+      aria-labelledby="conversion-title"
+      style={
+        section?.image_url
+          ? ({
+              "--conversion-image": `url(${section.image_url})`,
+              "--conversion-position":
+                section.image_position || "center center",
+            } as React.CSSProperties)
+          : undefined
+      }
+    >
       <div className="conversion-photo" aria-hidden="true" />
       <div className="conversion-shade" aria-hidden="true" />
 
       <div className="container conversion-layout">
         <div className="conversion-copy">
-          <p className="section-label">KİŞİYE ÖZEL DANIŞMANLIK</p>
-          <h2 id="conversion-title">Size uygun hizmeti birlikte belirleyelim.</h2>
-          <p className="conversion-lead">
-            İhtiyacınızı seçin; WhatsApp&apos;ta hazır mesajla uzman ekibimize doğrudan ulaşın.
-            Fiyat ve seans planı, kısa değerlendirme sonrasında kişiye özel olarak netleştirilir.
-          </p>
+          <p className="section-label">{eyebrow}</p>
+          <h2 id="conversion-title">{title}</h2>
+          <p className="conversion-lead">{description}</p>
 
           <div className="conversion-trust-list">
-            <span><ShieldCheck size={19} /> Hijyen ve mahremiyet odaklı süreç</span>
-            <span><Sparkles size={19} /> Kişiye özel bakım planlaması</span>
-            <span><Check size={19} /> Hızlı WhatsApp geri dönüşü</span>
+            <span>
+              <ShieldCheck size={19} /> Hijyen ve mahremiyet odaklı süreç
+            </span>
+            <span>
+              <Sparkles size={19} /> Kişiye özel bakım planlaması
+            </span>
+            <span>
+              <Check size={19} /> Hızlı WhatsApp geri dönüşü
+            </span>
           </div>
 
           <div className="conversion-contact-row">
@@ -118,12 +149,15 @@ export default function ConversionConsultation() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <span><MessageCircle size={21} /> WhatsApp&apos;tan Danışmanlık Al</span>
+            <span>
+              <MessageCircle size={21} /> {buttonText}
+            </span>
             <ArrowRight size={20} />
           </a>
 
           <p className="conversion-disclaimer">
-            Bu form tıbbi değerlendirme yerine geçmez; hizmet uygunluğu ön görüşmede belirlenir.
+            Bu form tıbbi değerlendirme yerine geçmez; hizmet uygunluğu ön
+            görüşmede belirlenir.
           </p>
         </div>
       </div>
@@ -136,7 +170,9 @@ export default function ConversionConsultation() {
         </div>
         <div>
           <b>Karar vermeden önce gerçek müşteri deneyimlerini inceleyin.</b>
-          <span>Google üzerindeki güncel TDA Luxury değerlendirmelerine ulaşın.</span>
+          <span>
+            Google üzerindeki güncel TDA Luxury değerlendirmelerine ulaşın.
+          </span>
         </div>
         <a href={mapUrl} target="_blank" rel="noopener noreferrer">
           Google Yorumlarını Gör <ArrowRight size={17} />
