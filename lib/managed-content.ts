@@ -1,7 +1,8 @@
-﻿import { createClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 import { defaultOpeningHours, normalizeOpeningHours, type OpeningHours } from "@/lib/opening-hours";
 import { blogPosts as fallbackBlogPosts, type BlogPost } from "@/data/blog";
 import { getServiceImage } from "@/lib/service-media";
+import { inferBlogRelatedServices } from "@/lib/blog-related-services";
 
 export type ManagedCampaign = { id?: string; title: string; eyebrow: string; description: string; image: string; href: string };
 export type ManagedGalleryItem = { id?: string; src: string; title: string; category: string; alt: string };

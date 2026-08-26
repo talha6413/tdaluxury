@@ -4,6 +4,7 @@ import { blogPosts } from "@/data/blog";
 import { site } from "@/lib/site";
 
 const SITE_CONTENT_UPDATE = "2026-08-27";
+const BLOG_TEMPLATE_UPDATE = "2026-08-27";
 const BLOG_SITEMAP_API =
   "https://ypgenxagjhccfgsyrgzx.supabase.co/functions/v1/blog-sitemap?format=json";
 
@@ -17,33 +18,12 @@ const SERVICE_CONTENT_UPDATES: Record<string, string> = {
 };
 
 const staticPages = [
-  {
-    path: "/",
-    priority: 1,
-    changeFrequency: "weekly" as const,
-    lastModified: SITE_CONTENT_UPDATE,
-  },
-  {
-    path: "/usak-guzellik-salonu",
-    priority: 0.95,
-    changeFrequency: "monthly" as const,
-  },
+  { path: "/", priority: 1, changeFrequency: "weekly" as const, lastModified: SITE_CONTENT_UPDATE },
+  { path: "/usak-guzellik-salonu", priority: 0.95, changeFrequency: "monthly" as const },
   { path: "/hizmetler", priority: 0.9, changeFrequency: "monthly" as const },
-  {
-    path: "/lazer-epilasyon",
-    priority: 0.9,
-    changeFrequency: "monthly" as const,
-  },
-  {
-    path: "/cilt-bakimi",
-    priority: 0.9,
-    changeFrequency: "monthly" as const,
-  },
-  {
-    path: "/kalici-makyaj",
-    priority: 0.9,
-    changeFrequency: "monthly" as const,
-  },
+  { path: "/lazer-epilasyon", priority: 0.9, changeFrequency: "monthly" as const },
+  { path: "/cilt-bakimi", priority: 0.9, changeFrequency: "monthly" as const },
+  { path: "/kalici-makyaj", priority: 0.9, changeFrequency: "monthly" as const },
   { path: "/hakkimizda", priority: 0.75, changeFrequency: "yearly" as const },
   { path: "/iletisim", priority: 0.8, changeFrequency: "monthly" as const },
   { path: "/galeri", priority: 0.75, changeFrequency: "monthly" as const },
@@ -51,50 +31,22 @@ const staticPages = [
   { path: "/sss", priority: 0.7, changeFrequency: "monthly" as const },
   { path: "/blog", priority: 0.8, changeFrequency: "daily" as const },
   { path: "/kampanyalar", priority: 0.65, changeFrequency: "weekly" as const },
-  {
-    path: "/site-haritasi",
-    priority: 0.7,
-    changeFrequency: "weekly" as const,
-    lastModified: SITE_CONTENT_UPDATE,
-  },
-  {
-    path: "/randevu",
-    priority: 0.85,
-    changeFrequency: "monthly" as const,
-    lastModified: SITE_CONTENT_UPDATE,
-  },
-  {
-    path: "/kalite-hijyen",
-    priority: 0.7,
-    changeFrequency: "yearly" as const,
-  },
-  {
-    path: "/yayin-ilkeleri",
-    priority: 0.55,
-    changeFrequency: "yearly" as const,
-  },
-  {
-    path: "/gizlilik-politikasi",
-    priority: 0.3,
-    changeFrequency: "yearly" as const,
-  },
-  {
-    path: "/cerez-politikasi",
-    priority: 0.3,
-    changeFrequency: "yearly" as const,
-  },
-  {
-    path: "/kvkk-aydinlatma-metni",
-    priority: 0.3,
-    changeFrequency: "yearly" as const,
-  },
+  { path: "/site-haritasi", priority: 0.7, changeFrequency: "weekly" as const, lastModified: SITE_CONTENT_UPDATE },
+  { path: "/randevu", priority: 0.85, changeFrequency: "monthly" as const, lastModified: SITE_CONTENT_UPDATE },
+  { path: "/kalite-hijyen", priority: 0.7, changeFrequency: "yearly" as const },
+  { path: "/yayin-ilkeleri", priority: 0.55, changeFrequency: "yearly" as const },
+  { path: "/gizlilik-politikasi", priority: 0.3, changeFrequency: "yearly" as const },
+  { path: "/cerez-politikasi", priority: 0.3, changeFrequency: "yearly" as const },
+  { path: "/kvkk-aydinlatma-metni", priority: 0.3, changeFrequency: "yearly" as const },
 ];
 
-type DynamicBlogEntry = {
-  slug: string;
-  url: string;
-  lastModified: string;
-};
+type DynamicBlogEntry = { slug: string; url: string; lastModified: string };
+
+function notBefore(value: string | Date, floor: string) {
+  const current = new Date(value);
+  const minimum = new Date(floor);
+  return current.getTime() >= minimum.getTime() ? current : minimum;
+}
 
 async function getDynamicBlogEntries(): Promise<MetadataRoute.Sitemap> {
   try {
@@ -102,22 +54,16 @@ async function getDynamicBlogEntries(): Promise<MetadataRoute.Sitemap> {
       next: { revalidate: 300 },
       headers: { Accept: "application/json" },
     });
-
-    if (!response.ok) {
-      throw new Error(`Blog sitemap API returned ${response.status}`);
-    }
-
+    if (!response.ok) throw new Error(`Blog sitemap API returned ${response.status}`);
     const posts = (await response.json()) as DynamicBlogEntry[];
-
     return posts.map((post) => ({
       url: post.url,
-      lastModified: new Date(post.lastModified),
+      lastModified: notBefore(post.lastModified, BLOG_TEMPLATE_UPDATE),
       changeFrequency: "monthly",
       priority: 0.68,
     }));
   } catch (error) {
     console.error("Dynamic blog sitemap failed, using static fallback.", error);
-
     return blogPosts.map((post) => ({
       url: new URL(`/blog/${post.slug}`, site.url).toString(),
       lastModified: new Date(post.dateModified || post.datePublished),
@@ -129,14 +75,12 @@ async function getDynamicBlogEntries(): Promise<MetadataRoute.Sitemap> {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const dynamicBlogEntries = await getDynamicBlogEntries();
-
   const latestBlogUpdate =
     dynamicBlogEntries
       .map((entry) => entry.lastModified)
       .filter(Boolean)
       .map((value) => new Date(value as string | Date))
-      .sort((a, b) => b.getTime() - a.getTime())[0] ??
-    new Date(SITE_CONTENT_UPDATE);
+      .sort((a, b) => b.getTime() - a.getTime())[0] ?? new Date(SITE_CONTENT_UPDATE);
 
   const staticEntries: MetadataRoute.Sitemap = staticPages.map((page) => {
     const lastModified =
@@ -145,7 +89,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         : "lastModified" in page && page.lastModified
           ? new Date(page.lastModified)
           : undefined;
-
     return {
       url: new URL(page.path, site.url).toString(),
       ...(lastModified ? { lastModified } : {}),
@@ -158,7 +101,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((service) => !staticPages.some((page) => page.path === service.slug))
     .map((service) => {
       const contentUpdate = SERVICE_CONTENT_UPDATES[service.slug];
-
       return {
         url: new URL(service.slug, site.url).toString(),
         ...(contentUpdate ? { lastModified: new Date(contentUpdate) } : {}),

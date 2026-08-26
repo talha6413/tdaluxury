@@ -1,5 +1,8 @@
 import { site } from "@/lib/site";
 
+const SALON_RANDEVU_PROFILE =
+  "https://www.salonrandevu.com/isletme/tda-luxury-guzellik-merkezi-merkez-usak-10813";
+
 export function JsonLd({ data }: { data: Record<string, unknown> }) {
   return (
     <script
@@ -56,7 +59,7 @@ export function LocalBusinessSchema() {
           "@type": name === "Uşak Merkez" ? "City" : "AdministrativeArea",
           name,
         })),
-        sameAs: [site.instagram, site.mapsUrl],
+        sameAs: [site.instagram, site.mapsUrl, SALON_RANDEVU_PROFILE],
         hasMap: site.mapsUrl,
         geo: {
           "@type": "GeoCoordinates",
@@ -66,9 +69,11 @@ export function LocalBusinessSchema() {
         priceRange: "₺₺₺",
         knowsAbout: [
           "Lazer epilasyon",
+          "İğneli epilasyon",
           "Cilt bakımı",
           "Kalıcı makyaj",
           "Kaş ve kirpik uygulamaları",
+          "Tırnak hizmetleri",
           "Bölgesel bakım",
         ],
         openingHoursSpecification: site.openingHours.map((item) => ({

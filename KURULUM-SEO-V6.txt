@@ -1,0 +1,29 @@
+TDA LUXURY — SEO V6
+Blog Otoritesi + Yerel Entity + Eski Vercel Domain Konsolidasyonu
+
+NE YAPIYOR?
+1) V5'te oluşan UÅŸak karakterini otomatik Uşak olarak düzeltir.
+2) Supabase'ten gelen blogların artık sadece “Tüm Hizmetler”e gitmesi sorununu çözer.
+   Yazının konusuna göre doğrudan ilgili hizmete 1–3 link üretir.
+3) Eski tdaluxury.vercel.app adresini kalıcı olarak www.tdaluxury.com.tr adresine yönlendirir.
+4) BeautySalon schema sameAs alanına doğrulanmış SalonRandevu işletme profilini ekler.
+5) Schema knowsAbout alanına İğneli Epilasyon ve Tırnak Hizmetleri ekler.
+6) Kod değişikliğiyle gerçekten yenilenen dinamik blog sayfalarının sitemap lastmod tarihini 27.08.2026'dan eski olmayacak şekilde günceller.
+
+KURULUM
+1. ZIP'i proje ana klasörüne çıkart ve dosyaların üzerine yazılmasına izin ver.
+2. UYGULA-SEO-V6.bat dosyasına çift tıkla.
+3. Terminal:
+   npm run build
+4. Build başarılıysa:
+   git add -A
+   git commit -m "SEO V6 blog ve yerel otorite"
+   git push origin main
+
+DEPLOY SONRASI KONTROL
+- /bolgesel-incelme H1 “Uşak Bölgesel İncelme” olmalı.
+- Yeni Supabase bloglarında “İlgili hizmetler” doğrudan konuya uygun sayfaları göstermeli.
+- https://tdaluxury.vercel.app/... -> https://www.tdaluxury.com.tr/... kalıcı yönlendirme vermeli.
+- LocalBusiness JSON-LD içinde SalonRandevu sameAs görünmeli.
+
+Ayrıca GOOGLE-ISLETME-PROFILI-V6.txt dosyasındaki profil ayarlarını kontrol edin.

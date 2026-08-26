@@ -62,6 +62,12 @@ const nextConfig: NextConfig = {
 
   async redirects() {
     return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "tdaluxury.vercel.app" }],
+        destination: "https://www.tdaluxury.com.tr/:path*",
+        permanent: true,
+      },
       { source: "/hakkımızda", destination: "/hakkimizda", permanent: true },
       { source: "/iletişim", destination: "/iletisim", permanent: true },
       {
