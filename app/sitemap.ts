@@ -7,6 +7,15 @@ const SITE_CONTENT_UPDATE = "2026-08-27";
 const BLOG_SITEMAP_API =
   "https://ypgenxagjhccfgsyrgzx.supabase.co/functions/v1/blog-sitemap?format=json";
 
+const SERVICE_CONTENT_UPDATES: Record<string, string> = {
+  "/igneli-epilasyon": "2026-08-27",
+  "/bolgesel-incelme": "2026-08-27",
+  "/bolgesel-incelme/g5-masaji": "2026-08-27",
+  "/bolgesel-incelme/lenf-drenaj": "2026-08-27",
+  "/kas-kirpik": "2026-08-27",
+  "/tirnak": "2026-08-27",
+};
+
 const staticPages = [
   {
     path: "/",
@@ -147,11 +156,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const serviceEntries: MetadataRoute.Sitemap = services
     .filter((service) => !staticPages.some((page) => page.path === service.slug))
-    .map((service) => ({
-      url: new URL(service.slug, site.url).toString(),
-      changeFrequency: "monthly",
-      priority: service.parent ? 0.72 : 0.82,
-    }));
+    .map((service) => {
+      const contentUpdate = SERVICE_CONTENT_UPDATES[service.slug];
+
+      return {
+        url: new URL(service.slug, site.url).toString(),
+        ...(contentUpdate ? { lastModified: new Date(contentUpdate) } : {}),
+        changeFrequency: "monthly" as const,
+        priority: service.parent ? 0.72 : 0.82,
+      };
+    });
 
   const seen = new Set<string>();
   const dedupedBlogEntries = dynamicBlogEntries.filter((entry) => {

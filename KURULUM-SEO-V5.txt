@@ -1,0 +1,55 @@
+TDA LUXURY — SEO V5
+Özgün Hizmet İçerikleri + Uşak H1 + Doğru lastmod
+Tarih: 27.08.2026
+
+HEDEF
+Google'ın zayıf/şablon algılayabileceği ServicePage tabanlı sayfaları
+birbirinden anlamlı biçimde ayırmak.
+
+ÖZGÜNLEŞTİRİLEN SAYFALAR
+- /igneli-epilasyon
+- /bolgesel-incelme
+- /bolgesel-incelme/g5-masaji
+- /bolgesel-incelme/lenf-drenaj
+- /kas-kirpik
+- /tirnak
+
+HER SAYFAYA EKLENENLER
+- Hizmete özgü "Nedir?" metni
+- Kimler için uygun olabilir?
+- Dikkat edilmesi gerekenler
+- İşlem öncesi hazırlık
+- İşlem sonrası bakım
+- Avantaj / planlama maddeleri
+- Hizmete özgü FAQ
+- Ana kategori sayfalarında H1'e doğal "Uşak" yerel sinyali
+
+ÖNEMLİ
+Mevcut data/service-content.ts DOSYASI değiştirilmez ve güçlü alt hizmet
+içerikleri korunur. Yeni primary-service-content yalnızca mevcut özel içerik
+bulunmayan sayfalarda devreye girer.
+
+SITEMAP
+Yalnızca bu turda gerçekten içeriği değişen 6 URL'ye 27.08.2026
+lastModified eklenir. Diğer hizmetlere sahte güncelleme tarihi verilmez.
+
+KURULUM
+1) ZIP'i TDA Luxury proje ana klasörüne çıkart ve app/sitemap.ts üzerine yazılmasına izin ver.
+2) UYGULA-SEO-V5.bat dosyasına çift tıkla.
+   Bu dosya ServicePage.tsx'i UTF-8 karakterlerini bozmadan güvenli şekilde yamalar.
+3) Terminalde:
+   npm run build
+4) Build başarılıysa:
+   git add -A
+   git commit -m "SEO V5 ozgun hizmet icerikleri"
+   git push origin main
+
+DEPLOY SONRASI KONTROL
+- /bolgesel-incelme H1 = Uşak Bölgesel İncelme
+- /igneli-epilasyon H1 = Uşak İğneli Epilasyon
+- /kas-kirpik H1 = Uşak Kaş ve Kirpik Hizmetleri
+- /tirnak H1 = Uşak Tırnak Hizmetleri
+- Bu sayfalarda generic metin yerine özgün metinler görünmeli
+- sitemap.xml ilgili 6 URL için 2026-08-27 lastmod vermeli
+
+Search Console doğrulamasını yeniden başlatmayın; mevcut doğrulama süreci devam etsin.

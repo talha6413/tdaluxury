@@ -7,6 +7,7 @@ import { site, waUrl } from "@/lib/site";
 import { getServiceImage } from "@/lib/service-media";
 import { services, type Service } from "@/data/services";
 import { richServiceContent } from "@/data/service-content";
+import { primaryServiceContent } from "@/data/primary-service-content";
 import SeoTopicCluster from "@/components/SeoTopicCluster";
 import { getClusterForService } from "@/data/seo-clusters";
 
@@ -99,7 +100,7 @@ export default function ServicePage({ service }: { service: Service }) {
     { name: service.title, url: fullUrl },
   ];
 
-  const rich = richServiceContent[service.slug];
+  const rich = richServiceContent[service.slug] ?? primaryServiceContent[service.slug];
   const faqs = rich?.faqs ?? defaultFaqItems(service);
   const heroImage = getServiceImage(service.slug);
   const profile = getServiceProfile(service);
@@ -132,7 +133,7 @@ export default function ServicePage({ service }: { service: Service }) {
               <span>/</span><span aria-current="page">{service.title}</span>
             </nav>
             <p className="service-detail-kicker">TDA LUXURY UŞAK</p>
-            <h1>{service.title}</h1>
+            <h1>{service.parent ? service.title : `UÅŸak ${service.title}`}</h1>
             <p className="service-detail-lead">{service.description}</p>
             <div className="service-detail-actions">
               <a className="btn-gold" href={waUrl(`${service.title} hakkında bilgi almak istiyorum.`)} target="_blank" rel="noreferrer">
