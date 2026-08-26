@@ -1,15 +1,17 @@
-TDA Luxury Admin Redirect
+TDA Luxury — Vercel Build Fix
 
-Bu paket /admin adresini otomatik olarak /admin/editor adresine yönlendirir.
+Vercel hatası:
+components/ServicesCatalog.tsx
+Type error: 'supabase' is possibly 'null'.
+
+Bu paket sadece bu TypeScript hatasını düzeltir.
+Mevcut Hizmetler/Admin bağlantısını değiştirmez.
 
 Kurulum:
 1. ZIP'i tdaluxury proje klasörüne çıkarın.
-2. app/admin/page.tsx dosyasının üzerine yazılmasına izin verin.
-3. Terminalde:
+2. components/ServicesCatalog.tsx üzerine yazılmasına izin verin.
+3. Terminal:
 
 git add .
-git commit -m "Admin adresini yeni site editorune yonlendir"
+git commit -m "Hizmetler Supabase TypeScript hatasini duzelt"
 git push origin main
-
-Yayın sonrası panel:
-https://tdaluxury.com.tr/admin

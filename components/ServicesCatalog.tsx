@@ -201,16 +201,17 @@ export default function ServicesCatalog() {
   const [settings, setSettings] = useState<Record<string, unknown>>({});
 
   useEffect(() => {
-    if (!supabase) return;
+    const client = supabase;
+    if (!client) return;
 
     async function loadManagedContent() {
       const [servicesRes, pageRes, settingsRes] = await Promise.all([
-        supabase
+        client
           .from("services")
           .select("*")
           .eq("published", true)
           .order("sort_order", { ascending: true }),
-        supabase
+        client
           .from("page_content")
           .select("*")
           .eq("page_key", "hizmetler")
@@ -218,7 +219,7 @@ export default function ServicesCatalog() {
           .order("sort_order", { ascending: true })
           .limit(1)
           .maybeSingle(),
-        supabase
+        client
           .from("site_settings")
           .select("*")
           .eq("id", true)
