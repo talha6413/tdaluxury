@@ -8,13 +8,16 @@ import {
   PenTool,
   Clock3,
 } from "lucide-react";
-import { getManagedFeaturedServices, type ManagedService } from "@/lib/managed-content";
+import {
+  getManagedFeaturedServices,
+  type ManagedService,
+} from "@/lib/managed-content";
 import type { HomeSection } from "@/lib/home-sections";
 
 const fallbackServices: (ManagedService & { icon: typeof UserRound })[] = [
   {
     title: "Lazer Epilasyon",
-    subtitle: "Kişiye özel bölge ve seans planlaması",
+    subtitle: "Uşak'ta kişiye özel bölge ve seans planlaması",
     meta: "Kadın & Erkek",
     duration: "Ön görüşme",
     price: "Bilgi alın",
@@ -25,7 +28,7 @@ const fallbackServices: (ManagedService & { icon: typeof UserRound })[] = [
   },
   {
     title: "Cilt Bakımı",
-    subtitle: "Cilt ihtiyacına göre profesyonel bakım",
+    subtitle: "Uşak'ta cilt ihtiyacına göre profesyonel bakım",
     meta: "Cilt Analizi",
     duration: "45–90 dk",
     price: "Bilgi alın",
@@ -36,7 +39,7 @@ const fallbackServices: (ManagedService & { icon: typeof UserRound })[] = [
   },
   {
     title: "Kalıcı Makyaj",
-    subtitle: "Yüz hatlarına uyumlu zarif uygulamalar",
+    subtitle: "Uşak'ta yüz hatlarına uyumlu kalıcı makyaj uygulamaları",
     meta: "Kaş & Dudak",
     duration: "Ön görüşme",
     price: "Bilgi alın",
@@ -47,23 +50,38 @@ const fallbackServices: (ManagedService & { icon: typeof UserRound })[] = [
   },
 ];
 
-export default async function ServicesHome({ section }: { section?: HomeSection }) {
+export default async function ServicesHome({
+  section,
+}: {
+  section?: HomeSection;
+}) {
   const managed = await getManagedFeaturedServices(fallbackServices);
-  const mainHrefs = new Set(fallbackServices.map((service) => service.href));
-  const displayServices = managed
-    .filter((service) => mainHrefs.has(service.href))
-    .map((service) => ({
-      ...service,
+  const managedByHref = new Map(
+    managed.map((service) => [service.href, service] as const)
+  );
+
+  // Ana para getiren üç kategori daima ana sayfadan doğrudan link alır.
+  // Yönetim panelinde bir kart yanlışlıkla featured dışına alınsa bile
+  // iç link hiyerarşisi bozulmaz.
+  const displayServices = fallbackServices.map((fallbackService) => {
+    const managedService = managedByHref.get(fallbackService.href);
+
+    return {
+      ...fallbackService,
+      ...(managedService ?? {}),
       icon:
-        fallbackServices.find((item) => item.href === service.href)?.icon ??
-        Sparkles,
-    }));
+        fallbackServices.find(
+          (item) => item.href === fallbackService.href
+        )?.icon ?? Sparkles,
+    };
+  });
 
   const eyebrow = section?.eyebrow?.trim() || "HİZMETLERİMİZ";
-  const title = section?.title?.trim() || "Size Özel Hizmetlerimiz";
+  const title =
+    section?.title?.trim() || "Uşak'ta Öne Çıkan Güzellik Hizmetlerimiz";
   const description =
     section?.description?.trim() ||
-    "Uzman değerlendirmesi, hijyenik uygulama alanları ve kişiye özel planlama ile güzellik deneyiminizi birlikte şekillendiriyoruz.";
+    "Lazer epilasyon, cilt bakımı ve kalıcı makyaj hizmetlerimizi inceleyin; ihtiyacınıza uygun uygulama için detaylı bilgi alın.";
   const buttonText = section?.button_text?.trim() || "Tüm Hizmetleri İncele";
   const buttonUrl = section?.button_url?.trim() || "/hizmetler";
 

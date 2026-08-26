@@ -1,0 +1,52 @@
+TDA LUXURY — SEO V1 / INDEXLEME PAKETİ
+Tarih: 26.08.2026
+
+AMAÇ
+Search Console'da:
+- "Keşfedildi - şu anda dizine eklenmiş değil" (53 URL)
+- "Tarandı - şu anda dizine eklenmiş değil" (7 URL)
+gruplarını teknik ve içerik hiyerarşisi açısından güçlendirmek.
+
+BU PAKET NE YAPIYOR?
+1. app/sitemap.ts
+   - Eski ve yanıltıcı 28.07.2026 lastmod bilgisini kaldırır.
+   - Yalnızca gerçekten güncellendiğini bildiğimiz ana sayfa ve randevu sayfasına
+     26.08.2026 lastmod verir.
+   - Blog yazılarında gerçek published/updated tarihlerini kullanmaya devam eder.
+   - Hizmet sayfalarına doğrulanmamış sahte güncelleme tarihi göndermez.
+
+2. app/page.tsx
+   - Ana sayfa kod fallback SEO başlığını:
+     "TDA Luxury Uşak | Lazer Epilasyon, Cilt Bakımı ve Kalıcı Makyaj"
+     olarak günceller.
+   - Supabase geçici olarak erişilemezse eski SEO başlığına geri dönmesini önler.
+
+3. lib/home-sections.ts
+   - Ana sayfa H1 fallback'ini TDA Luxury Uşak + hizmet niyetine göre düzenler.
+   - "Uşak Güzellik Salonu" exact sorgusunun /usak-guzellik-salonu sayfasına
+     ait kalmasına yardımcı olur.
+   - Services fallback başlığını ve açıklamasını düzeltir.
+
+4. components/ServicesHome.tsx
+   - Ana sayfada Lazer Epilasyon + Cilt Bakımı + Kalıcı Makyaj kartlarının
+     üçünün de her durumda görünmesini sağlar.
+   - Bu üç kritik ticari sayfaya ana sayfadan kalıcı, güçlü iç link verir.
+
+NOT
+Ana sayfa SEO/H1 ayarları Supabase'de de aynı stratejiyle güncellendi.
+Bu ZIP, kod fallback'ini de aynı hale getirir ve yeni deployment ile eski Vercel cache'ini kırar.
+
+KURULUM
+1. ZIP'i tdaluxury proje ana klasörüne çıkart.
+2. Dosyaların üzerine yazılmasına izin ver.
+3. Terminal:
+   npm run build
+4. Build başarılıysa:
+   git add -A
+   git commit -m "SEO V1 indexleme ve ic link optimizasyonu"
+   git push origin main
+
+DEPLOY SONRASI
+- Search Console'daki mevcut doğrulama zaten "Başladı" durumda.
+- Tekrar tekrar "Düzeltmeyi doğrula"ya basmayın.
+- Deployment sonrası sitemap.xml ve öncelikli 7 URL canlıdan kontrol edilecek.

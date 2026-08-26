@@ -12,7 +12,9 @@ const Results = dynamic(() => import("@/components/Results"));
 const AboutStrip = dynamic(() => import("@/components/AboutStrip"));
 const Stats = dynamic(() => import("@/components/Stats"));
 const InstagramShowcase = dynamic(() => import("@/components/InstagramShowcase"));
-const ConversionConsultation = dynamic(() => import("@/components/ConversionConsultation"));
+const ConversionConsultation = dynamic(
+  () => import("@/components/ConversionConsultation")
+);
 const GoogleTrust = dynamic(() => import("@/components/GoogleTrust"));
 const ScrollProgress = dynamic(() => import("@/components/ScrollProgress"));
 const MotionReveal = dynamic(() => import("@/components/MotionReveal"));
@@ -20,9 +22,10 @@ const PremiumSplash = dynamic(() => import("@/components/PremiumSplash"));
 
 export async function generateMetadata() {
   return buildManagedMetadata("ana-sayfa", {
-    title: "Uşak Güzellik Salonu | Lazer Epilasyon, Cilt Bakımı | TDA Luxury",
+    title:
+      "TDA Luxury Uşak | Lazer Epilasyon, Cilt Bakımı ve Kalıcı Makyaj",
     description:
-      "Uşak TDA Luxury’de lazer epilasyon, profesyonel cilt bakımı ve kalıcı makyaj hizmetlerini keşfedin. Kişiye özel planlama ve randevu için bize ulaşın.",
+      "TDA Luxury Uşak Merkez'de lazer epilasyon, profesyonel cilt bakımı, kalıcı makyaj ve kişiye özel güzellik hizmetleri. Randevu ve bilgi için bize ulaşın.",
     path: "/",
     image: "/og/home.jpg",
   });
