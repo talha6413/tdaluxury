@@ -1,4 +1,4 @@
-﻿import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { Award, BadgeCheck, Star, UserRoundCheck } from "lucide-react";
 
 type Stat = {
@@ -11,10 +11,10 @@ type Stat = {
 };
 
 const stats: Stat[] = [
-  { target: 5000, suffix: "+", label: "Mutlu MÃ¼ÅŸteri", icon: <UserRoundCheck /> },
-  { target: 4.9, decimals: 1, suffix: " / 5", label: "Google PuanÄ±", icon: <Star /> },
-  { target: 6, suffix: " YIL+", label: "TecrÃ¼be", icon: <Award /> },
-  { staticValue: "FDA OnaylÄ±", label: "Cihazlar", icon: <BadgeCheck /> },
+  { target: 5000, suffix: "+", label: "Mutlu Müşteri", icon: <UserRoundCheck /> },
+  { target: 4.9, decimals: 1, suffix: " / 5", label: "Google Puanı", icon: <Star /> },
+  { target: 6, suffix: " YIL+", label: "Tecrübe", icon: <Award /> },
+  { staticValue: "FDA Onaylı", label: "Cihazlar", icon: <BadgeCheck /> },
 ];
 
 function Counter({ stat }: { stat: Stat }) {
@@ -32,10 +32,16 @@ export default function AnimatedStats() {
     <section className="stats">
       <div className="container stats-grid">
         {stats.map((stat, index) => (
-          <div className="stat" key={stat.label} style={{ "--stat-delay": `${index * 90}ms` } as CSSProperties}>
+          <div
+            className="stat"
+            key={stat.label}
+            style={{ "--stat-delay": `${index * 90}ms` } as CSSProperties}
+          >
             <div className="stat-icon">{stat.icon}</div>
             <div>
-              <div className="stat-value"><Counter stat={stat} /></div>
+              <div className="stat-value">
+                <Counter stat={stat} />
+              </div>
               <div className="stat-label">{stat.label}</div>
             </div>
           </div>
@@ -44,5 +50,3 @@ export default function AnimatedStats() {
     </section>
   );
 }
-
-
