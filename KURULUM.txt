@@ -1,20 +1,17 @@
-TDA Luxury — Randevu Gün + Saat Güncellemesi
+TDA LUXURY - ADMIN BUILD FIX V2
+
+1) ZIP'i tdaluxury proje ANA klasorune cikart.
+   Dogru konum ornegi:
+   C:\Users\MSI\OneDrive\Desktop\tdaluxury
+
+2) DUZELT-VE-BUILD.bat dosyasina cift tikla.
 
 Bu paket:
-- Müşteri hesabına giriş bölümünü randevu sayfasından tamamen kaldırır.
-- Sabah / Öğleden sonra / Akşamüstü seçeneklerini kaldırır.
-- Sol tarafta önümüzdeki 12 açık günü gösterir.
-- Sağ tarafta 09:00–19:30 saatlerini 30 dakikalık aralıklarla gösterir.
-- Pazar günlerini otomatik gizler.
-- Seçilen gün ve saati WhatsApp mesajına ekler.
-- Randevu sayfası metinlerini yeni akışa göre günceller.
+- components/admin/FullSiteEditor.tsx dosyasini otomatik bulur.
+- saveSettings icindeki payload TypeScript tip hatasini duzeltir.
+- Degisikligin gercekten uygulandigini ekranda satir satir gosterir.
+- Ardindan npm run build komutunu otomatik calistirir.
 
-Kurulum:
-1. ZIP'i tdaluxury proje ana klasörüne çıkart.
-2. Dosyaların üzerine yazılmasına izin ver.
-3. Terminal:
-   npm run build
-4. Build başarılıysa:
-   git add -A
-   git commit -m "Randevu gun ve saat secimini yenile"
-   git push origin main
+Build basarili olursa ekranda push komutlari da gosterilir.
+
+SEO V1 dosyalarina veya Supabase verilerine dokunmaz.

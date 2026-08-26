@@ -395,7 +395,10 @@ export default function FullSiteEditor() {
     if (!supabase) return;
     setBusy(true);
 
-    const payload = { ...settingsRow, updated_at: new Date().toISOString() };
+    const payload: Record<string, unknown> = {
+      ...settingsRow,
+      updated_at: new Date().toISOString(),
+    };
     delete payload.id;
 
     const { error } = await supabase.from("site_settings").update(payload).eq("id", true);
