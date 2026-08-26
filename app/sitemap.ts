@@ -3,7 +3,7 @@ import { services } from "@/data/services";
 import { blogPosts } from "@/data/blog";
 import { site } from "@/lib/site";
 
-const SITE_CONTENT_UPDATE = "2026-08-26";
+const SITE_CONTENT_UPDATE = "2026-08-27";
 const BLOG_SITEMAP_API =
   "https://ypgenxagjhccfgsyrgzx.supabase.co/functions/v1/blog-sitemap?format=json";
 
@@ -42,6 +42,12 @@ const staticPages = [
   { path: "/sss", priority: 0.7, changeFrequency: "monthly" as const },
   { path: "/blog", priority: 0.8, changeFrequency: "daily" as const },
   { path: "/kampanyalar", priority: 0.65, changeFrequency: "weekly" as const },
+  {
+    path: "/site-haritasi",
+    priority: 0.7,
+    changeFrequency: "weekly" as const,
+    lastModified: SITE_CONTENT_UPDATE,
+  },
   {
     path: "/randevu",
     priority: 0.85,
@@ -139,9 +145,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
-  // Google'a sahte/eski lastmod göndermiyoruz.
-  // Hizmet sayfalarında güvenilir bir içerik güncelleme tarihi yoksa
-  // lastModified alanını boş bırakmak yanlış tarih göndermekten daha doğrudur.
   const serviceEntries: MetadataRoute.Sitemap = services
     .filter((service) => !staticPages.some((page) => page.path === service.slug))
     .map((service) => ({

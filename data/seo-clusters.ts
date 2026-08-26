@@ -99,6 +99,20 @@ export const seoClusters: SeoCluster[] = [
     ],
     blogSlugs: ["g5-masaji-nedir", "bolgesel-incelme-gercekci-beklenti"],
   },
+  {
+    key: "tirnak",
+    title: "Tırnak Bakımı Rehberi",
+    description:
+      "Protez tırnak, kalıcı oje, manikür ve pedikür hizmetlerini tek konu kümesinde inceleyin.",
+    serviceSlugs: [
+      "/tirnak",
+      "/tirnak/protez-tirnak",
+      "/tirnak/kalici-oje",
+      "/tirnak/manikur",
+      "/tirnak/pedikur",
+    ],
+    blogSlugs: [],
+  },
 ];
 
 export function getClusterForService(serviceSlug: string) {

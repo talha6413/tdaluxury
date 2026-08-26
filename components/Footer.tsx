@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -42,8 +42,28 @@ export default function Footer() {
           </div>
         </div>
 
-        <div><h3>Hizmetler</h3><Link href="/lazer-epilasyon">Lazer Epilasyon</Link><Link href="/cilt-bakimi">Cilt Bakımı</Link><Link href="/kalici-makyaj">Kalıcı Makyaj</Link><Link href="/kas-kirpik">Kaş &amp; Kirpik</Link><Link href="/bolgesel-incelme">Bölgesel İncelme</Link><Link href="/hizmetler">Tüm Hizmetler</Link></div>
-        <div><h3>Kurumsal</h3><Link href="/usak-guzellik-salonu">Uşak Güzellik Salonu</Link><Link href="/hakkimizda">Hakkımızda</Link><Link href="/galeri">Galeri</Link><Link href="/sonuclar">Öncesi / Sonrası</Link><Link href="/blog">Blog</Link><Link href="/kalite-hijyen">Kalite ve Hijyen</Link></div>
+        <div>
+          <h3>Hizmetler</h3>
+          <Link href="/lazer-epilasyon">Lazer Epilasyon</Link>
+          <Link href="/cilt-bakimi">Cilt Bakımı</Link>
+          <Link href="/kalici-makyaj">Kalıcı Makyaj</Link>
+          <Link href="/kas-kirpik">Kaş &amp; Kirpik</Link>
+          <Link href="/bolgesel-incelme">Bölgesel İncelme</Link>
+          <Link href="/tirnak">Tırnak</Link>
+          <Link href="/hizmetler">Tüm Hizmetler</Link>
+        </div>
+
+        <div>
+          <h3>Kurumsal</h3>
+          <Link href="/usak-guzellik-salonu">Uşak Güzellik Salonu</Link>
+          <Link href="/hakkimizda">Hakkımızda</Link>
+          <Link href="/galeri">Galeri</Link>
+          <Link href="/sonuclar">Öncesi / Sonrası</Link>
+          <Link href="/blog">Blog</Link>
+          <Link href="/kalite-hijyen">Kalite ve Hijyen</Link>
+          <Link href="/site-haritasi">Site Haritası</Link>
+        </div>
+
         <div className="premium-footer-contact">
           <h3>İletişim</h3>
           <a href={`tel:+${settings.whatsappNumber}`}><Phone size={17} /> {settings.phoneDisplay}</a>
@@ -67,10 +87,15 @@ export default function Footer() {
 
       <div className="container premium-footer-bottom">
         <span>© {new Date().getFullYear()} {settings.footerCopyright}</span>
-        <div><Link href="/gizlilik-politikasi">Gizlilik</Link><Link href="/kvkk-aydinlatma-metni">KVKK</Link><Link href="/cerez-politikasi">Çerezler</Link><Link href="/yayin-ilkeleri">Yayın İlkeleri</Link></div>
+        <div>
+          <Link href="/gizlilik-politikasi">Gizlilik</Link>
+          <Link href="/kvkk-aydinlatma-metni">KVKK</Link>
+          <Link href="/cerez-politikasi">Çerezler</Link>
+          <Link href="/yayin-ilkeleri">Yayın İlkeleri</Link>
+          <Link href="/site-haritasi">Site Haritası</Link>
+        </div>
         <span>www.tdaluxury.com.tr</span>
       </div>
     </footer>
   );
 }
-

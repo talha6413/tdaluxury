@@ -1,17 +1,18 @@
-TDA LUXURY - ADMIN BUILD FIX V2
+TDA Luxury — SEO V3 Türkçe Karakter Düzeltmesi
 
-1) ZIP'i tdaluxury proje ANA klasorune cikart.
-   Dogru konum ornegi:
-   C:\Users\MSI\OneDrive\Desktop\tdaluxury
+Bu dosya yalnızca components/AnimatedStats.tsx dosyasını düzeltir.
 
-2) DUZELT-VE-BUILD.bat dosyasina cift tikla.
+Doğru metinler:
+- 5.000+ Mutlu Müşteri
+- 4,9 / 5 Google Puanı
+- 6 YIL+ Tecrübe
+- FDA Onaylı Cihazlar
 
-Bu paket:
-- components/admin/FullSiteEditor.tsx dosyasini otomatik bulur.
-- saveSettings icindeki payload TypeScript tip hatasini duzeltir.
-- Degisikligin gercekten uygulandigini ekranda satir satir gosterir.
-- Ardindan npm run build komutunu otomatik calistirir.
-
-Build basarili olursa ekranda push komutlari da gosterilir.
-
-SEO V1 dosyalarina veya Supabase verilerine dokunmaz.
+Kurulum:
+1) ZIP'i proje ana klasörüne çıkart ve dosyanın üzerine yaz.
+2) Terminal:
+   npm run build
+3) Build başarılıysa:
+   git add components/AnimatedStats.tsx
+   git commit -m "Turkce karakterleri duzelt"
+   git push origin main

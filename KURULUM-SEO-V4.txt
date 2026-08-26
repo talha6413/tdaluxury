@@ -1,0 +1,40 @@
+TDA Luxury — SEO V4 İç Link + HTML Site Haritası
+Tarih: 27.08.2026
+
+BU PAKET NE YAPIYOR?
+- /site-haritasi sayfasını ekler.
+- Site haritasında tüm hizmetleri ve yayınlanmış blog yazılarını gerçek HTML linkleriyle gösterir.
+- Footer'a Tırnak hizmeti ve Site Haritası linki ekler.
+- Böylece Google her sayfadan site haritasına, oradan tüm alt sayfalara ulaşabilir.
+- Tırnak hizmetlerini SEO topic cluster sistemine ekler.
+- /site-haritasi URL'sini XML sitemap'e ekler.
+- Sitemap güncelleme tarihini bu gerçek değişiklik nedeniyle 27.08.2026 yapar.
+
+SUPABASE TARAFINDA AYRICA UYGULANDI:
+- Uşak Kaş ve Kirpik
+- Uşak Kirpik Lifting
+- Uşak Kaş Laminasyonu
+- Uşak İpek Kirpik
+- Uşak Altın Oran Kaş Tasarımı
+- Uşak Kaş Alımı
+- Uşak Tırnak Hizmetleri
+- Uşak Protez Tırnak
+- Uşak Kalıcı Oje
+- Uşak Manikür
+- Uşak Pedikür
+sayfalarının SEO title ve description alanları Uşak arama niyetine göre güncellendi.
+
+KURULUM
+1. ZIP'i tdaluxury proje ana klasörüne çıkart, üzerine yaz.
+2. Terminal:
+   npm run build
+3. Build başarılıysa:
+   git add -A
+   git commit -m "SEO V4 ic link ve site haritasi"
+   git push origin main
+
+DEPLOY SONRASI KONTROL
+- /site-haritasi 200 OK
+- footer'da Site Haritası linki
+- /tirnak sayfalarında ilgili tırnak hizmetleri topic cluster linkleri
+- sitemap.xml içinde /site-haritasi
