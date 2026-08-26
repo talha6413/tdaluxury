@@ -133,7 +133,7 @@ export default function ServicePage({ service }: { service: Service }) {
               <span>/</span><span aria-current="page">{service.title}</span>
             </nav>
             <p className="service-detail-kicker">TDA LUXURY UŞAK</p>
-            <h1>{service.parent ? service.title : `UÅŸak ${service.title}`}</h1>
+            <h1>{service.parent ? service.title : `Uşak ${service.title}`}</h1>
             <p className="service-detail-lead">{service.description}</p>
             <div className="service-detail-actions">
               <a className="btn-gold" href={waUrl(`${service.title} hakkında bilgi almak istiyorum.`)} target="_blank" rel="noreferrer">
