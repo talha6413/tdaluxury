@@ -1,56 +1,20 @@
-TDA LUXURY — SADECE WEB SİTESİ TEMİZLİK PAKETİ
+TDA Luxury — Randevu Gün + Saat Güncellemesi
 
-AMAÇ
-Ziyaretçiye yalnızca kurumsal TDA Luxury sitesi kalsın.
-Müşteri/personel girişi, dijital onam ve AI cilt analizi public taraftan kaldırılır.
+Bu paket:
+- Müşteri hesabına giriş bölümünü randevu sayfasından tamamen kaldırır.
+- Sabah / Öğleden sonra / Akşamüstü seçeneklerini kaldırır.
+- Sol tarafta önümüzdeki 12 açık günü gösterir.
+- Sağ tarafta 09:00–19:30 saatlerini 30 dakikalık aralıklarla gösterir.
+- Pazar günlerini otomatik gizler.
+- Seçilen gün ve saati WhatsApp mesajına ekler.
+- Randevu sayfası metinlerini yeni akışa göre günceller.
 
-SİLİNENLER
-- /musteri-paneli ve alt sayfaları
-- /personel-paneli
-- /dijital-onam
-- /ai-cilt-analizi
-- AI cilt analizi API'si
-- CustomerPortal / StaffPortal / DigitalConsent / AI müşteri bileşenleri
-
-KALANLAR
-- Ana sayfa
-- Hizmetler ve tüm SEO landing sayfaları
-- Lazer epilasyon / cilt bakımı / kalıcı makyaj / tırnak vb.
-- Blog
-- Galeri / sonuçlar
-- İletişim
-- Randevu
-- WhatsApp / telefon
-- Google Analytics ve Google Ads ölçümü
-- Admin / yönetim alanı (public menüde görünmez, Google'a noindex)
-- Supabase müşteri verileri (SİLİNMEZ)
-
-EK DÜZELTME
-Önceki Google CSP hatası da bu pakette birleştirildi:
-- google.com ccm/collect
-- doubleclick.net ccm collect
-izinleri eklendi.
-
-KURULUM
-1) ZIP'i proje ana klasörüne çıkart.
-   Örnek:
-   C:\Users\MSI\OneDrive\Desktop\tdaluxury
-
-2) Dosyaların üzerine yazılmasına izin ver.
-
-3) Proje ana klasöründeki:
-   TEMIZLE.bat
-   dosyasına çift tıkla.
-
-4) Terminali proje klasöründe aç ve:
+Kurulum:
+1. ZIP'i tdaluxury proje ana klasörüne çıkart.
+2. Dosyaların üzerine yazılmasına izin ver.
+3. Terminal:
    npm run build
-
-5) Build başarılıysa:
+4. Build başarılıysa:
    git add -A
-   git commit -m "Musteri girisi ve portal ozelliklerini kaldir"
+   git commit -m "Randevu gun ve saat secimini yenile"
    git push origin main
-
-Vercel main branch'i otomatik deploy eder.
-
-NOT
-Bu paket Supabase tablolarını, müşteri kayıtlarını veya admin verilerini silmez.

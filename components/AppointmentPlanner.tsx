@@ -1,22 +1,18 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ArrowRight,
   CalendarDays,
   Check,
-  CheckCircle2,
   Clock3,
-  LoaderCircle,
-  LogIn,
   MessageCircle,
   Phone,
   UserRound,
 } from "lucide-react";
 import { site, waUrl } from "@/lib/site";
 import { dispatchConversion } from "@/lib/analytics";
-import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
+import styles from "./AppointmentPlanner.module.css";
 
 const publicServices = [
   "Lazer Epilasyon",
@@ -29,12 +25,11 @@ const publicServices = [
   "Diğer",
 ];
 
-const timeOptions = ["Sabah", "Öğleden sonra", "Akşamüstü", "Fark etmez"];
-
-type Service = {
-  id: string;
-  title: string;
-  duration: string | null;
+type AppointmentDay = {
+  value: string;
+  dayName: string;
+  dateLabel: string;
+  fullLabel: string;
 };
 
 function localDateValue(date: Date) {
@@ -44,137 +39,90 @@ function localDateValue(date: Date) {
   return `${year}-${month}-${day}`;
 }
 
-function minimumDate() {
-  const date = new Date();
-  date.setDate(date.getDate() + 1);
-  return localDateValue(date);
-}
+function buildUpcomingDays(count = 12): AppointmentDay[] {
+  const days: AppointmentDay[] = [];
+  const cursor = new Date();
+  cursor.setHours(12, 0, 0, 0);
 
-function maximumDate() {
-  const date = new Date();
-  date.setDate(date.getDate() + 90);
-  return localDateValue(date);
+  while (days.length < count) {
+    cursor.setDate(cursor.getDate() + 1);
+
+    // Pazar kapalı.
+    if (cursor.getDay() === 0) continue;
+
+    const dayName = new Intl.DateTimeFormat("tr-TR", {
+      weekday: "long",
+    }).format(cursor);
+
+    const dateLabel = new Intl.DateTimeFormat("tr-TR", {
+      day: "numeric",
+      month: "long",
+    }).format(cursor);
+
+    days.push({
+      value: localDateValue(cursor),
+      dayName: dayName.charAt(0).toUpperCase() + dayName.slice(1),
+      dateLabel,
+      fullLabel: `${dateLabel} ${dayName}`,
+    });
+  }
+
+  return days;
 }
 
 function buildTimes() {
   const times: string[] = [];
-  for (let hour = 9; hour < 19; hour += 1) {
+
+  for (let hour = 9; hour <= 19; hour += 1) {
     times.push(`${String(hour).padStart(2, "0")}:00`);
     times.push(`${String(hour).padStart(2, "0")}:30`);
   }
+
   return times;
 }
 
 export default function AppointmentPlanner() {
-  const [sessionChecked, setSessionChecked] = useState(false);
-  const [signedIn, setSignedIn] = useState(false);
-  const [services, setServices] = useState<Service[]>([]);
-  const [serviceId, setServiceId] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [onlineNote, setOnlineNote] = useState("");
-  const [onlineConsent, setOnlineConsent] = useState(false);
-  const [onlineBusy, setOnlineBusy] = useState(false);
-  const [onlineMessage, setOnlineMessage] = useState("");
-  const [success, setSuccess] = useState(false);
-
   const [gender, setGender] = useState("");
   const [service, setService] = useState("");
-  const [preferredTime, setPreferredTime] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [note, setNote] = useState("");
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [error, setError] = useState("");
 
+  const days = useMemo(() => buildUpcomingDays(12), []);
   const times = useMemo(() => buildTimes(), []);
+
+  const selectedDay = useMemo(
+    () => days.find((item) => item.value === selectedDate),
+    [days, selectedDate]
+  );
+
   const progress = useMemo(() => {
-    return [gender, service, preferredTime, name.trim(), phone.trim()].filter(Boolean).length;
-  }, [gender, service, preferredTime, name, phone]);
-
-  useEffect(() => {
-    const supabase = getSupabaseBrowserClient();
-
-    async function boot() {
-      const { data: sessionData } = await supabase.auth.getSession();
-      const hasSession = Boolean(sessionData.session);
-      setSignedIn(hasSession);
-
-      if (hasSession) {
-        const { data, error: serviceError } = await supabase
-          .from("services")
-          .select("id, title, duration")
-          .eq("published", true)
-          .order("sort_order", { ascending: true });
-
-        if (serviceError) setOnlineMessage("Hizmetler yüklenemedi: " + serviceError.message);
-        else setServices((data || []) as Service[]);
-      }
-
-      setSessionChecked(true);
-    }
-
-    void boot();
-  }, []);
-
-  async function submitOnlineRequest() {
-    setOnlineMessage("");
-    setSuccess(false);
-
-    if (!serviceId || !date || !time) {
-      setOnlineMessage("Hizmet, tarih ve saat alanlarını tamamlayın.");
-      return;
-    }
-
-    if (!onlineConsent) {
-      setOnlineMessage("Randevu talebi ve iletişim onayını işaretleyin.");
-      return;
-    }
-
-    const selectedDate = new Date(`${date}T${time}:00`);
-    if (selectedDate.getDay() === 0) {
-      setOnlineMessage("Pazar günleri kapalıyız. Lütfen başka bir gün seçin.");
-      return;
-    }
-
-    setOnlineBusy(true);
-
-    const { error: requestError } = await getSupabaseBrowserClient().rpc(
-      "create_customer_appointment_request",
-      {
-        requested_service_id: serviceId,
-        requested_starts_at: selectedDate.toISOString(),
-        customer_note: onlineNote.trim(),
-      } as never
-    );
-
-    setOnlineBusy(false);
-
-    if (requestError) {
-      setOnlineMessage(requestError.message);
-      return;
-    }
-
-    setSuccess(true);
-    setOnlineMessage(
-      "Randevu talebiniz alındı. Ekibimiz kontrol ettikten sonra müşteri panelinizde onay durumunu görebilirsiniz."
-    );
-    setDate("");
-    setTime("");
-    setOnlineNote("");
-    setOnlineConsent(false);
-
-    dispatchConversion({
-      event_name: "online_appointment_request",
-      source: "customer_portal",
-      service: services.find((item) => item.id === serviceId)?.title || "",
-      page_path: window.location.pathname,
-    });
-  }
+    return [
+      gender,
+      service,
+      selectedDate,
+      selectedTime,
+      name.trim(),
+      phone.trim(),
+    ].filter(Boolean).length;
+  }, [gender, service, selectedDate, selectedTime, name, phone]);
 
   const submitPublicRequest = () => {
-    if (!gender || !service || !preferredTime || !name.trim() || !phone.trim()) {
-      setError("Lütfen danışan, hizmet, saat tercihi, ad soyad ve telefon alanlarını tamamlayın.");
+    if (
+      !gender ||
+      !service ||
+      !selectedDate ||
+      !selectedTime ||
+      !name.trim() ||
+      !phone.trim()
+    ) {
+      setError(
+        "Lütfen danışan, hizmet, gün, saat, ad soyad ve telefon alanlarını tamamlayın."
+      );
       return;
     }
 
@@ -185,20 +133,24 @@ export default function AppointmentPlanner() {
     }
 
     if (!privacyAccepted) {
-      setError("Randevu iletişimi için KVKK bilgilendirme onayını işaretleyin.");
+      setError(
+        "Randevu iletişimi için KVKK bilgilendirme onayını işaretleyin."
+      );
       return;
     }
 
     setError("");
+
     const message = [
       "Merhaba, TDA Luxury web sitesinden randevu talebi oluşturuyorum.",
       `Ad Soyad: ${name.trim()}`,
       `Telefon: ${phone.trim()}`,
       `Danışan: ${gender}`,
       `Hizmet: ${service}`,
-      `Saat tercihi: ${preferredTime}`,
+      `Gün: ${selectedDay?.fullLabel ?? selectedDate}`,
+      `Saat: ${selectedTime}`,
       note.trim() ? `Not: ${note.trim()}` : "",
-      "Uygun gün ve saatleri paylaşabilir misiniz?",
+      "Bu gün ve saat için uygunluk durumunu paylaşabilir misiniz?",
     ]
       .filter(Boolean)
       .join("\n");
@@ -213,203 +165,197 @@ export default function AppointmentPlanner() {
     window.open(waUrl(message), "_blank", "noopener,noreferrer");
   };
 
-  if (!sessionChecked) {
-    return (
-      <section className="appointment-planner">
-        <div className="appointment-planner-head">
-          <LoaderCircle size={24} />
-          <h2>Randevu ekranı hazırlanıyor…</h2>
-        </div>
-      </section>
-    );
-  }
-
-  if (signedIn) {
-    return (
-      <section className="appointment-planner" aria-labelledby="online-appointment-title">
-        <div className="appointment-planner-head">
-          <span>GÜVENLİ MÜŞTERİ RANDEVUSU</span>
-          <h2 id="online-appointment-title">Uygun gün ve saati seçerek talebinizi gönderin.</h2>
-          <p>Talebiniz doğrudan TDA Luxury sistemine ulaşır. Onaylandığında müşteri panelinizde görünür.</p>
-        </div>
-
-        <div className="appointment-form-grid">
-          <label className="appointment-input appointment-input-wide">
-            <span>Hizmet</span>
-            <select value={serviceId} onChange={(event) => setServiceId(event.target.value)}>
-              <option value="">Hizmet seçin</option>
-              {services.map((item) => (
-                <option value={item.id} key={item.id}>
-                  {item.title}{item.duration ? ` · ${item.duration}` : ""}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="appointment-input">
-            <span>Tarih</span>
-            <input
-              type="date"
-              value={date}
-              min={minimumDate()}
-              max={maximumDate()}
-              onChange={(event) => {
-                setDate(event.target.value);
-                setOnlineMessage("");
-              }}
-            />
-          </label>
-
-          <label className="appointment-input">
-            <span>Saat</span>
-            <select value={time} onChange={(event) => setTime(event.target.value)}>
-              <option value="">Saat seçin</option>
-              {times.map((item) => (
-                <option key={item} value={item}>{item}</option>
-              ))}
-            </select>
-          </label>
-
-          <label className="appointment-input appointment-input-wide">
-            <span>Notunuz (isteğe bağlı)</span>
-            <textarea
-              value={onlineNote}
-              onChange={(event) => setOnlineNote(event.target.value)}
-              placeholder="İşlem bölgesi veya özellikle belirtmek istediğiniz bir konu…"
-              rows={4}
-              maxLength={500}
-            />
-          </label>
-        </div>
-
-        <label className="appointment-privacy">
-          <input
-            type="checkbox"
-            checked={onlineConsent}
-            onChange={(event) => setOnlineConsent(event.target.checked)}
-          />
-          <span>
-            Randevu talebimin işlenmesini ve onay durumu hakkında benimle iletişime geçilmesini kabul ediyorum.
-          </span>
-        </label>
-
-        {onlineMessage ? (
-          <p className={success ? "appointment-success" : "appointment-error"} role="status">
-            {success ? <CheckCircle2 size={18} /> : null} {onlineMessage}
-          </p>
-        ) : null}
-
-        <div className="appointment-actions">
-          <button
-            type="button"
-            onClick={() => void submitOnlineRequest()}
-            className="appointment-primary"
-            disabled={onlineBusy}
-          >
-            {onlineBusy ? <LoaderCircle size={20} /> : <CalendarDays size={20} />}
-            {onlineBusy ? "Talep gönderiliyor…" : "Randevu Talebini Gönder"}
-            <ArrowRight size={18} />
-          </button>
-          <Link href="/musteri-paneli" className="appointment-secondary">
-            Müşteri panelime dön
-          </Link>
-        </div>
-
-        <p className="appointment-note">
-          Talep oluşturmak kesin rezervasyon anlamına gelmez. Salon onayından sonra randevunuz kesinleşir.
-        </p>
-      </section>
-    );
-  }
-
   return (
     <section className="appointment-planner" aria-labelledby="appointment-title">
-      <div className="appointment-progress" aria-label={`Randevu formu ${progress} / 5 tamamlandı`}>
-        <span style={{ width: `${(progress / 5) * 100}%` }} />
+      <div
+        className="appointment-progress"
+        aria-label={`Randevu formu ${progress} / 6 tamamlandı`}
+      >
+        <span style={{ width: `${(progress / 6) * 100}%` }} />
       </div>
 
       <div className="appointment-planner-head">
         <span>ÜCRETSİZ ÖN GÖRÜŞME</span>
         <h2 id="appointment-title">Randevu talebinizi 1 dakikada hazırlayın.</h2>
-        <p>Kesin tarih ve saat seçmek için müşteri hesabınıza giriş yapabilir veya WhatsApp üzerinden talep bırakabilirsiniz.</p>
-      </div>
-
-      <div className="appointment-actions">
-        <Link href="/musteri-paneli" className="appointment-secondary">
-          <LogIn size={18} /> Müşteri hesabına giriş yap
-        </Link>
+        <p>
+          Hizmetinizi, tercih ettiğiniz günü ve saati seçin. Talebiniz
+          WhatsApp üzerinden doğrudan TDA Luxury ekibine ulaşsın.
+        </p>
       </div>
 
       <div className="appointment-form-grid">
         <fieldset className="appointment-fieldset">
-          <legend><UserRound size={18} /> Danışan</legend>
+          <legend>
+            <UserRound size={18} /> Danışan
+          </legend>
           <div className="appointment-choice-grid two">
             {["Kadın", "Erkek"].map((item) => (
-              <button key={item} type="button" className={gender === item ? "selected" : ""} onClick={() => setGender(item)}>
-                {gender === item ? <Check size={17} /> : null}{item}
+              <button
+                key={item}
+                type="button"
+                className={gender === item ? "selected" : ""}
+                onClick={() => setGender(item)}
+              >
+                {gender === item ? <Check size={17} /> : null}
+                {item}
               </button>
             ))}
           </div>
         </fieldset>
 
         <fieldset className="appointment-fieldset appointment-fieldset-wide">
-          <legend><CalendarDays size={18} /> Hizmet</legend>
+          <legend>
+            <CalendarDays size={18} /> Hizmet
+          </legend>
           <div className="appointment-choice-grid services">
             {publicServices.map((item) => (
-              <button key={item} type="button" className={service === item ? "selected" : ""} onClick={() => setService(item)}>
-                {service === item ? <Check size={16} /> : null}{item}
+              <button
+                key={item}
+                type="button"
+                className={service === item ? "selected" : ""}
+                onClick={() => setService(item)}
+              >
+                {service === item ? <Check size={16} /> : null}
+                {item}
               </button>
             ))}
           </div>
         </fieldset>
 
         <fieldset className="appointment-fieldset appointment-fieldset-wide">
-          <legend><Clock3 size={18} /> Saat tercihi</legend>
-          <div className="appointment-choice-grid four">
-            {timeOptions.map((item) => (
-              <button key={item} type="button" className={preferredTime === item ? "selected" : ""} onClick={() => setPreferredTime(item)}>
-                {preferredTime === item ? <Check size={16} /> : null}{item}
-              </button>
-            ))}
+          <legend>
+            <CalendarDays size={18} /> Gün ve Saat
+          </legend>
+
+          <div className={styles.scheduleGrid}>
+            <div className={styles.scheduleColumn}>
+              <div className={styles.scheduleTitle}>Gün seçin</div>
+              <div className={styles.dayGrid}>
+                {days.map((day) => (
+                  <button
+                    key={day.value}
+                    type="button"
+                    className={`${styles.dayButton} ${
+                      selectedDate === day.value ? styles.selected : ""
+                    }`}
+                    onClick={() => {
+                      setSelectedDate(day.value);
+                      setSelectedTime("");
+                    }}
+                  >
+                    <span>{day.dayName}</span>
+                    <strong>{day.dateLabel}</strong>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.scheduleColumn}>
+              <div className={styles.scheduleTitle}>
+                <Clock3 size={16} /> Saat seçin
+              </div>
+
+              {selectedDate ? (
+                <div className={styles.timeGrid}>
+                  {times.map((item) => (
+                    <button
+                      key={item}
+                      type="button"
+                      className={`${styles.timeButton} ${
+                        selectedTime === item ? styles.selected : ""
+                      }`}
+                      onClick={() => setSelectedTime(item)}
+                    >
+                      {selectedTime === item ? <Check size={15} /> : null}
+                      {item}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className={styles.timePlaceholder}>
+                  Önce soldan bir gün seçin.
+                </div>
+              )}
+            </div>
           </div>
+
+          <p className={styles.scheduleNote}>
+            Pazar günleri kapalıyız. Saatler 09:00–19:30 arasındadır. Seçilen
+            saat kesin rezervasyon değildir; ekip uygunluğu WhatsApp üzerinden
+            teyit eder.
+          </p>
         </fieldset>
 
         <label className="appointment-input">
           <span>Ad Soyad</span>
-          <input value={name} onChange={(event) => setName(event.target.value)} placeholder="Adınızı ve soyadınızı yazın" autoComplete="name" />
+          <input
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            placeholder="Adınızı ve soyadınızı yazın"
+            autoComplete="name"
+          />
         </label>
 
         <label className="appointment-input">
           <span>Telefon</span>
-          <input value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="05__ ___ __ __" inputMode="tel" autoComplete="tel" />
+          <input
+            value={phone}
+            onChange={(event) => setPhone(event.target.value)}
+            placeholder="05__ ___ __ __"
+            inputMode="tel"
+            autoComplete="tel"
+          />
         </label>
 
         <label className="appointment-input appointment-input-wide">
           <span>Notunuz (isteğe bağlı)</span>
-          <textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="Özellikle belirtmek istediğiniz bir konu varsa yazabilirsiniz." rows={4} />
+          <textarea
+            value={note}
+            onChange={(event) => setNote(event.target.value)}
+            placeholder="Özellikle belirtmek istediğiniz bir konu varsa yazabilirsiniz."
+            rows={4}
+          />
         </label>
       </div>
 
       <label className="appointment-privacy">
-        <input type="checkbox" checked={privacyAccepted} onChange={(event) => setPrivacyAccepted(event.target.checked)} />
+        <input
+          type="checkbox"
+          checked={privacyAccepted}
+          onChange={(event) => setPrivacyAccepted(event.target.checked)}
+        />
         <span>
           Bilgilerimin yalnızca randevu iletişimi amacıyla kullanılmasını ve
-          <a href="/kvkk-aydinlatma-metni"> KVKK Aydınlatma Metni</a> kapsamında işlenmesini kabul ediyorum.
+          <a href="/kvkk-aydinlatma-metni"> KVKK Aydınlatma Metni</a>{" "}
+          kapsamında işlenmesini kabul ediyorum.
         </span>
       </label>
 
-      {error ? <p className="appointment-error" role="alert">{error}</p> : null}
+      {error ? (
+        <p className="appointment-error" role="alert">
+          {error}
+        </p>
+      ) : null}
 
       <div className="appointment-actions">
-        <button type="button" onClick={submitPublicRequest} className="appointment-primary">
-          <MessageCircle size={20} /> WhatsApp’ta Randevu Talebi Oluştur <ArrowRight size={18} />
+        <button
+          type="button"
+          onClick={submitPublicRequest}
+          className="appointment-primary"
+        >
+          <MessageCircle size={20} /> WhatsApp’ta Randevu Talebi Oluştur
+          <ArrowRight size={18} />
         </button>
+
         <a href={`tel:+${site.whatsapp}`} className="appointment-secondary">
           <Phone size={18} /> {site.phoneDisplay}
         </a>
       </div>
 
-      <p className="appointment-note">Bu form doğrudan rezervasyon oluşturmaz. Ekibimiz uygun gün ve saat için WhatsApp üzerinden dönüş yapar.</p>
+      <p className="appointment-note">
+        Talep oluşturmak kesin rezervasyon anlamına gelmez. Ekibimiz seçtiğiniz
+        gün ve saatin uygunluğunu WhatsApp üzerinden teyit eder.
+      </p>
     </section>
   );
 }
