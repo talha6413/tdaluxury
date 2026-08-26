@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /* eslint-disable @next/next/no-img-element -- Admin previews accept dynamic CMS and local blob URLs. */
 
@@ -7,12 +7,14 @@ import {
   BookOpen, Check, ChevronRight, CircleUserRound, ExternalLink, Eye, FileText,
   BadgeHelp, BriefcaseBusiness, ImageIcon, LayoutDashboard, LogOut, Megaphone,
   Menu, PanelsTopLeft, Pencil, Plus, RefreshCw, Save, Search, Sparkles,
-  Settings, Trash2, Upload, X,
+  Settings, Trash2, Upload, X, Globe2,
 } from "lucide-react";
 import { getSupabaseBrowserClient } from "@/lib/supabase";
+import SiteManagementPanel from "@/components/admin/SiteManagementPanel";
+import HomePageManagementPanel from "@/components/admin/HomePageManagementPanel";
 
 type Tab = "services" | "campaigns" | "blog_posts" | "gallery_items" | "results" | "faqs" | "page_content";
-type View = "dashboard" | "settings" | Tab;
+type View = "dashboard" | "settings" | "site_management" | "home_management" | Tab;
 type Row = Record<string, unknown> & {
   id: string;
   title: string;
@@ -104,7 +106,7 @@ export default function AdminPanel() {
     });
   }, [supabase, loadAll]);
 
-  const activeTab: Tab = view === "dashboard" || view === "settings" ? "campaigns" : view;
+  const activeTab: Tab = view === "dashboard" || view === "settings" || view === "site_management" || view === "home_management" ? "campaigns" : view;
   const activeRows = rowsByTab[activeTab];
   const filteredRows = useMemo(() => activeRows.filter((row) => {
     const matchesSearch = row.title.toLocaleLowerCase("tr-TR").includes(search.toLocaleLowerCase("tr-TR"));
@@ -206,6 +208,8 @@ export default function AdminPanel() {
           <p>İÇERİK</p>
           {(Object.keys(tabConfig) as Tab[]).map((key) => { const Icon = tabConfig[key].icon; return <button key={key} className={view === key ? "active" : ""} onClick={() => navigate(key)}><Icon size={19} /><span>{tabConfig[key].label}</span><b>{rowsByTab[key].length}</b></button>; })}
           <p>YAPILANDIRMA</p>
+          <button className={view === "site_management" ? "active" : ""} onClick={() => navigate("site_management")}><Globe2 size={19} /><span>Site Yönetimi</span></button>
+          <button className={view === "home_management" ? "active" : ""} onClick={() => navigate("home_management")}><PanelsTopLeft size={19} /><span>Ana Sayfa</span></button>
           <button className={view === "settings" ? "active" : ""} onClick={() => navigate("settings")}><Settings size={19} /><span>İşletme Ayarları</span></button>
         </nav>
         <div className="admin-account"><CircleUserRound /><span><b>Yönetici</b><small>{userEmail}</small></span></div>
@@ -215,6 +219,10 @@ export default function AdminPanel() {
       <section className="admin-content">
         {view === "dashboard" ? (
           <Dashboard rows={rowsByTab} total={total} published={published} busy={busy} navigate={navigate} refresh={loadAll} />
+        ) : view === "site_management" ? (
+          <SiteManagementPanel />
+        ) : view === "home_management" ? (
+          <HomePageManagementPanel />
         ) : view === "settings" ? (
           <SettingsPanel settings={settings} setSettings={setSettings} save={saveSettings} busy={busy} message={message} />
         ) : (
@@ -279,3 +287,7 @@ function AdminFields({ tab, draft, setDraft, uploadImage }: { tab: Tab; draft: R
     {(tab === "services" || tab === "page_content") && <section><h3>Arama motoru ayarları</h3>{field("seo_title", "SEO başlığı", "text", "Google sonuçlarında görünen başlık")}{area("seo_description", "SEO açıklaması", 4, "Google sonuçlarında görünen kısa açıklama")}<p className="admin-field-note">Başlık için yaklaşık 50–60, açıklama için 140–160 karakter önerilir.</p></section>}
   </div>;
 }
+
+
+
+

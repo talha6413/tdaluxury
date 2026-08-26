@@ -1,14 +1,56 @@
-TDA Luxury - Protez Tırnak 404 Düzeltmesi
+TDA LUXURY — SADECE WEB SİTESİ TEMİZLİK PAKETİ
 
-1. ZIP dosyasını bilgisayarında aç.
-2. İçindeki "app" klasörünü TDA Luxury proje ana klasörüne kopyala.
-3. Dosyaları birleştir/değiştir sorusu çıkarsa "Birleştir" seç.
-4. GitHub'a yükleyip commit et.
-5. Vercel otomatik yeniden yayınlayacaktır.
+AMAÇ
+Ziyaretçiye yalnızca kurumsal TDA Luxury sitesi kalsın.
+Müşteri/personel girişi, dijital onam ve AI cilt analizi public taraftan kaldırılır.
 
-Bu yama:
-/protez-tirnak adresini kalıcı olarak /tirnak/protez-tirnak adresine yönlendirir.
+SİLİNENLER
+- /musteri-paneli ve alt sayfaları
+- /personel-paneli
+- /dijital-onam
+- /ai-cilt-analizi
+- AI cilt analizi API'si
+- CustomerPortal / StaffPortal / DigitalConsent / AI müşteri bileşenleri
 
-Ek kontrol:
-Menü veya butonlarda href="/protez-tirnak" varsa doğrudan
-href="/tirnak/protez-tirnak" olarak değiştirmek daha doğrudur.
+KALANLAR
+- Ana sayfa
+- Hizmetler ve tüm SEO landing sayfaları
+- Lazer epilasyon / cilt bakımı / kalıcı makyaj / tırnak vb.
+- Blog
+- Galeri / sonuçlar
+- İletişim
+- Randevu
+- WhatsApp / telefon
+- Google Analytics ve Google Ads ölçümü
+- Admin / yönetim alanı (public menüde görünmez, Google'a noindex)
+- Supabase müşteri verileri (SİLİNMEZ)
+
+EK DÜZELTME
+Önceki Google CSP hatası da bu pakette birleştirildi:
+- google.com ccm/collect
+- doubleclick.net ccm collect
+izinleri eklendi.
+
+KURULUM
+1) ZIP'i proje ana klasörüne çıkart.
+   Örnek:
+   C:\Users\MSI\OneDrive\Desktop\tdaluxury
+
+2) Dosyaların üzerine yazılmasına izin ver.
+
+3) Proje ana klasöründeki:
+   TEMIZLE.bat
+   dosyasına çift tıkla.
+
+4) Terminali proje klasöründe aç ve:
+   npm run build
+
+5) Build başarılıysa:
+   git add -A
+   git commit -m "Musteri girisi ve portal ozelliklerini kaldir"
+   git push origin main
+
+Vercel main branch'i otomatik deploy eder.
+
+NOT
+Bu paket Supabase tablolarını, müşteri kayıtlarını veya admin verilerini silmez.

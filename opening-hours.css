@@ -1,0 +1,20 @@
+/* ===== ADMIN OPENING HOURS ===== */
+.admin-hours-card{grid-column:1/-1}
+.admin-hours-grid{display:grid;gap:8px}
+.admin-hours-row{
+  display:grid;grid-template-columns:130px 82px 150px 150px minmax(180px,1fr);
+  gap:10px;align-items:end;padding:11px 12px;border:1px solid #e7dfd4;border-radius:12px;background:#faf8f4
+}
+.admin-hours-row>strong{align-self:center;font-size:12px;color:#302a24}
+.admin-field.compact,.admin-check.compact{margin:0!important}
+.admin-hours-row input:disabled{opacity:.45;cursor:not-allowed}
+.admin-hours-note{min-width:0}
+@media(max-width:1000px){
+  .admin-hours-row{grid-template-columns:1fr 100px 1fr 1fr}
+  .admin-hours-note{grid-column:1/-1}
+}
+@media(max-width:620px){
+  .admin-hours-row{grid-template-columns:1fr 1fr}
+  .admin-hours-row>strong{grid-column:1/-1}
+  .admin-hours-note{grid-column:1/-1}
+}

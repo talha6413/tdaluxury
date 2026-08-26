@@ -1,20 +1,11 @@
-TDA Luxury — Hizmetler Görsel ve Yerleşim Düzeltmesi
+TDA Luxury Çalışma Saatleri Yönetimi
 
-Düzeltilen sorunlar:
-- Hizmetlerimiz başlığının menünün altına girmesi engellendi.
-- Hero alanına güvenli üst boşluk eklendi.
-- Öne çıkan hizmet sekmeleri birbirinden ayrıldı.
-- Bozuk/kırpılmış paket görselleri kaldırıldı.
-- Görseller artık lib/service-media.ts üzerinden sitenin gerçek görsellerinden yüklenir.
-- Görsellerde object-fit: cover ve doğru oran kullanılır.
-- Alt hizmet görselleri de aynı sistemden yüklenir.
-- Mobil ve tablet yerleşimi düzeltildi.
+ZIP'i proje köküne çıkar.
 
-Kurulum:
-1. ZIP'i tdaluxury proje klasörüne çıkarın.
-2. components/ServicesCatalog.tsx ve components/ServicesCatalog.module.css üzerine yazılmasına izin verin.
-3. VS Code terminalinde:
+Sırayla:
+1) powershell -ExecutionPolicy Bypass -File .\apply-opening-hours.ps1
+2) powershell -ExecutionPolicy Bypass -File .\apply-opening-hours-css.ps1
+3) npm run build
+4) vercel --prod --yes
 
-git add .
-git commit -m "Hizmetler görsellerini ve üst yerleşimi düzelt"
-git push origin main
+Sonra /admin > Site Yönetimi içinde haftalık çalışma saatlerini düzenleyebilirsin.

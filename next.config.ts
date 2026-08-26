@@ -5,7 +5,6 @@ const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -16,7 +15,7 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com",
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com https://www.google.com https://*.doubleclick.net",
   "frame-src 'self' https://www.google.com https://maps.google.com https://www.paytr.com",
   "media-src 'self' blob:",
   "worker-src 'self' blob:",
@@ -30,12 +29,16 @@ const securityHeaders = [
   { key: "X-Frame-Options", value: "SAMEORIGIN" },
   {
     key: "Permissions-Policy",
-    value: "camera=(self), microphone=(), geolocation=(self)",
+    value: "camera=(), microphone=(), geolocation=(self)",
   },
   {
     key: "Cross-Origin-Opener-Policy",
     value: "same-origin-allow-popups",
   },
+];
+
+const privateRouteHeaders = [
+  { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
 ];
 
 const nextConfig: NextConfig = {
@@ -109,6 +112,14 @@ const nextConfig: NextConfig = {
       {
         source: "/:path*",
         headers: securityHeaders,
+      },
+      {
+        source: "/admin/:path*",
+        headers: privateRouteHeaders,
+      },
+      {
+        source: "/yonetim-v2/:path*",
+        headers: privateRouteHeaders,
       },
       {
         source: "/videos/:path*",

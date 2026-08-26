@@ -1,0 +1,28 @@
+--- components/admin/AdminPanel.tsx
++++ components/admin/AdminPanel.tsx
+@@
+ import {
+   BookOpen, Check, ChevronRight, CircleUserRound, ExternalLink, Eye, FileText,
+   BadgeHelp, BriefcaseBusiness, ImageIcon, LayoutDashboard, LogOut, Megaphone,
+   Menu, PanelsTopLeft, Pencil, Plus, RefreshCw, Save, Search, Sparkles,
+-  Settings, Trash2, Upload, X,
++  Settings, Trash2, Upload, X, Globe2,
+ } from "lucide-react";
+ import { getSupabaseBrowserClient } from "@/lib/supabase";
++import SiteManagementPanel from "@/components/admin/SiteManagementPanel";
+@@
+-type View = "dashboard" | "settings" | Tab;
++type View = "dashboard" | "settings" | "site_management" | Tab;
+@@
+-  const activeTab: Tab = view === "dashboard" || view === "settings" ? "campaigns" : view;
++  const activeTab: Tab = view === "dashboard" || view === "settings" || view === "site_management" ? "campaigns" : view;
+@@
+           <p>YAPILANDIRMA</p>
++          <button className={view === "site_management" ? "active" : ""} onClick={() => navigate("site_management")}><Globe2 size={19} /><span>Site Yönetimi</span></button>
+           <button className={view === "settings" ? "active" : ""} onClick={() => navigate("settings")}><Settings size={19} /><span>İşletme Ayarları</span></button>
+@@
+         {view === "dashboard" ? (
+           <Dashboard rows={rowsByTab} total={total} published={published} busy={busy} navigate={navigate} refresh={loadAll} />
++        ) : view === "site_management" ? (
++          <SiteManagementPanel />
+         ) : view === "settings" ? (

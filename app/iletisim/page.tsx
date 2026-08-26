@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import {
   ArrowRight,
   CalendarDays,
@@ -18,6 +18,10 @@ import { buildManagedMetadata } from "@/lib/seo";
 import { BreadcrumbSchema, JsonLd } from "@/lib/schema";
 import { site, waUrl } from "@/lib/site";
 import ConsentMap from "@/components/ConsentMap";
+import { getManagedSiteSettings } from "@/lib/managed-content";
+import { compactOpeningHours, dayLabels, formatDayHours, normalizeOpeningHours } from "@/lib/opening-hours";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata() { return buildManagedMetadata("iletisim", {
   title: "İletişim | Uşak Merkez Güzellik Salonu",
@@ -29,38 +33,6 @@ export async function generateMetadata() { return buildManagedMetadata("iletisim
 const mapsUrl = site.mapsUrl;
 const mapsEmbedUrl = site.mapsEmbedUrl;
 
-const contactCards = [
-  {
-    icon: Phone,
-    label: "Telefon",
-    title: site.phoneDisplay,
-    text: "Hızlı bilgi ve randevu için bizi arayın.",
-    href: `tel:+${site.whatsapp}`,
-  },
-  {
-    icon: MessageCircle,
-    label: "WhatsApp",
-    title: "Hemen Yazışın",
-    text: "Hizmet bilgisi ve uygun saat için mesaj gönderin.",
-    href: waUrl(),
-  },
-  {
-    icon: MapPin,
-    label: "Konum",
-    title: site.address,
-    text: "Google Haritalar üzerinden yol tarifini açın.",
-    href: mapsUrl,
-  },
-  {
-    icon: Clock3,
-    label: "Çalışma Saatleri",
-    title: "Pzt–Cmt 10:00–20:00",
-    text: "Pazar günü randevu durumuna göre hizmet verilir.",
-    href: "#calisma-saatleri",
-  },
-];
-
-
 const contactPageSchema = {
   "@context": "https://schema.org",
   "@type": "ContactPage",
@@ -71,17 +43,49 @@ const contactPageSchema = {
   mainEntity: { "@id": `${site.url}/#business` },
 };
 
-const hours = [
-  ["Pazartesi", "10:00 – 20:00"],
-  ["Salı", "10:00 – 20:00"],
-  ["Çarşamba", "10:00 – 20:00"],
-  ["Perşembe", "10:00 – 20:00"],
-  ["Cuma", "10:00 – 20:00"],
-  ["Cumartesi", "10:00 – 20:00"],
-  ["Pazar", "Randevu ile"],
-];
+export default async function Page() {
+  const managedSettings = await getManagedSiteSettings();
+  const phoneDisplay = managedSettings?.phoneDisplay || site.phoneDisplay;
+  const whatsappNumber = managedSettings?.whatsappNumber || site.whatsapp;
+  const address = managedSettings?.address || site.address;
+  const instagramUrl = managedSettings?.instagramUrl || site.instagram;
+  const managedMapsUrl = managedSettings?.mapsUrl || mapsUrl;
+  const openingHours = normalizeOpeningHours(managedSettings?.openingHours);
+  const hours = Object.entries(dayLabels).map(([key, label]) => [label, formatDayHours(openingHours[key])] as const);
+  const hoursSummary = compactOpeningHours(openingHours);
+  const managedWaUrl = (text?: string) =>
+    `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text || managedSettings?.whatsappMessage || "Merhaba, TDA Luxury hizmetleri hakkında bilgi almak ve randevu oluşturmak istiyorum.")}`;
 
-export default function Page() {
+  const contactCards = [
+    {
+      icon: Phone,
+      label: "Telefon",
+      title: phoneDisplay,
+      text: "Hızlı bilgi ve randevu için bizi arayın.",
+      href: `tel:+${whatsappNumber}`,
+    },
+    {
+      icon: MessageCircle,
+      label: "WhatsApp",
+      title: "Hemen Yazışın",
+      text: "Hizmet bilgisi ve uygun saat için mesaj gönderin.",
+      href: managedWaUrl(),
+    },
+    {
+      icon: MapPin,
+      label: "Konum",
+      title: address,
+      text: "Google Haritalar üzerinden yol tarifini açın.",
+      href: managedMapsUrl,
+    },
+    {
+      icon: Clock3,
+      label: "Çalışma Saatleri",
+      title: hoursSummary,
+      text: "Detaylı haftalık çalışma saatlerini görüntüleyin.",
+      href: "#calisma-saatleri",
+    },
+  ];
   return (
     <>
       <JsonLd data={contactPageSchema} />
@@ -104,12 +108,12 @@ export default function Page() {
                 ekibimize doğrudan ulaşın.
               </p>
               <div className="contact-hero-actions">
-                <a className="btn-gold" href={waUrl()} target="_blank" rel="noreferrer">
+                <a className="btn-gold" href={managedWaUrl()} target="_blank" rel="noreferrer">
                   <MessageCircle size={20} />
                   WhatsApp&apos;tan Randevu Al
                   <ArrowRight size={18} />
                 </a>
-                <a className="contact-hero-outline" href={mapsUrl} target="_blank" rel="noreferrer">
+                <a className="contact-hero-outline" href={managedMapsUrl} target="_blank" rel="noreferrer">
                   <MapPin size={19} />
                   Yol Tarifi Al
                 </a>
@@ -130,7 +134,7 @@ export default function Page() {
                 <li>Uzman ekip yönlendirmesi</li>
                 <li>Randevu öncesi bilgilendirme</li>
               </ul>
-              <a href={waUrl("Merhaba, TDA Luxury danışmanlık hizmeti hakkında bilgi almak istiyorum.")} target="_blank" rel="noreferrer">
+              <a href={managedWaUrl("Merhaba, TDA Luxury danışmanlık hizmeti hakkında bilgi almak istiyorum.")} target="_blank" rel="noreferrer">
                 Danışmana Yaz <ArrowRight size={17} />
               </a>
             </aside>
@@ -174,7 +178,7 @@ export default function Page() {
                 <section className="contact-social-card">
                   <p className="section-label">SOSYAL MEDYA</p>
                   <h2>Güncel İşlemlerimizi Takip Edin</h2>
-                  <a href={site.instagram} target="_blank" rel="noreferrer">
+                  <a href={instagramUrl} target="_blank" rel="noreferrer">
                     <Instagram size={22} />
                     <span>
                       <small>Instagram</small>
@@ -182,11 +186,11 @@ export default function Page() {
                     </span>
                     <ArrowRight size={17} />
                   </a>
-                  <a href={waUrl()} target="_blank" rel="noreferrer">
+                  <a href={managedWaUrl()} target="_blank" rel="noreferrer">
                     <MessageCircle size={22} />
                     <span>
                       <small>WhatsApp</small>
-                      <strong>{site.phoneDisplay}</strong>
+                      <strong>{phoneDisplay}</strong>
                     </span>
                     <ArrowRight size={17} />
                   </a>
@@ -211,16 +215,16 @@ export default function Page() {
                 <MapPin size={24} />
                 <div>
                   <small>Salon Konumu</small>
-                  <strong>{site.address}</strong>
+                  <strong>{address}</strong>
                   <span>Uşak ve çevre ilçelerden kolay ulaşım</span>
                 </div>
               </div>
 
               <div className="contact-map-actions">
-                <a href={mapsUrl} target="_blank" rel="noreferrer" className="dark-btn">
+                <a href={managedMapsUrl} target="_blank" rel="noreferrer" className="dark-btn">
                   Google Haritalar&apos;da Aç <ArrowRight size={16} />
                 </a>
-                <a href={`tel:+${site.whatsapp}`} className="contact-map-secondary">
+                <a href={`tel:+${whatsappNumber}`} className="contact-map-secondary">
                   <Phone size={17} /> Konum İçin Ara
                 </a>
               </div>
@@ -249,7 +253,7 @@ export default function Page() {
               </div>
               <div className="contact-map-footer">
                 <span>Randevu öncesi konumu telefonunuza kaydedin.</span>
-                <a href={waUrl("Merhaba, TDA Luxury konum bilgisi ve yol tarifi hakkında destek almak istiyorum.")} target="_blank" rel="noreferrer">
+                <a href={managedWaUrl("Merhaba, TDA Luxury konum bilgisi ve yol tarifi hakkında destek almak istiyorum.")} target="_blank" rel="noreferrer">
                   WhatsApp&apos;tan Konum İste <MessageCircle size={16} />
                 </a>
               </div>
@@ -264,7 +268,7 @@ export default function Page() {
               <h2>Bugün Ücretsiz Danışmanlık Alın</h2>
               <span>İhtiyacınıza uygun hizmeti birlikte belirleyelim.</span>
             </div>
-            <a href={waUrl()} target="_blank" rel="noreferrer">
+            <a href={managedWaUrl()} target="_blank" rel="noreferrer">
               <CalendarDays size={20} />
               Randevu Oluştur
               <ArrowRight size={18} />
@@ -276,3 +280,6 @@ export default function Page() {
     </>
   );
 }
+
+
+
