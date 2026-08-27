@@ -112,7 +112,11 @@ export async function getManagedSiteSettings(): Promise<ManagedSiteSettings | nu
 }
 function mapBlogRow(row: Record<string, unknown>): BlogPost {
   const publishedAt = String(row.published_at ?? new Date().toISOString().slice(0, 10));
-  return { slug: String(row.slug), title: String(row.title), excerpt: String(row.excerpt ?? ""), category: String(row.category ?? "Güzellik"), readTime: String(row.read_time ?? "5 dk"), image: realImage(row.image_url, "/images/real/salon-03.webp"), intro: String(row.intro ?? ""), datePublished: publishedAt, dateModified: String(row.updated_at ?? publishedAt).slice(0, 10), keywords: Array.isArray(row.keywords) ? row.keywords.map(String) : [], relatedServices: [{ label: "Tüm Hizmetler", href: "/hizmetler" }], sections: Array.isArray(row.sections) ? row.sections as BlogPost["sections"] : [] };
+  return { slug: String(row.slug), title: String(row.title), excerpt: String(row.excerpt ?? ""), category: String(row.category ?? "Güzellik"), readTime: String(row.read_time ?? "5 dk"), image: realImage(row.image_url, "/images/real/salon-03.webp"), intro: String(row.intro ?? ""), datePublished: publishedAt, dateModified: String(row.updated_at ?? publishedAt).slice(0, 10), keywords: Array.isArray(row.keywords) ? row.keywords.map(String) : [], relatedServices: inferBlogRelatedServices({
+      slug: String(row.slug),
+      title: String(row.title),
+      category: String(row.category ?? "Güzellik"),
+    }), sections: Array.isArray(row.sections) ? row.sections as BlogPost["sections"] : [] };
 }
 export async function getManagedBlogPosts() {
   const client = serverClient(); if (!client) return fallbackBlogPosts;

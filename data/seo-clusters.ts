@@ -30,6 +30,9 @@ export const seoClusters: SeoCluster[] = [
       "lazer-epilasyon-sonrasi-bakim",
       "lazer-epilasyon-acitir-mi",
       "erkek-lazer-epilasyon",
+      "lazer-epilasyonda-seans-araliklari-neden-onemli",
+      "igneli-epilasyon-sonrasi-cilt-bakimi",
+      "igneli-epilasyon-kimler-icin-uygun",
     ],
   },
   {
@@ -51,6 +54,8 @@ export const seoClusters: SeoCluster[] = [
       "cilt-bakimi-sonrasi-makyaj",
       "cilt-analizi-neden-onemli",
       "akneye-egilimli-cilt-bakimi-hatalari",
+      "gunes-sonrasi-cilt-bakimi-nasil-olmali",
+      "cilt-bakiminda-mevsim-gecisleri-rutin-nasil-uyarlanir",
     ],
   },
   {
@@ -70,6 +75,7 @@ export const seoClusters: SeoCluster[] = [
       "microblading-mi-pudralama-kas-mi",
       "microblading-sonrasi-bakim",
       "dudak-renklendirme-sonrasi-bakim",
+      "kalici-makyaj-oncesi-hazirlik-rehberi",
     ],
   },
   {
@@ -85,7 +91,12 @@ export const seoClusters: SeoCluster[] = [
       "/kas-kirpik/altin-oran-kas-tasarimi",
       "/kas-kirpik/kas-alimi",
     ],
-    blogSlugs: ["kirpik-lifting-kalicilik"],
+    blogSlugs: [
+      "kirpik-lifting-kalicilik",
+      "ipek-kirpik-mi-kirpik-lifting-mi",
+      "ipek-kirpik-bakimi-kaliciligi-etkileyen-aliskanliklar",
+      "kas-laminasyonu-sonrasi-bakim",
+    ],
   },
   {
     key: "vucut-bakimi",
@@ -111,7 +122,10 @@ export const seoClusters: SeoCluster[] = [
       "/tirnak/manikur",
       "/tirnak/pedikur",
     ],
-    blogSlugs: [],
+    blogSlugs: [
+      "protez-tirnak-bakimi-kaliciligi-korumak",
+      "protez-tirnak-oncesi-bilinmesi-gerekenler",
+    ],
   },
 ];
 

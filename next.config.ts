@@ -63,6 +63,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/blog/bolgesel-incelme",
+        destination: "/blog/bolgesel-incelme-gercekci-beklenti",
+        permanent: true,
+      },
+      {
         source: "/:path*",
         has: [{ type: "host", value: "tdaluxury.vercel.app" }],
         destination: "https://www.tdaluxury.com.tr/:path*",

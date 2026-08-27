@@ -2,9 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BookOpenText } from "lucide-react";
 import type { SeoCluster } from "@/data/seo-clusters";
-import { getClusterBlogPosts, getClusterServices } from "@/data/seo-clusters";
+import { getClusterServices } from "@/data/seo-clusters";
+import { getManagedBlogPosts } from "@/lib/managed-content";
 
-export default function SeoTopicCluster({
+export default async function SeoTopicCluster({
   cluster,
   currentServiceSlug,
   currentBlogSlug,
@@ -13,7 +14,14 @@ export default function SeoTopicCluster({
   currentServiceSlug?: string;
   currentBlogSlug?: string;
 }) {
-  const posts = getClusterBlogPosts(cluster, currentBlogSlug).slice(0, 4);
+  const allBlogPosts = await getManagedBlogPosts();
+  const posts = cluster.blogSlugs
+    .filter((slug) => slug !== currentBlogSlug)
+    .map((slug) => allBlogPosts.find((post) => post.slug === slug))
+    .filter(
+      (post): post is (typeof allBlogPosts)[number] => Boolean(post),
+    )
+    .slice(0, 4);
   const clusterServices = getClusterServices(cluster, currentServiceSlug).slice(0, 5);
 
   if (posts.length === 0 && clusterServices.length === 0) return null;
