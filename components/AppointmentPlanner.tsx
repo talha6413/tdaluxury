@@ -71,7 +71,7 @@ function buildUpcomingDays(count = 12): AppointmentDay[] {
 }
 
 function buildTimes() {
-  const times: string[] = [];
+  const times: string[] = ["08:30"];
 
   for (let hour = 9; hour <= 19; hour += 1) {
     times.push(`${String(hour).padStart(2, "0")}:00`);
@@ -280,7 +280,7 @@ export default function AppointmentPlanner() {
           </div>
 
           <p className={styles.scheduleNote}>
-            Pazar günleri kapalıyız. Saatler 09:00–19:30 arasındadır. Seçilen
+            Pazar günleri kapalıyız. Saatler 08:30–19:30 arasındadır. Seçilen
             saat kesin rezervasyon değildir; ekip uygunluğu WhatsApp üzerinden
             teyit eder.
           </p>

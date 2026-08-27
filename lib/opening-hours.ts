@@ -8,12 +8,12 @@ export type DayHours = {
 export type OpeningHours = Record<string, DayHours>;
 
 export const defaultOpeningHours: OpeningHours = {
-  monday: { open: "09:00", close: "19:30" },
-  tuesday: { open: "09:00", close: "19:30" },
-  wednesday: { open: "09:00", close: "19:30" },
-  thursday: { open: "09:00", close: "19:30" },
-  friday: { open: "09:00", close: "19:30" },
-  saturday: { open: "09:00", close: "19:30" },
+  monday: { open: "08:30", close: "19:30" },
+  tuesday: { open: "08:30", close: "19:30" },
+  wednesday: { open: "08:30", close: "19:30" },
+  thursday: { open: "08:30", close: "19:30" },
+  friday: { open: "08:30", close: "19:30" },
+  saturday: { open: "08:30", close: "19:30" },
   sunday: { open: "", close: "", closed: true, note: "Kapalı" },
 };
 

@@ -20,12 +20,12 @@ export const site = {
     process.env.NEXT_PUBLIC_MAPS_EMBED_URL ||
     "https://www.google.com/maps?q=TDA%20Luxury%20U%C5%9Fak&output=embed",
   openingHours: [
-    { day: "Monday", opens: "09:00", closes: "19:30" },
-    { day: "Tuesday", opens: "09:00", closes: "19:30" },
-    { day: "Wednesday", opens: "09:00", closes: "19:30" },
-    { day: "Thursday", opens: "09:00", closes: "19:30" },
-    { day: "Friday", opens: "09:00", closes: "19:30" },
-    { day: "Saturday", opens: "09:00", closes: "19:30" },
+    { day: "Monday", opens: "08:30", closes: "19:30" },
+    { day: "Tuesday", opens: "08:30", closes: "19:30" },
+    { day: "Wednesday", opens: "08:30", closes: "19:30" },
+    { day: "Thursday", opens: "08:30", closes: "19:30" },
+    { day: "Friday", opens: "08:30", closes: "19:30" },
+    { day: "Saturday", opens: "08:30", closes: "19:30" },
   ],
   serviceAreas: [
     "Uşak Merkez",
