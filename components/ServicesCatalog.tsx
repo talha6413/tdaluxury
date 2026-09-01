@@ -159,6 +159,83 @@ const fallbackOthers: ManagedService[] = [
   },
 ];
 
+const fallbackMainCategories: ManagedService[] = [
+  {
+    id: "fallback-needle-main",
+    title: "İğneli Epilasyon",
+    slug: "/igneli-epilasyon",
+    category: "Ana Hizmet",
+    description:
+      "İnce, açık renkli ve lazerin görmediği tüyler için kişiye özel planlanan iğneli epilasyon uygulaması.",
+    short_description: "",
+    price_text: "Bilgi alın",
+    duration: "Kişiye özel",
+    image_url: "/images/services-premium/igneli-epilasyon.webp",
+    image_position: "center center",
+    featured: false,
+    published: true,
+    sort_order: 40,
+  },
+  {
+    id: "fallback-kas-kirpik-main",
+    title: "Kaş & Kirpik",
+    slug: "/kas-kirpik",
+    category: "Ana Hizmet",
+    description:
+      "İpek kirpik, kirpik lifting, kaş laminasyonu ve kaş tasarımı uygulamalarını keşfedin.",
+    short_description: "",
+    price_text: "Bilgi alın",
+    duration: "Kişiye özel",
+    image_url: "",
+    image_position: "center center",
+    featured: false,
+    published: true,
+    sort_order: 50,
+  },
+  {
+    id: "fallback-tirnak-main",
+    title: "Tırnak Hizmetleri",
+    slug: "/tirnak",
+    category: "Ana Hizmet",
+    description:
+      "Protez tırnak, kalıcı oje, manikür ve pedikür uygulamalarını keşfedin.",
+    short_description: "",
+    price_text: "Bilgi alın",
+    duration: "Kişiye özel",
+    image_url: "",
+    image_position: "center center",
+    featured: false,
+    published: true,
+    sort_order: 60,
+  },
+  {
+    id: "fallback-regional-main",
+    title: "Bölgesel İncelme",
+    slug: "/bolgesel-incelme",
+    category: "Ana Hizmet",
+    description:
+      "Bölgesel bakım hedeflerine göre kişiye özel planlanan profesyonel uygulamaları keşfedin.",
+    short_description: "",
+    price_text: "Bilgi alın",
+    duration: "Kişiye özel",
+    image_url: "",
+    image_position: "center center",
+    featured: false,
+    published: true,
+    sort_order: 70,
+  },
+];
+
+const mainServiceSlugs = [
+  "/lazer-epilasyon",
+  "/cilt-bakimi",
+  "/kalici-makyaj",
+  "/igneli-epilasyon",
+  "/kas-kirpik",
+  "/tirnak",
+  "/bolgesel-incelme",
+] as const;
+
 const processSteps = [
   {
     no: "1",
@@ -244,20 +321,28 @@ export default function ServicesCatalog() {
   }, [supabase]);
 
   const activeServices = useMemo(
-    () => (services.length ? services : [...fallbackServices, ...fallbackOthers]),
+    () =>
+      services.length
+        ? services
+        : [...fallbackServices, ...fallbackOthers, ...fallbackMainCategories],
     [services]
   );
 
-  const featuredServices = useMemo(() => {
-    const featured = activeServices.filter((item) => item.featured).slice(0, 3);
-    if (featured.length >= 3) return featured;
-    return activeServices.slice(0, 3);
-  }, [activeServices]);
+  const serviceMap = useMemo(
+    () =>
+      new Map(
+        activeServices.map((item) => [normalizeSlug(item.slug), item] as const)
+      ),
+    [activeServices]
+  );
 
-  const otherServices = useMemo(() => {
-    const featuredIds = new Set(featuredServices.map((item) => item.id));
-    return activeServices.filter((item) => !featuredIds.has(item.id));
-  }, [activeServices, featuredServices]);
+  const mainServices = useMemo(
+    () =>
+      mainServiceSlugs
+        .map((slug) => serviceMap.get(slug))
+        .filter((item): item is ManagedService => Boolean(item)),
+    [serviceMap]
+  );
 
   const heroTitle = safeText(pageContent?.title, "Hizmetlerimiz");
   const heroDescription = safeText(
@@ -314,7 +399,7 @@ export default function ServicesCatalog() {
       <section className={styles.mainSection}>
         <div className={styles.container}>
           <div className={styles.mainGrid}>
-            {featuredServices.map((service) => (
+            {mainServices.map((service) => (
               <article key={service.id} className={styles.mainCard}>
                 <Link href={normalizeSlug(service.slug)} className={styles.imageWrap}>
                   <Image
@@ -342,57 +427,6 @@ export default function ServicesCatalog() {
             ))}
           </div>
 
-          {otherServices.length ? (
-            <>
-              <header className={styles.otherHeader}>
-                <h2>Diğer Uygulamalarımız</h2>
-                <span>
-                  <i />
-                  <b />
-                  <i />
-                </span>
-              </header>
-
-              <div className={styles.otherGrid}>
-                {otherServices.map((service) => (
-                  <article key={service.id} className={styles.otherCard}>
-                    <Link
-                      href={normalizeSlug(service.slug)}
-                      className={styles.otherImage}
-                    >
-                      <Image
-                        src={serviceImage(service)}
-                        alt={`${service.title} uygulaması - TDA Luxury Uşak`}
-                        fill
-                        sizes="(max-width: 760px) 100vw, 33vw"
-                        style={{
-                          objectPosition:
-                            service.image_position || "center center",
-                        }}
-                      />
-                    </Link>
-
-                    <div className={styles.otherBody}>
-                      <h3>{service.title}</h3>
-                      <p>{service.short_description || service.description}</p>
-
-                      {(service.price_text || service.duration) && (
-                        <small>
-                          {service.price_text ? service.price_text : ""}
-                          {service.price_text && service.duration ? " · " : ""}
-                          {service.duration ? service.duration : ""}
-                        </small>
-                      )}
-
-                      <Link href={normalizeSlug(service.slug)}>
-                        Detaylı Bilgi <ArrowRight size={15} />
-                      </Link>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </>
-          ) : null}
         </div>
       </section>
 
